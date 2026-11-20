@@ -7,13 +7,16 @@
 
 /* ESTILO GENERAL DEL SITIO */
 body{
-    background: #f1f5f9;
+    background: 
+#f1f5f9;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* HEADER */
 header{
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: linear-gradient(135deg, 
+#2563eb, 
+#7c3aed);
     color: white;
     height: 100px;
     text-align: center;
@@ -24,9 +27,11 @@ header{
 
 /* MENU NAVEGACION */
 nav{
-    background: #0ea5e9;
+    background: 
+#0ea5e9;
     height: 50px;
-    border-bottom: 3px solid #0369a1;
+    border-bottom: 3px solid 
+#0369a1;
 }
 
 nav ul li{
@@ -43,7 +48,8 @@ nav ul li a{
 }
 
 nav ul li a:hover{
-    color: #fde047;
+    color: 
+#fde047;
 }
 
 /* LIMPIAR FLOTANTES */
@@ -63,10 +69,12 @@ nav ul li a:hover{
 
 /* ARTICULOS */
 .article{
-    color: #334155;
+    color: 
+#334155;
     margin-top: 15px;
     margin-bottom: 15px;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid 
+#e2e8f0;
     padding-bottom: 12px;
 }
 
@@ -74,7 +82,9 @@ nav ul li a:hover{
 aside{
     float: left;
     width: 20%;
-    background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+    background: linear-gradient(180deg, 
+#38bdf8, 
+#0ea5e9);
     color: white;
     min-height: 500px;
     padding: 20px;
@@ -82,10 +92,10 @@ aside{
 
 /* FOOTER */
 footer{
-    background: #1e293b;
+    background: 
+#1e293b;
     color: white;
     text-align: center;
     height: 50px;
     line-height: 50px;
     margin-top: 10px;
-}
