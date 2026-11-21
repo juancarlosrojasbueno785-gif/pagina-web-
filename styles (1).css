@@ -1,0 +1,431 @@
+/* RESET GENERAL */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* PALETA: CANCHA DE NOCHE */
+:root{
+    --pasto: #123d26;
+    --cesped: #1d5a35;
+    --cesped-2: #1a5030;
+    --tiza: #f3f6ee;
+    --tinta: #0f2418;
+    --tarjeta: #f6d32d;
+    --display: 'Big Shoulders Display', Impact, 'Arial Narrow', sans-serif;
+}
+
+/* ESTILO GENERAL: CESPED CORTADO EN FRANJAS */
+body{
+    background: repeating-linear-gradient(90deg, var(--cesped) 0 90px, var(--cesped-2) 90px 180px);
+    color: var(--tiza);
+    font-family: 'Figtree', 'Segoe UI', Tahoma, sans-serif;
+    line-height: 1.6;
+}
+
+a:focus-visible,
+input:focus-visible{
+    outline: 3px solid var(--tarjeta);
+    outline-offset: 3px;
+}
+
+/* HEADER: EL CENTRO DE LA CANCHA */
+header{
+    position: relative;
+    overflow: hidden;
+    background: var(--pasto);
+    min-height: 280px;
+    padding: 60px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* circulo central */
+header::before{
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 4px solid var(--tiza);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: .35;
+}
+
+/* linea de medio campo */
+header::after{
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    background: var(--tiza);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: .35;
+}
+
+header h1,
+header p{
+    position: relative;
+    z-index: 1;
+}
+
+header h1{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(3.2rem, 11vw, 8rem);
+    line-height: .9;
+    letter-spacing: -0.01em;
+    text-shadow: 0 4px 0 var(--pasto);
+}
+
+header p{
+    margin-top: 14px;
+    font-size: 1.2rem;
+    background: var(--pasto);
+    padding: 2px 12px;
+}
+
+.hero-img{
+    position: absolute;
+    z-index: 1;
+    right: 5%;
+    bottom: 0;
+    height: 85%;
+    max-width: 25%;
+    object-fit: contain;
+}
+
+/* MENU: LA BANDA */
+nav{
+    background: var(--tiza);
+    border-bottom: 6px solid var(--tarjeta);
+}
+
+nav ul{
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 28px;
+    padding: 10px 20px;
+}
+
+nav ul li a{
+    display: block;
+    color: var(--tinta);
+    text-decoration: none;
+    font-weight: 700;
+    padding: 6px 2px;
+    border-bottom: 4px solid transparent;
+}
+
+nav ul li a:hover{
+    border-bottom-color: var(--tarjeta);
+}
+
+/* DISTRIBUCION: CONTENIDO + BANCA */
+.cancha{
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+    align-items: start;
+}
+
+/* CONTENIDO PRINCIPAL */
+#content{
+    background: var(--tiza);
+    color: var(--tinta);
+    padding: 12px 32px;
+    min-height: 500px;
+    border-radius: 4px;
+}
+
+/* ARTICULOS */
+.article{
+    padding: 28px 0;
+    border-bottom: 2px solid rgba(15, 36, 24, .18);
+}
+
+.article:last-child{
+    border-bottom: none;
+}
+
+.article h2{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.article p{
+    max-width: 62ch;
+    margin-bottom: 16px;
+}
+
+/* ENLACE EN FORMA DE TARJETA AMARILLA */
+.tarjeta{
+    display: inline-block;
+    background: var(--tarjeta);
+    color: var(--tinta);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 3px;
+    transition: transform .15s ease;
+}
+
+.tarjeta:hover{
+    transform: rotate(-3deg);
+}
+
+/* BARRA LATERAL: LA BANCA */
+aside{
+    background: var(--pasto);
+    border: 4px solid var(--tiza);
+    padding: 24px;
+    position: sticky;
+    top: 20px;
+}
+
+aside h2{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+aside form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0 20px;
+}
+
+aside input[type="text"]{
+    background: transparent;
+    border: 2px solid var(--tiza);
+    color: var(--tiza);
+    padding: 10px 12px;
+    font: inherit;
+}
+
+aside input[type="text"]::placeholder{
+    color: rgba(243, 246, 238, .6);
+}
+
+aside input[type="submit"]{
+    background: var(--tarjeta);
+    color: var(--tinta);
+    border: none;
+    padding: 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+aside img{
+    display: block;
+    width: 90px;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* FOOTER */
+footer{
+    background: var(--tinta);
+    color: var(--tiza);
+    text-align: center;
+    padding: 28px 20px;
+}
+
+footer img{
+    display: block;
+    height: 60px;
+    width: auto;
+    margin: 0 auto 10px;
+}
+
+/* DESTACADO: DEPORTE DE LA SEMANA */
+.destacado{
+    width: min(1100px, calc(100% - 40px));
+    margin: 40px auto 0;
+    padding: 28px 32px;
+    background: var(--pasto);
+    border-left: 10px solid var(--tarjeta);
+}
+
+.destacado h2{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.destacado p{
+    max-width: 62ch;
+    margin-bottom: 16px;
+}
+
+/* TABLA DE RAREZAS */
+.tabla-scroll{
+    overflow-x: auto;
+}
+
+.rarezas{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.rarezas th,
+.rarezas td{
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid rgba(15, 36, 24, .18);
+}
+
+.rarezas th{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.3rem;
+    background: var(--tinta);
+    color: var(--tiza);
+}
+
+.rarezas tbody tr:hover{
+    background: rgba(246, 211, 45, .35);
+}
+
+/* MAS JUGADAS: TARJETAS */
+.mas-jugadas{
+    width: min(1100px, calc(100% - 40px));
+    margin: 0 auto 40px;
+}
+
+.mas-jugadas h2{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.6rem;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.fichas{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.ficha{
+    background: var(--tiza);
+    color: var(--tinta);
+    padding: 20px;
+    border-top: 6px solid var(--tarjeta);
+}
+
+.ficha h3{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+/* CONTACTO */
+.contacto{
+    width: min(1100px, calc(100% - 40px));
+    margin: 0 auto 40px;
+    background: var(--pasto);
+    border: 4px solid var(--tiza);
+    padding: 28px 32px;
+}
+
+.contacto h2{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.6rem;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.contacto form{
+    display: grid;
+    gap: 8px;
+    max-width: 560px;
+}
+
+.contacto label{
+    font-weight: 600;
+}
+
+.contacto input[type="text"],
+.contacto input[type="email"],
+.contacto textarea{
+    background: transparent;
+    border: 2px solid var(--tiza);
+    color: var(--tiza);
+    padding: 10px 12px;
+    font: inherit;
+    margin-bottom: 8px;
+}
+
+.contacto input[type="submit"]{
+    background: var(--tarjeta);
+    color: var(--tinta);
+    border: none;
+    padding: 12px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.contacto input:focus-visible,
+.contacto textarea:focus-visible{
+    outline: 3px solid var(--tarjeta);
+    outline-offset: 3px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 800px){
+    .cancha{
+        grid-template-columns: 1fr;
+    }
+    aside{
+        position: static;
+    }
+    #content{
+        padding: 8px 20px;
+    }
+    .hero-img{
+        display: none;
+    }
+    header::before{
+        width: 220px;
+        height: 220px;
+    }
+    .destacado,
+    .contacto{
+        padding: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .tarjeta{
+        transition: none;
+    }
+}

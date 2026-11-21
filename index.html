@@ -33,6 +33,12 @@
     </ul>
 </nav>
 
+<section class="destacado">
+    <h2>Deporte de la semana: pelota mixteca</h2>
+    <p>Se juega en México con un guante pesado en lugar de raqueta. Parece un tenis de otra época y es una de las herencias más curiosas de los juegos de pelota antiguos.</p>
+    <a class="tarjeta" href="#">Ver reglas</a>
+</section>
+
 <main class="cancha">
 
     <section id="content">
@@ -55,6 +61,43 @@
             <a class="tarjeta" href="#">Seguir leyendo</a>
         </article>
 
+        <article class="article">
+            <h2>La tabla de las rarezas</h2>
+            <div class="tabla-scroll">
+                <table class="rarezas">
+                    <thead>
+                        <tr>
+                            <th>Deporte</th>
+                            <th>Origen</th>
+                            <th>Se juega con</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tejo</td>
+                            <td>Colombia</td>
+                            <td>Disco de metal y pólvora</td>
+                        </tr>
+                        <tr>
+                            <td>Sepak takraw</td>
+                            <td>Sudeste asiático</td>
+                            <td>Pelota de ratán</td>
+                        </tr>
+                        <tr>
+                            <td>Pelota mixteca</td>
+                            <td>México</td>
+                            <td>Guante pesado y pelota de hule</td>
+                        </tr>
+                        <tr>
+                            <td>Ajedrez boxeo</td>
+                            <td>Europa</td>
+                            <td>Tablero y guantes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
     </section>
 
     <aside>
@@ -69,10 +112,60 @@
 
 </main>
 
+<section class="mas-jugadas">
+    <h2>Más jugadas</h2>
+    <div class="fichas">
+        <div class="ficha">
+            <h3>Kabaddi</h3>
+            <p>Un atacante entra al campo rival sin respirar, repitiendo una sola palabra, e intenta tocar a un rival y volver.</p>
+        </div>
+        <div class="ficha">
+            <h3>Quadball</h3>
+            <p>Antes se llamaba quidditch. Se juega corriendo, con una escoba entre las piernas y sin volar.</p>
+        </div>
+        <div class="ficha">
+            <h3>Bossaball</h3>
+            <p>Voleibol sobre camas elásticas, con música y saltos acrobáticos.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contacto">
+    <h2>Cuéntanos tu deporte raro</h2>
+    <form>
+        <label for="nombre">Tu nombre</label>
+        <input type="text" id="nombre">
+
+        <label for="correo">Tu correo</label>
+        <input type="email" id="correo">
+
+        <label for="mensaje">¿Qué deporte deberíamos explicar?</label>
+        <textarea id="mensaje" rows="4"></textarea>
+
+        <input type="submit" value="Enviar">
+    </form>
+</section>
+
 <footer>
     <img src="balon pie.png" alt="Balón junto a un pie">
     <p>Pitazo final. Maquetación con CSS.</p>
 </footer>
+
+<script>
+    const buscador = document.querySelector('aside input[type="text"]');
+    const articulos = document.querySelectorAll('.article');
+
+    document.querySelector('aside form').addEventListener('submit', function (e) {
+        e.preventDefault();
+    });
+
+    buscador.addEventListener('input', function () {
+        const texto = buscador.value.toLowerCase();
+        articulos.forEach(function (a) {
+            a.style.display = a.textContent.toLowerCase().includes(texto) ? '' : 'none';
+        });
+    });
+</script>
 
 </body>
 </html>
