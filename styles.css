@@ -142,6 +142,9 @@ input{ width:100%; max-width:420px; margin-bottom:16px; }
     border:2px solid rgba(255,255,255,.6);
     text-shadow:0 1px 2px rgba(0,0,0,.6);
 }
+.escudo{ position:relative; overflow:hidden; }
+.escudo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:3px; }
+.escudo.con-logo{ background:#fff !important; font-size:0; border-color:var(--borde); }
 .vacio{ color:var(--suave); padding:20px 0; }
 
 /* TABLA */
@@ -190,3 +193,59 @@ footer{ background:#050c1c; color:#fff; text-align:center; padding:20px; border-
     .hero-balon,.punto{ animation:none; }
     html{ scroll-behavior:auto; }
 }
+
+
+.resumen{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:16px; }
+.resumen div{ background:var(--panel2); border-radius:10px; padding:12px 14px; border-left:5px solid var(--oro); }
+.resumen b{ display:block; font-size:26px; font-family:Impact,sans-serif; font-weight:normal; letter-spacing:1px; }
+.resumen span{ color:var(--suave); font-size:13px; }
+.tabs{ overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px; }
+.tabs button{ white-space:nowrap; text-transform:capitalize; }
+.tabs button.hoy{ border-color:var(--oro); }
+.buscar-fila{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.buscar-fila input{ margin:0; flex:1; }
+.equipo{ cursor:pointer; }
+.equipo:hover{ border-color:var(--cesped); }
+.leyenda{ color:var(--suave); font-size:14px; margin-top:10px; }
+.ganador{ color:var(--oro); }
+
+/* PRÓXIMO PARTIDO */
+.proximo{ display:inline-block; background:rgba(0,0,0,.5); border-left:4px solid var(--oro); padding:6px 14px; border-radius:6px; margin-bottom:16px; }
+.proximo:empty{ display:none; }
+
+/* PRONÓSTICOS */
+.marcador-pred{ background:var(--panel2); border-radius:10px; padding:12px 16px; margin-bottom:16px; border-left:5px solid var(--cesped); }
+.pred{ display:flex; align-items:center; gap:6px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--borde); font-size:13px; color:var(--suave); }
+.pred span{ margin-right:auto; }
+.pred button{ padding:3px 12px; background:var(--panel2); color:var(--texto); border:2px solid var(--borde); }
+.pred button.sel{ background:var(--oro); color:#1a1a1a; border-color:var(--oro); }
+.pred.acierto{ color:var(--cesped); font-weight:bold; }
+.pred.fallo{ color:var(--rojo); font-weight:bold; }
+
+/* FAVORITOS */
+.equipo{ position:relative; }
+.estrella{ position:absolute; top:8px; right:8px; padding:0 8px; font-size:20px; line-height:30px; background:transparent; border:none; color:var(--suave); }
+.estrella.on{ color:var(--oro); }
+.fav{ color:var(--oro); }
+
+/* COMPARADOR */
+.cmp-controles{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.cmp{ background:var(--panel); border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
+.cmp-cab,.cmp-fila{ display:grid; grid-template-columns:1fr 1.2fr 1fr; text-align:center; align-items:center; padding:10px 8px; border-bottom:1px solid var(--borde); }
+.cmp-cab{ background:var(--panel2); font-weight:bold; }
+.cmp-cab .escudo{ margin:0 auto 4px; width:44px; height:44px; }
+.cmp-fila b{ font-size:20px; }
+.cmp-fila .mejor{ color:var(--cesped); }
+.cmp-fila span{ color:var(--suave); font-size:14px; }
+
+/* TRIVIA */
+.trivia{ background:var(--panel); border:1px solid var(--borde); border-radius:10px; padding:20px; max-width:640px; }
+.trivia h3{ margin:6px 0 14px; font-size:22px; }
+.opciones{ display:grid; gap:10px; margin-bottom:12px; }
+.opciones button{ text-align:left; background:var(--panel2); color:var(--texto); border:2px solid var(--borde); }
+.opciones button.bien{ background:var(--cesped); color:#04210f; border-color:var(--cesped); }
+.opciones button.mal{ background:var(--rojo); color:#fff; border-color:var(--rojo); }
+.opciones button:disabled{ cursor:default; }
+
+/* SUBIR */
+#subir{ position:fixed; right:16px; bottom:16px; display:none; border-radius:50%; width:46px; height:46px; padding:0; font-size:20px; z-index:20; }
