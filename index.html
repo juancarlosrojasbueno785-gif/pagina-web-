@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Fuera de juego: los deportes más raros del mundo, sus reglas y sus historias.">
+    <meta name="description" content="Fuera de juego: historia, reglas, leyendas y Mundiales del fútbol.">
     <meta name="theme-color" content="#123d26">
-    <title>Fuera de juego | El deporte que no sale en la tele</title>
+    <title>Fuera de juego | Todo el fútbol, sin relleno</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,38 +22,227 @@
 <header id="inicio">
     <img class="hero-img" src="futbol.png" alt="Jugador de fútbol">
     <h1>Fuera de juego</h1>
-    <p>El deporte que no sale en la tele.</p>
+    <p>Todo el fútbol, sin relleno.</p>
 </header>
 
 <nav aria-label="Principal">
     <ul>
         <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#content">Deportes raros</a></li>
-        <li><a href="#reglas">Reglas</a></li>
-        <li><a href="#rarezas">Rarezas</a></li>
-        <li><a href="#historias">Historias</a></li>
+        <li><a href="#content">Historia y reglas</a></li>
+        <li><a href="#posiciones">Posiciones</a></li>
+        <li><a href="#leyendas">Leyendas</a></li>
+        <li><a href="#mundiales">Mundiales</a></li>
         <li><a href="#contacto">Contacto</a></li>
     </ul>
 </nav>
 
-<section class="destacado" id="reglas">
-    <h2>Deporte de la semana: pelota mixteca</h2>
-    <p>Se juega en México con un guante pesado en lugar de raqueta. Parece un tenis de otra época y es una de las herencias más curiosas de los juegos de pelota antiguos.</p>
-    <details class="mas">
-        <summary class="tarjeta">Ver reglas</summary>
-        <ul class="reglas-lista">
-            <li>Dos equipos se enfrentan en una cancha larga dividida por una línea central.</li>
-            <li>La pelota de hule se golpea con el guante pesado, sin dejar que bote dos veces.</li>
-            <li>Los puntos se cuentan como en el tenis: 15, 30, 40 y juego.</li>
-        </ul>
-    </details>
+<section class="destacado" id="dato">
+    <h2>Dato del día</h2>
+    <p id="dato-texto"></p>
+    <button type="button" class="tarjeta" id="otro-dato">Otro dato</button>
 </section>
 
 <main class="cancha">
 
     <section id="content">
 
-        <p id="sin-resultados" hidden>No encontramos ese deporte. Prueba con tejo, sepak o ajedrez.</p>
+        <p id="sin-resultados" hidden>No encontramos eso. Prueba con Pelé, Mundial o fuera de juego.</p>
 
         <article class="article">
-            <h2>Tejo: el deporte que se juega con pólvora</h2>
+            <h2>Cómo nació el fútbol</h2>
+            <p>Muchas culturas jugaron con una pelota y los pies, pero las reglas modernas se escribieron en Inglaterra en 1863, cuando se fundó la Football Association. En 1904 nació la FIFA para organizar el fútbol entre países.</p>
+            <details class="mas">
+                <summary class="tarjeta">Seguir leyendo</summary>
+                <p>El primer Mundial llegó en 1930, en Uruguay, con trece selecciones. Desde entonces se juega cada cuatro años.</p>
+            </details>
+        </article>
+
+        <article class="article">
+            <h2>Las reglas básicas</h2>
+            <p>Dos equipos de once jugadores se enfrentan en dos tiempos de 45 minutos. Gana el que meta más goles, y hay gol cuando el balón cruza por completo la línea entre los palos.</p>
+            <details class="mas">
+                <summary class="tarjeta">Faltas y tarjetas</summary>
+                <p>Una falta puede darle al rival un tiro libre o un penal. La tarjeta amarilla es una advertencia y la roja expulsa al jugador.</p>
+            </details>
+        </article>
+
+        <article class="article">
+            <h2>El fuera de juego, explicado</h2>
+            <p>Un delantero está en fuera de juego si, cuando le pasan el balón, está más cerca de la línea de gol rival que el balón y que el penúltimo defensa.</p>
+            <details class="mas">
+                <summary class="tarjeta">Cuándo no existe</summary>
+                <p>No hay fuera de juego en un saque de banda, un saque de meta ni un tiro de esquina.</p>
+            </details>
+        </article>
+
+        <article class="article" id="posiciones">
+            <h2>Las posiciones</h2>
+            <div class="tabs" role="tablist">
+                <button type="button" class="tab" role="tab" aria-selected="true" data-panel="p-portero">Portero</button>
+                <button type="button" class="tab" role="tab" aria-selected="false" data-panel="p-defensa">Defensa</button>
+                <button type="button" class="tab" role="tab" aria-selected="false" data-panel="p-medio">Mediocampista</button>
+                <button type="button" class="tab" role="tab" aria-selected="false" data-panel="p-delantero">Delantero</button>
+            </div>
+            <p class="panel" id="p-portero">Es el único que puede usar las manos, y solo dentro de su área. Es el último defensa y muchas veces el primer pasador.</p>
+            <p class="panel" id="p-defensa" hidden>Cierran los espacios, marcan a los delanteros y, cada vez más, ayudan a construir el juego desde atrás.</p>
+            <p class="panel" id="p-medio" hidden>Son el motor del equipo: recuperan el balón, lo reparten y conectan la defensa con el ataque.</p>
+            <p class="panel" id="p-delantero" hidden>Su trabajo es definir. Se mueven entre los defensas para recibir el balón y rematar.</p>
+        </article>
+
+        <article class="article" id="leyendas">
+            <h2>Las leyendas</h2>
+            <div class="tabla-scroll">
+                <table class="rarezas">
+                    <thead>
+                        <tr><th>Jugador</th><th>País</th><th>Por qué es leyenda</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Pelé</td><td>Brasil</td><td>Tres Mundiales: 1958, 1962 y 1970</td></tr>
+                        <tr><td>Maradona</td><td>Argentina</td><td>Líder del título de 1986</td></tr>
+                        <tr><td>Cruyff</td><td>Países Bajos</td><td>Símbolo del "fútbol total"</td></tr>
+                        <tr><td>Zidane</td><td>Francia</td><td>Dos goles de cabeza en la final de 1998</td></tr>
+                        <tr><td>James Rodríguez</td><td>Colombia</td><td>Goleador del Mundial 2014</td></tr>
+                        <tr><td>Messi</td><td>Argentina</td><td>Campeón del mundo en 2022</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+    </section>
+
+    <aside>
+        <h2>La banca</h2>
+        <p>Busca un jugador, una regla o un Mundial.</p>
+        <form id="form-buscar">
+            <input type="text" id="buscador" placeholder="Ej: Pelé" aria-label="Buscar">
+            <input type="submit" value="Buscar">
+        </form>
+        <img src="balon.png" alt="Balón">
+    </aside>
+
+</main>
+
+<section class="mas-jugadas" id="mundiales">
+    <h2>Mundiales para recordar</h2>
+    <div class="fichas">
+        <div class="ficha">
+            <h3>Uruguay 1930</h3>
+            <p>El primero de todos. Uruguay fue campeón en casa.</p>
+            <details class="mas">
+                <summary class="tarjeta">La final</summary>
+                <p>Uruguay venció 4-2 a Argentina ante su propia gente.</p>
+            </details>
+        </div>
+        <div class="ficha">
+            <h3>México 1970</h3>
+            <p>Para muchos, el mejor equipo de la historia: el Brasil de Pelé.</p>
+            <details class="mas">
+                <summary class="tarjeta">La final</summary>
+                <p>Brasil goleó 4-1 a Italia y se quedó para siempre con la copa Jules Rimet.</p>
+            </details>
+        </div>
+        <div class="ficha">
+            <h3>México 1986</h3>
+            <p>El Mundial de Maradona, con la "mano de Dios" y el gol del siglo ante Inglaterra.</p>
+            <details class="mas">
+                <summary class="tarjeta">La final</summary>
+                <p>Argentina venció 3-2 a Alemania Federal.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<section class="contacto" id="contacto">
+    <h2>Cuéntanos tu jugada</h2>
+    <form id="form-contacto">
+        <label for="nombre">Tu nombre</label>
+        <input type="text" id="nombre" required>
+
+        <label for="correo">Tu correo</label>
+        <input type="email" id="correo" required>
+
+        <label for="mensaje">¿Qué jugador o partido quieres ver aquí?</label>
+        <textarea id="mensaje" rows="4" required></textarea>
+
+        <input type="submit" value="Enviar idea">
+        <p id="gracias" role="status" hidden></p>
+    </form>
+</section>
+
+<footer>
+    <img src="balon-pie.png" alt="Balón junto a un pie">
+    <p>Pitazo final. Maquetación con CSS.</p>
+</footer>
+
+<a class="subir" href="#inicio">Subir</a>
+
+<script>
+    // Dato del dia: cambia con el boton
+    const datos = [
+        'El primer Mundial se jugó en Uruguay en 1930 y el campeón fue el país anfitrión.',
+        'Las reglas modernas del fútbol nacieron en Inglaterra en 1863.',
+        'Pelé es el único jugador que ganó tres Copas del Mundo: 1958, 1962 y 1970.',
+        'El Mundial no se jugó en 1942 ni en 1946 por la Segunda Guerra Mundial.',
+        'James Rodríguez fue el máximo goleador del Mundial de Brasil 2014, con seis goles.',
+        'El balón oficial debe medir entre 68 y 70 centímetros de circunferencia.'
+    ];
+    let i = Math.floor(Math.random() * datos.length);
+    const datoTexto = document.getElementById('dato-texto');
+    datoTexto.textContent = datos[i];
+    document.getElementById('otro-dato').addEventListener('click', function () {
+        i = (i + 1) % datos.length;
+        datoTexto.textContent = datos[i];
+    });
+
+    // Posiciones: pestañas
+    const pestanas = document.querySelectorAll('.tab');
+    const paneles = document.querySelectorAll('.panel');
+    pestanas.forEach(function (t) {
+        t.addEventListener('click', function () {
+            pestanas.forEach(function (x) { x.setAttribute('aria-selected', x === t); });
+            paneles.forEach(function (p) { p.hidden = p.id !== t.dataset.panel; });
+        });
+    });
+
+    // Buscador: filtra los articulos
+    const buscador = document.getElementById('buscador');
+    const articulos = document.querySelectorAll('.article');
+    const vacio = document.getElementById('sin-resultados');
+
+    function filtrar() {
+        const t = buscador.value.trim().toLowerCase();
+        let visibles = 0;
+        articulos.forEach(function (a) {
+            const ok = a.textContent.toLowerCase().includes(t);
+            a.hidden = !ok;
+            if (ok) visibles++;
+        });
+        vacio.hidden = visibles > 0;
+    }
+
+    buscador.addEventListener('input', filtrar);
+    document.getElementById('form-buscar').addEventListener('submit', function (e) {
+        e.preventDefault();
+        filtrar();
+        document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Contacto: confirmacion en pantalla
+    document.getElementById('form-contacto').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const g = document.getElementById('gracias');
+        g.textContent = 'Gracias, ' + document.getElementById('nombre').value.trim() + '. Tu idea quedó anotada.';
+        g.hidden = false;
+        e.target.reset();
+    });
+
+    // Si una imagen no carga, se oculta
+    document.querySelectorAll('img').forEach(function (img) {
+        function ocultar() { img.style.display = 'none'; }
+        img.addEventListener('error', ocultar);
+        if (img.complete && img.naturalWidth === 0) ocultar();
+    });
+</script>
+
+</body>
+</html>
