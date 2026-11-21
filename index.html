@@ -3,7 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>PAGINA WEB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fuera de juego | El deporte que no sale en la tele</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- AQUI SE CONECTA EL CSS -->
     <link rel="stylesheet" href="styles.css">
@@ -12,57 +17,62 @@
 <body>
 
 <header>
-    <h1>PAGINA WEB</h1>
+    <img class="hero-img" src="futbol.png" alt="Jugador de fútbol">
+    <h1>Fuera de juego</h1>
+    <p>El deporte que no sale en la tele.</p>
 </header>
 
 <nav>
     <ul>
         <li><a href="#">Inicio</a></li>
-        <li><a href="#">Contenido</a></li>
-        <li><a href="#">Requisitos</a></li>
-        <li><a href="#">Lenguajes</a></li>
-        <li><a href="#">Frameworks</a></li>
-        <li><a href="#">Proyectos</a></li>
+        <li><a href="#">Deportes raros</a></li>
+        <li><a href="#">Reglas</a></li>
+        <li><a href="#">Campeonatos</a></li>
+        <li><a href="#">Historias</a></li>
+        <li><a href="#">Contacto</a></li>
     </ul>
 </nav>
 
-<div class="clearfix"></div>
+<main class="cancha">
 
-<section id="content">
+    <section id="content">
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+        <article class="article">
+            <h2>Tejo: el deporte que se juega con pólvora</h2>
+            <p>En Colombia se lanza un disco de metal contra una caja de arcilla donde descansan unas mechas rellenas de pólvora. Si el disco las hace estallar, el punto es tuyo. Tiene reglas, ligas y campeonatos, y no se parece a nada que veas en un estadio.</p>
+            <a class="tarjeta" href="#">Seguir leyendo</a>
+        </article>
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+        <article class="article">
+            <h2>Sepak takraw: voleibol sin manos</h2>
+            <p>Nació en el sudeste asiático y se juega sobre una red como la del voleibol, pero con una pelota de ratán y solo con pies, rodillas, pecho y cabeza. Los remates de acrobacia son tan espectaculares que parecen de película.</p>
+            <a class="tarjeta" href="#">Seguir leyendo</a>
+        </article>
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+        <article class="article">
+            <h2>Ajedrez boxeo: pensar y pegar</h2>
+            <p>Los combates alternan rondas de ajedrez con rondas de boxeo. Puedes ganar por jaque mate o por nocaut, así que hay que cuidar la cabeza en los dos sentidos.</p>
+            <a class="tarjeta" href="#">Seguir leyendo</a>
+        </article>
 
-</section>
+    </section>
 
-<aside>
-    <h2>Barra lateral</h2>
-    <form>
-        <input type="text">
-        <input type="submit" value="Buscar">
-    </form>
-</aside>
+    <aside>
+        <h2>La banca</h2>
+        <p>Busca un deporte, una regla o una historia.</p>
+        <form>
+            <input type="text" placeholder="Ej: tejo" aria-label="Buscar">
+            <input type="submit" value="Buscar">
+        </form>
+        <img src="balon.png" alt="Balón">
+    </aside>
 
-<div class="clearfix"></div>
+</main>
 
 <footer>
-    Maquetación con CSS
+    <img src="balon pie.png" alt="Balón junto a un pie">
+    <p>Pitazo final. Maquetación con CSS.</p>
 </footer>
 
 </body>
 </html>
-<img src="futbol.png">
-<img src="balon.png">
-<img src="balon pie.png">
