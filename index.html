@@ -4,7 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Fuera de juego: los deportes más raros del mundo, sus reglas y sus historias.">
+    <meta name="theme-color" content="#123d26">
     <title>Fuera de juego | El deporte que no sale en la tele</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,156 +19,41 @@
 
 <body>
 
-<header>
+<header id="inicio">
     <img class="hero-img" src="futbol.png" alt="Jugador de fútbol">
     <h1>Fuera de juego</h1>
     <p>El deporte que no sale en la tele.</p>
 </header>
 
-<nav>
+<nav aria-label="Principal">
     <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Deportes raros</a></li>
-        <li><a href="#">Reglas</a></li>
-        <li><a href="#">Campeonatos</a></li>
-        <li><a href="#">Historias</a></li>
-        <li><a href="#">Contacto</a></li>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#content">Deportes raros</a></li>
+        <li><a href="#reglas">Reglas</a></li>
+        <li><a href="#rarezas">Rarezas</a></li>
+        <li><a href="#historias">Historias</a></li>
+        <li><a href="#contacto">Contacto</a></li>
     </ul>
 </nav>
 
-<section class="destacado">
+<section class="destacado" id="reglas">
     <h2>Deporte de la semana: pelota mixteca</h2>
     <p>Se juega en México con un guante pesado en lugar de raqueta. Parece un tenis de otra época y es una de las herencias más curiosas de los juegos de pelota antiguos.</p>
-    <a class="tarjeta" href="#">Ver reglas</a>
+    <details class="mas">
+        <summary class="tarjeta">Ver reglas</summary>
+        <ul class="reglas-lista">
+            <li>Dos equipos se enfrentan en una cancha larga dividida por una línea central.</li>
+            <li>La pelota de hule se golpea con el guante pesado, sin dejar que bote dos veces.</li>
+            <li>Los puntos se cuentan como en el tenis: 15, 30, 40 y juego.</li>
+        </ul>
+    </details>
 </section>
 
 <main class="cancha">
 
     <section id="content">
 
+        <p id="sin-resultados" hidden>No encontramos ese deporte. Prueba con tejo, sepak o ajedrez.</p>
+
         <article class="article">
             <h2>Tejo: el deporte que se juega con pólvora</h2>
-            <p>En Colombia se lanza un disco de metal contra una caja de arcilla donde descansan unas mechas rellenas de pólvora. Si el disco las hace estallar, el punto es tuyo. Tiene reglas, ligas y campeonatos, y no se parece a nada que veas en un estadio.</p>
-            <a class="tarjeta" href="#">Seguir leyendo</a>
-        </article>
-
-        <article class="article">
-            <h2>Sepak takraw: voleibol sin manos</h2>
-            <p>Nació en el sudeste asiático y se juega sobre una red como la del voleibol, pero con una pelota de ratán y solo con pies, rodillas, pecho y cabeza. Los remates de acrobacia son tan espectaculares que parecen de película.</p>
-            <a class="tarjeta" href="#">Seguir leyendo</a>
-        </article>
-
-        <article class="article">
-            <h2>Ajedrez boxeo: pensar y pegar</h2>
-            <p>Los combates alternan rondas de ajedrez con rondas de boxeo. Puedes ganar por jaque mate o por nocaut, así que hay que cuidar la cabeza en los dos sentidos.</p>
-            <a class="tarjeta" href="#">Seguir leyendo</a>
-        </article>
-
-        <article class="article">
-            <h2>La tabla de las rarezas</h2>
-            <div class="tabla-scroll">
-                <table class="rarezas">
-                    <thead>
-                        <tr>
-                            <th>Deporte</th>
-                            <th>Origen</th>
-                            <th>Se juega con</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tejo</td>
-                            <td>Colombia</td>
-                            <td>Disco de metal y pólvora</td>
-                        </tr>
-                        <tr>
-                            <td>Sepak takraw</td>
-                            <td>Sudeste asiático</td>
-                            <td>Pelota de ratán</td>
-                        </tr>
-                        <tr>
-                            <td>Pelota mixteca</td>
-                            <td>México</td>
-                            <td>Guante pesado y pelota de hule</td>
-                        </tr>
-                        <tr>
-                            <td>Ajedrez boxeo</td>
-                            <td>Europa</td>
-                            <td>Tablero y guantes</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </article>
-
-    </section>
-
-    <aside>
-        <h2>La banca</h2>
-        <p>Busca un deporte, una regla o una historia.</p>
-        <form>
-            <input type="text" placeholder="Ej: tejo" aria-label="Buscar">
-            <input type="submit" value="Buscar">
-        </form>
-        <img src="balon.png" alt="Balón">
-    </aside>
-
-</main>
-
-<section class="mas-jugadas">
-    <h2>Más jugadas</h2>
-    <div class="fichas">
-        <div class="ficha">
-            <h3>Kabaddi</h3>
-            <p>Un atacante entra al campo rival sin respirar, repitiendo una sola palabra, e intenta tocar a un rival y volver.</p>
-        </div>
-        <div class="ficha">
-            <h3>Quadball</h3>
-            <p>Antes se llamaba quidditch. Se juega corriendo, con una escoba entre las piernas y sin volar.</p>
-        </div>
-        <div class="ficha">
-            <h3>Bossaball</h3>
-            <p>Voleibol sobre camas elásticas, con música y saltos acrobáticos.</p>
-        </div>
-    </div>
-</section>
-
-<section class="contacto">
-    <h2>Cuéntanos tu deporte raro</h2>
-    <form>
-        <label for="nombre">Tu nombre</label>
-        <input type="text" id="nombre">
-
-        <label for="correo">Tu correo</label>
-        <input type="email" id="correo">
-
-        <label for="mensaje">¿Qué deporte deberíamos explicar?</label>
-        <textarea id="mensaje" rows="4"></textarea>
-
-        <input type="submit" value="Enviar">
-    </form>
-</section>
-
-<footer>
-    <img src="balon pie.png" alt="Balón junto a un pie">
-    <p>Pitazo final. Maquetación con CSS.</p>
-</footer>
-
-<script>
-    const buscador = document.querySelector('aside input[type="text"]');
-    const articulos = document.querySelectorAll('.article');
-
-    document.querySelector('aside form').addEventListener('submit', function (e) {
-        e.preventDefault();
-    });
-
-    buscador.addEventListener('input', function () {
-        const texto = buscador.value.toLowerCase();
-        articulos.forEach(function (a) {
-            a.style.display = a.textContent.toLowerCase().includes(texto) ? '' : 'none';
-        });
-    });
-</script>
-
-</body>
-</html>
