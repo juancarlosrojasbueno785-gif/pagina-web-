@@ -1,45 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
-<title>Mi Proyecto Web</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Partidos de hoy, tablas, equipos y todo sobre fútbol.">
+<title>Mundo Fútbol | Partidos, tablas y equipos</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body onload="mostrarBienvenida()">
+<body>
 
-<header>
-<h1>Mi Proyecto Web</h1>
+<header id="inicio">
+  <div class="hero-texto">
+    <p class="en-vivo"><span class="punto"></span> Hoy se juega</p>
+    <h1>Mundo Fútbol</h1>
+    <p class="lema">Partidos de cada día, tablas, equipos y leyendas. Todo el fútbol en un solo lugar.</p>
+    <p id="fecha-hoy" class="fecha"></p>
+    <div class="botones">
+      <a class="btn" href="#partidos">Ver partidos</a>
+      <button onclick="cambiarFondo()">Modo claro / oscuro</button>
+    </div>
+  </div>
+  <div class="hero-balon" aria-hidden="true">⚽</div>
 </header>
 
 <nav>
-<ul>
-<li><a href="index.html">Inicio</a></li>
-<li><a href="contenido.html">Contenido</a></li>
-<li><a href="galeria.html">Galería</a></li>
-<li><a href="datos.html">Datos</a></li>
-<li><a href="contacto.html">Contacto</a></li>
-</ul>
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#partidos">Partidos</a></li>
+    <li><a href="#tabla">Tabla</a></li>
+    <li><a href="#equipos">Equipos</a></li>
+    <li><a href="#leyendas">Leyendas</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
 </nav>
 
-<section>
+<main>
 
-<h2>Bienvenido</h2>
+  <section id="partidos">
+    <h2>Partidos</h2>
+    <div class="fila-controles">
+      <div class="tabs" id="tabs-dias"></div>
+      <select id="filtro-liga" aria-label="Filtrar por liga"></select>
+    </div>
+    <div id="lista-partidos" class="grid-partidos"></div>
+    <p class="nota">Datos de ejemplo. Edita la lista PARTIDOS en script.js para poner los reales.</p>
+  </section>
 
-<p id="texto">Este es mi proyecto web final.</p>
+  <section id="tabla">
+    <h2>Tabla de posiciones</h2>
+    <div class="tabs" id="tabs-ligas"></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>DG</th><th>Pts</th></tr></thead>
+        <tbody id="cuerpo-tabla"></tbody>
+      </table>
+    </div>
+    <p class="nota">Datos de ejemplo. Edita TABLAS en script.js.</p>
+  </section>
 
-<button onclick="cambiarTexto()">Cambiar texto</button>
+  <section id="equipos">
+    <h2>Equipos</h2>
+    <input id="buscador" type="search" placeholder="Busca un equipo o país..." aria-label="Buscar equipo">
+    <div id="grid-equipos" class="grid-equipos"></div>
+  </section>
 
-<button onclick="cambiarFondo()">Cambiar fondo</button>
-
-</section>
-
-<footer>
-Proyecto HTML CSS JavaScript
-</footer>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+  <section id="leyendas">
+    <h2>Leyendas y récords</h2>
+    <div class="grid-leyendas">
+      <article><h3>Pelé</h3><p>Brasil. Único jugador con tres Copas del Mundo (1958, 1962 y 1970).</p></article>
+      <article><h3>Diego Maradona</h3><p>Argentina. Campeón en México 1986 y símbolo del Napoli.</p></article>
+      <article><h3>Lionel Messi</h3><p>Argentina. Campeón del mundo en Qatar 2022 y ocho Balones de Oro.</p></article>
+      <article><h3>Cristiano Ronaldo</h3><p>Portugal. Máximo goleador histórico del fútbol de selecciones y clubes.</p></article>
+      <article><h3>James Rodríguez</h3><p>Colombia. Bota de Oro del Mundial de Brasil 2014 con seis goles.</p></article>
+      <article><h3>Just Fontaine</h3><p>Francia. 13 goles en un solo Mundial (1958), récord que sigue vigente.</p></article>
