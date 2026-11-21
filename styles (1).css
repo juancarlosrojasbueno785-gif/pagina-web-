@@ -429,3 +429,109 @@ footer img{
         transition: none;
     }
 }
+
+/* ===== MEJORAS: NAVEGACION, DESPLEGABLES Y MENSAJES ===== */
+[hidden]{
+    display: none !important;
+}
+
+html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 70px;
+}
+
+nav{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+aside{
+    top: 80px;
+}
+
+/* desplegables con forma de tarjeta amarilla */
+details.mas summary{
+    list-style: none;
+    cursor: pointer;
+}
+
+details.mas summary::-webkit-details-marker{
+    display: none;
+}
+
+details.mas summary:focus-visible{
+    outline: 3px solid var(--tarjeta);
+    outline-offset: 3px;
+}
+
+details.mas[open] > summary.tarjeta{
+    background: var(--tinta);
+    color: var(--tiza);
+    box-shadow: 0 0 0 2px var(--tiza);
+}
+
+details.mas > p,
+details.mas > ul{
+    margin-top: 14px;
+}
+
+.reglas-lista{
+    margin-left: 20px;
+    max-width: 62ch;
+}
+
+.ficha details.mas > p{
+    margin-bottom: 0;
+}
+
+#sin-resultados{
+    padding: 28px 0;
+    font-weight: 700;
+}
+
+#gracias{
+    background: var(--tarjeta);
+    color: var(--tinta);
+    font-weight: 700;
+    padding: 10px 14px;
+    margin-top: 8px;
+}
+
+/* boton volver arriba */
+.subir{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 20;
+    background: var(--tarjeta);
+    color: var(--tinta);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 3px;
+    box-shadow: 0 2px 0 var(--tinta);
+}
+
+.subir:focus-visible{
+    outline: 3px solid var(--tiza);
+    outline-offset: 3px;
+}
+
+@media (max-width: 800px){
+    nav ul{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        white-space: nowrap;
+    }
+    aside{
+        top: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    html{
+        scroll-behavior: auto;
+    }
+}
