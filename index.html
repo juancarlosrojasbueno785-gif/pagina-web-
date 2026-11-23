@@ -254,62 +254,101 @@ function siglas(n){
   const p = n.split(" ");
   return (p.length > 1 ? p[0][0] + p[1][0] + (p[2]?p[2][0]:"") : n.slice(0,3)).toUpperCase();
 }
+
 /* LOGOS: 1) archivo propio en logos/  2) escudo real buscado en internet (TheSportsDB)  3) siglas */
 const BUSCAR = {
   "Bayern Múnich":"Bayern Munich","Union Berlín":"Union Berlin","Gladbach":"Borussia Monchengladbach","Dortmund":"Borussia Dortmund",
-  "Leverkusen":"Bayer Leverkusen","Friburgo":"SC Freiburg","Colonia":"FC Koln","Augsburgo":"FC Augsburg","Hamburgo":"Hamburger SV",
-  "Mainz":"Mainz 05","Stuttgart":"VfB Stuttgart","Hoffenheim":"TSG Hoffenheim","Elversberg":"SV Elversberg","Paderborn":"SC Paderborn",
-  "Inter":"Inter Milan","Milan":"AC Milan","Roma":"AS Roma","Venezia":"Venezia FC","Alavés":"Deportivo Alaves","Deportivo":"Deportivo La Coruna",
-  "Celta de Vigo":"Celta Vigo","Atlético Madrid":"Atletico Madrid","Barcelona":"FC Barcelona","Málaga":"Malaga","Tottenham":"Tottenham Hotspur",
-  "Newcastle":"Newcastle United","Brighton":"Brighton and Hove Albion"
+  "Leverkusen":"Bayer Leverkusen","Friburgo":"SC Freiburg","Colonia":"1. FC Koln","Augsburgo":"FC Augsburg","Hamburgo":"Hamburger SV",
+  "Mainz":"1. FSV Mainz 05","Stuttgart":"VfB Stuttgart","Hoffenheim":"TSG 1899 Hoffenheim","Elversberg":"SV Elversberg","Paderborn":"SC Paderborn 07",
+  "Schalke 04":"FC Schalke 04","Inter":"Inter Milan","Milan":"AC Milan","Roma":"AS Roma","Venezia":"Venezia FC",
+  "Alavés":"Deportivo Alaves","Deportivo":"Deportivo La Coruna","Celta de Vigo":"Celta Vigo","Atlético Madrid":"Atletico Madrid",
+  "Barcelona":"FC Barcelona","Málaga":"Malaga CF","Tottenham":"Tottenham Hotspur","Newcastle":"Newcastle United",
+  "Brighton":"Brighton and Hove Albion","Leeds United":"Leeds United","Coventry City":"Coventry City","Hull City":"Hull City",
+  "Ipswich Town":"Ipswich Town","Racing Santander":"Racing Santander","Frosinone":"Frosinone Calcio"
 };
+
 let LOGOS = leer("logos", {});
+
 function escudo(n){
-  return `<span class="escudo" data-n="${n}" style="background:${color(n)}">${siglas(n)}<img src="logos/${slug(n)}.png" alt="Escudo de ${n}" onload="this.parentNode.classList.add('con-logo')" onerror="fallbackLogo(this)"></span>`;
+  const urlGuardada = LOGOS[n];
+  const srcInicial = urlGuardada ? urlGuardada : `logos/${slug(n)}.png`;
+  return `<span class="escudo" data-n="${n}" style="background:${color(n)}">
+    <span class="siglas-txt">${siglas(n)}</span>
+    <img src="${srcInicial}" alt="Escudo de ${n}" onload="marcarConLogo(this)" onerror="fallbackLogo(this)">
+  </span>`;
 }
+
+function marcarConLogo(img){
+  const span = img.parentNode;
+  span.classList.add('con-logo');
+  span.style.background = 'transparent';
+  const txt = span.querySelector('.siglas-txt');
+  if (txt) txt.style.display = 'none';
+}
+
 function fallbackLogo(img){
   const n = img.parentNode.dataset.n;
-  if (LOGOS[n] && !img.dataset.f) { img.dataset.f = 1; img.src = LOGOS[n]; } else img.remove();
+  if (LOGOS[n] && img.src !== LOGOS[n]) {
+    img.src = LOGOS[n];
+  } else {
+    img.remove();
+  }
 }
+
 function ponerLogo(n, url){
-  LOGOS[n] = url; guardar("logos", LOGOS);
+  LOGOS[n] = url;
+  guardar("logos", LOGOS);
   document.querySelectorAll(".escudo").forEach(s => {
-    if (s.dataset.n !== n || s.querySelector("img")) return;
-    const i = document.createElement("img");
-    i.alt = "Escudo de " + n;
-    i.onload = () => s.classList.add("con-logo");
-    i.onerror = () => { if (!i.dataset.r) { i.dataset.r = 1; i.src = url; } else i.remove(); };
-    i.src = url + "/small";
-    s.appendChild(i);
+    if (s.dataset.n !== n) return;
+    let i = s.querySelector("img");
+    if (!i) {
+      i = document.createElement("img");
+      i.alt = "Escudo de " + n;
+      i.onload = () => marcarConLogo(i);
+      i.onerror = () => i.remove();
+      s.appendChild(i);
+    }
+    i.src = url;
   });
 }
+
 async function buscarLogo(n){
   try {
-    const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=" + encodeURIComponent(BUSCAR[n] || n));
+    const query = BUSCAR[n] || n;
+    const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=" + encodeURIComponent(query));
     const d = await r.json();
     const t = (d.teams || []).find(x => x.strSport === "Soccer" && x.strGender !== "Female");
     const url = t && (t.strBadge || t.strTeamBadge);
     if (url) ponerLogo(n, url);
   } catch(e) {}
 }
+
 const EXTRA = {"Bayern Múnich":"Bayern Munchen","Colonia":"Köln","Atlético Madrid":"Atlético de Madrid"};
-const LIGAS_ID = {"Premier League":4328,"LaLiga":4335,"Serie A":4332,"Bundesliga":4331};
+/* Incluye 1ra y 2da división de cada país para cubrir todos los equipos */
+const LIGAS_IDS = [4328, 4329, 4335, 4400, 4332, 4394, 4331, 4399];
+
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
-  .replace(/\b(fc|afc|cf|sc|ac|as|ssc|us|the|club|de|ud|cd|rc|sv|vfb|vfl|tsg|fsv|1907|1899|1846|04|05)\b/g," ").replace(/[^a-z0-9]/g,"");
+  .replace(/\b(fc|afc|cf|sc|ac|as|ssc|us|the|club|de|ud|cd|rc|sv|vfb|vfl|tsg|fsv|1907|1899|1846|04|05|07)\b/g," ")
+  .replace(/[^a-z0-9]/g,"");
+
 function emparejar(n, lista){
   const cands = [BUSCAR[n], EXTRA[n], n].filter(Boolean).map(norm);
   let t = lista.find(x => x.nombres.some(m => cands.includes(m)));
   if (!t) t = lista.find(x => x.nombres.some(m => m.length >= 4 && cands.some(c => c.length >= 4 && (m.includes(c) || c.includes(m)))));
   return t ? t.url : null;
 }
+
 function contarLogos(){
   const todos = new Set(Object.values(TABLAS).flat().map(e => e[0]));
   const ok = [...todos].filter(n => LOGOS[n]).length;
   $("estado-logos").textContent = "Escudos reales cargados: " + ok + " de " + todos.size;
 }
+
 async function cargarLogos(){
   contarLogos();
-  for (const [liga, id] of Object.entries(LIGAS_ID)) {
+  const todosEquipos = [...new Set(Object.values(TABLAS).flat().map(e => e[0]))];
+
+  for (const id of LIGAS_IDS) {
     try {
       const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/lookup_all_teams.php?id=" + id);
       const d = await r.json();
@@ -317,16 +356,23 @@ async function cargarLogos(){
         url: t.strBadge || t.strTeamBadge,
         nombres: [t.strTeam, t.strTeamShort, ...(t.strTeamAlternate || "").split(",")].filter(Boolean).map(norm)
       })).filter(t => t.url);
-      TABLAS[liga].forEach(([n]) => { if (!LOGOS[n]) { const u = emparejar(n, lista); if (u) ponerLogo(n, u); } });
+
+      todosEquipos.forEach(n => {
+        if (!LOGOS[n]) {
+          const u = emparejar(n, lista);
+          if (u) ponerLogo(n, u);
+        }
+      });
     } catch(e) {}
     contarLogos();
   }
-  /* respaldo: buscar uno por uno los que falten */
-  const faltan = [...new Set(Object.values(TABLAS).flat().map(e => e[0]))].filter(n => !LOGOS[n]);
+
+  /* Respaldo rápido para los pocos que falten */
+  const faltan = todosEquipos.filter(n => !LOGOS[n]);
   for (const n of faltan) {
     await buscarLogo(n);
     contarLogos();
-    await new Promise(r => setTimeout(r, 2200));
+    await new Promise(r => setTimeout(r, 450));
   }
 }
 
