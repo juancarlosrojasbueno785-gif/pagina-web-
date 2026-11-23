@@ -228,9 +228,55 @@ function siglas(n){
   const p = n.split(" ");
   return (p.length > 1 ? p[0][0] + p[1][0] + (p[2]?p[2][0]:"") : n.slice(0,3)).toUpperCase();
 }
+
+/* LOGOS: 1) archivo propio en logos/  2) escudo real buscado en internet (TheSportsDB)  3) siglas */
+const BUSCAR = {
+  "Bayern Múnich":"Bayern Munich","Union Berlín":"Union Berlin","Gladbach":"Borussia Monchengladbach","Dortmund":"Borussia Dortmund",
+  "Leverkusen":"Bayer Leverkusen","Friburgo":"SC Freiburg","Colonia":"FC Koln","Augsburgo":"FC Augsburg","Hamburgo":"Hamburger SV",
+  "Mainz":"Mainz 05","Stuttgart":"VfB Stuttgart","Hoffenheim":"TSG Hoffenheim","Elversberg":"SV Elversberg","Paderborn":"SC Paderborn",
+  "Inter":"Inter Milan","Milan":"AC Milan","Roma":"AS Roma","Venezia":"Venezia FC","Alavés":"Deportivo Alaves","Deportivo":"Deportivo La Coruna",
+  "Celta de Vigo":"Celta Vigo","Atlético Madrid":"Atletico Madrid","Barcelona":"FC Barcelona","Málaga":"Malaga","Tottenham":"Tottenham Hotspur",
+  "Newcastle":"Newcastle United","Brighton":"Brighton and Hove Albion"
+};
+let LOGOS = leer("logos", {});
 function escudo(n){
-  return `<span class="escudo" style="background:${color(n)}">${siglas(n)}<img src="logos/${slug(n)}.png" alt="Escudo de ${n}" onload="this.parentNode.classList.add('con-logo')" onerror="this.remove()"></span>`;
+  return `<span class="escudo" data-n="${n}" style="background:${color(n)}">${siglas(n)}<img src="logos/${slug(n)}.png" alt="Escudo de ${n}" onload="this.parentNode.classList.add('con-logo')" onerror="fallbackLogo(this)"></span>`;
 }
+function fallbackLogo(img){
+  const n = img.parentNode.dataset.n;
+  if (LOGOS[n] && !img.dataset.f) { img.dataset.f = 1; img.src = LOGOS[n]; } else img.remove();
+}
+function ponerLogo(n, url){
+  LOGOS[n] = url; guardar("logos", LOGOS);
+  document.querySelectorAll(".escudo").forEach(s => {
+    if (s.dataset.n !== n || s.querySelector("img")) return;
+    const i = document.createElement("img");
+    i.alt = "Escudo de " + n;
+    i.onload = () => s.classList.add("con-logo");
+    i.onerror = () => { if (!i.dataset.r) { i.dataset.r = 1; i.src = url; } else i.remove(); };
+    i.src = url + "/small";
+    s.appendChild(i);
+  });
+}
+async function buscarLogo(n){
+  try {
+    const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=" + encodeURIComponent(BUSCAR[n] || n));
+    const d = await r.json();
+    const t = (d.teams || []).find(x => x.strSport === "Soccer" && x.strGender !== "Female");
+    const url = t && (t.strBadge || t.strTeamBadge);
+    if (url) ponerLogo(n, url);
+  } catch(e) {}
+}
+async function cargarLogos(){
+  const hoy = PARTIDOS.filter(p => p.fecha === diaActivo).flatMap(p => [p.local, p.visita]);
+  const orden = [...new Set([...hoy, ...Object.values(TABLAS).flat().map(e => e[0])])];
+  for (const n of orden) {
+    if (LOGOS[n]) continue;
+    await buscarLogo(n);
+    await new Promise(r => setTimeout(r, 2200));
+  }
+}
+
 function hora12(h){
   let [hh,mm] = h.split(":").map(Number);
   const s = hh >= 12 ? "p. m." : "a. m.";
@@ -453,6 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("buscar-partido").addEventListener("input", pintarPartidos);
   $("buscador").addEventListener("input", e => pintarEquipos(e.target.value));
   setInterval(pintarProximo, 30000);
+  cargarLogos();
   window.addEventListener("scroll", () => { $("subir").style.display = window.scrollY > 600 ? "block" : "none"; });
 });
 </script>
