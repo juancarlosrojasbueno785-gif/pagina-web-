@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
+  /* Escudos */
   .escudo {
     position: relative;
     display: inline-flex;
@@ -23,6 +24,201 @@
     object-fit: contain;
     display: block;
   }
+
+  /* Indicador EN VIVO */
+  .badge-vivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    animation: pulsoVivo 1.4s infinite;
+  }
+  .badge-vivo::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+  }
+  @keyframes pulsoVivo {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(0.96); }
+  }
+  .partido.en-vivo {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+  }
+
+  /* Cancha Pro - Arma tu Once Ideal */
+  .once-header-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .once-header-info input {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15, 23, 42, 0.6);
+    color: inherit;
+    font-weight: 600;
+    min-width: 210px;
+  }
+  .cancha-pro {
+    position: relative;
+    background: repeating-linear-gradient(
+      0deg,
+      #166534,
+      #166534 48px,
+      #15803d 48px,
+      #15803d 96px
+    );
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    padding: 28px 14px;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35), 0 12px 30px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+  /* Líneas tácticas del campo */
+  .cancha-pro::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.55);
+    pointer-events: none;
+  }
+  .cancha-pro::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110px;
+    height: 110px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .area-top, .area-bottom {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 52%;
+    max-width: 260px;
+    height: 75px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+  }
+  .area-top { top: -2px; border-top: none; }
+  .area-bottom { bottom: -2px; border-bottom: none; }
+
+  .cancha-pro .linea {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .jugador-pro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 105px;
+    cursor: pointer;
+    transition: transform 0.18s ease;
+  }
+  .jugador-pro:hover {
+    transform: translateY(-4px) scale(1.04);
+  }
+  .ficha-camiseta {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border: 2.5px solid #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+    margin-bottom: 5px;
+  }
+  .ficha-camiseta img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+  .ficha-camiseta .num-dorsal {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+  .pos-tag {
+    position: absolute;
+    bottom: -5px;
+    right: -6px;
+    background: #facc15;
+    color: #0f172a;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  .jugador-pro input {
+    width: 100%;
+    text-align: center;
+    background: rgba(15, 23, 42, 0.88);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    outline: none;
+  }
+  .jugador-pro input:focus {
+    border-color: #38bdf8;
+    background: #0f172a;
+  }
+  .toast-aviso {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #10b981;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 9999;
+  }
+  .toast-aviso.mostrar {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -30,9 +226,9 @@
 <header class="hero" id="inicio">
   <div class="hero-in">
     <div class="hero-txt">
-      <p class="chip"><span class="punto"></span> Fútbol de hoy</p>
+      <p class="chip"><span class="punto"></span> Fútbol en vivo</p>
       <h1>Mundo <span>Fútbol</span></h1>
-      <p class="lema">Resultados, tablas y estadísticas de las grandes ligas de Europa. Pronostica, compara equipos y arma tu once ideal.</p>
+      <p class="lema">Resultados reales, tablas y estadísticas de las grandes ligas de Europa. Pronostica, compara equipos y arma tu once ideal.</p>
       <p id="fecha-hoy" class="fecha"></p>
       <div class="botones">
         <a class="btn" href="#partidos">Ver partidos</a>
@@ -65,7 +261,7 @@
 
   <section id="partidos">
     <h2>Partidos</h2>
-    <p class="sub">Elige un día, busca tu equipo o filtra por liga.</p>
+    <p class="sub" id="sub-partidos">Sincronizando calendario y marcadores reales...</p>
     <div class="tabs" id="tabs-dias"></div>
     <div class="buscar-fila">
       <input id="buscar-partido" type="search" placeholder="Busca un equipo y ve todos sus partidos..." aria-label="Buscar partido">
@@ -74,7 +270,7 @@
     <div id="marcador-pred" class="marcador-pred"></div>
     <div id="resumen" class="resumen"></div>
     <div id="lista-partidos" class="grid-partidos"></div>
-    <p class="nota">Resultados y calendario actualizados al 21 de noviembre de 2026. Horas de Colombia.</p>
+    <p class="nota" id="nota-actualizacion">Conectado en tiempo real · Horas de Colombia (UTC-5).</p>
   </section>
 
   <section id="tabla">
@@ -125,12 +321,15 @@
 
   <section id="alineacion">
     <h2>Arma tu once ideal</h2>
-    <p class="sub">Elige una formación y escribe el nombre de tus jugadores. Se guarda solo.</p>
-    <div class="cmp-controles">
+    <p class="sub">Personaliza el nombre de tu equipo, elige el escudo de las camisetas, la formación y comparte tu alineación.</p>
+    <div class="once-header-info">
+      <input id="nombre-equipo-once" type="text" maxlength="28" placeholder="Nombre de tu equipo (ej. Galácticos FC)">
+      <select id="escudo-once" aria-label="Escudo de camiseta"></select>
       <select id="formacion" aria-label="Formación"></select>
-      <button onclick="limpiarOnce()">Borrar nombres</button>
+      <button onclick="compartirOnce()">Compartir enlace</button>
+      <button onclick="limpiarOnce()">Limpiar</button>
     </div>
-    <div id="cancha" class="cancha"></div>
+    <div id="cancha" class="cancha-pro"></div>
   </section>
 
   <section id="leyendas">
@@ -149,6 +348,7 @@
 
 </main>
 
+<div id="toast" class="toast-aviso"></div>
 <button id="subir" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Subir">↑</button>
 
 <footer>
@@ -158,78 +358,24 @@
 </footer>
 
 <script>
-/* Liga|mes-dia|hora (Colombia)|Local|Visitante|goles local|goles visitante */
-const PARTIDOS = `
-Premier League|11-21|07:30|Manchester City|Fulham|1|1
-Premier League|11-21|10:00|Aston Villa|Sunderland|0|0
-Premier League|11-21|10:00|Bournemouth|Nottingham Forest|2|0
-Premier League|11-21|10:00|Chelsea|Leeds United|1|4
-Premier League|11-21|10:00|Coventry City|Crystal Palace|3|2
-Premier League|11-21|10:00|Tottenham|Ipswich Town|2|0
-Premier League|11-21|12:30|Newcastle|Arsenal|2|2
-Premier League|11-22|09:00|Hull City|Brighton||
-Premier League|11-22|11:30|Liverpool|Manchester United||
-Premier League|11-23|15:00|Brentford|Everton||
-Premier League|11-27|15:00|Nottingham Forest|Chelsea||
-Premier League|11-28|10:00|Leeds United|Coventry City||
-Premier League|11-28|10:00|Manchester United|Brentford||
-Premier League|11-28|12:30|Ipswich Town|Aston Villa||
-Premier League|11-29|07:00|Everton|Liverpool||
-Premier League|11-29|09:05|Brighton|Newcastle||
-Premier League|11-29|09:05|Crystal Palace|Hull City||
-LaLiga|11-20|15:00|Athletic Bilbao|Espanyol|0|1
-LaLiga|11-21|08:00|Alavés|Deportivo|3|1
-LaLiga|11-21|10:15|Rayo Vallecano|Valencia|0|1
-LaLiga|11-21|12:30|Sevilla|Real Betis|1|1
-LaLiga|11-21|15:00|Real Madrid|Celta de Vigo|2|1
-LaLiga|11-22|08:00|Barcelona|Villarreal||
-LaLiga|11-22|10:15|Racing Santander|Real Sociedad||
-LaLiga|11-22|12:30|Osasuna|Málaga||
-LaLiga|11-22|15:00|Getafe|Atlético Madrid||
-LaLiga|11-23|15:00|Levante|Elche||
-LaLiga|11-27|15:00|Levante|Racing Santander||
-LaLiga|11-28|08:00|Real Betis|Rayo Vallecano||
-LaLiga|11-28|10:15|Málaga|Athletic Bilbao||
-LaLiga|11-28|12:30|Elche|Atlético Madrid||
-LaLiga|11-28|15:00|Real Madrid|Alavés||
-Serie A|11-21|09:00|Como|Cagliari|2|0
-Serie A|11-21|09:00|Lazio|Lecce|3|0
-Serie A|11-21|12:00|Parma|Roma|1|5
-Serie A|11-21|14:45|Napoli|Torino|1|0
-Serie A|11-22|06:30|Juventus|Venezia||
-Serie A|11-22|09:00|Bologna|Udinese||
-Serie A|11-22|09:00|Sassuolo|Genoa||
-Serie A|11-22|12:00|Milan|Frosinone||
-Serie A|11-22|14:45|Atalanta|Inter||
-Serie A|11-23|14:45|Monza|Fiorentina||
-Serie A|11-27|14:45|Venezia|Bologna||
-Serie A|11-28|09:00|Frosinone|Parma||
-Serie A|11-28|12:00|Torino|Lazio||
-Serie A|11-28|14:45|Inter|Genoa||
-Bundesliga|11-20|14:30|Bayern Múnich|Colonia|1|1
-Bundesliga|11-21|09:30|Leverkusen|Paderborn|4|0
-Bundesliga|11-21|09:30|Eintracht Frankfurt|Hoffenheim|1|0
-Bundesliga|11-21|09:30|Union Berlín|RB Leipzig|1|5
-Bundesliga|11-21|09:30|Gladbach|Dortmund|0|1
-Bundesliga|11-21|09:30|Elversberg|Friburgo|0|1
-Bundesliga|11-21|12:30|Schalke 04|Stuttgart|0|0
-Bundesliga|11-22|09:30|Augsburgo|Mainz||
-Bundesliga|11-22|11:30|Werder Bremen|Hamburgo||
-Bundesliga|11-27|14:30|Werder Bremen|Gladbach||
-Bundesliga|11-28|09:30|Mainz|Union Berlín||
-Bundesliga|11-28|09:30|Hamburgo|Bayern Múnich||
-Bundesliga|11-28|09:30|Colonia|Elversberg||
-Bundesliga|11-28|09:30|Paderborn|Schalke 04||
-Bundesliga|11-28|12:30|Stuttgart|Eintracht Frankfurt||
-Bundesliga|11-29|09:30|Friburgo|RB Leipzig||
-Bundesliga|11-29|11:30|Hoffenheim|Augsburgo||
+/* Respaldo offline por si no hay conexión a internet */
+const PARTIDOS_RESPALDO = `
+Premier League|2026-11-22|09:00|Hull City|Brighton|1|2|final
+Premier League|2026-11-22|11:30|Liverpool|Manchester United|3|1|final
+Premier League|2026-11-23|15:00|Brentford|Everton|||previo
+LaLiga|2026-11-22|08:00|Barcelona|Villarreal|2|0|final
+LaLiga|2026-11-22|15:00|Getafe|Atlético Madrid|0|1|final
+Serie A|2026-11-22|14:45|Atalanta|Inter|1|2|final
+Bundesliga|2026-11-22|11:30|Werder Bremen|Hamburgo|2|2|final
 `.trim().split("\n").map(l => {
-  const [liga,f,hora,local,visita,gl,gv] = l.split("|");
+  const [liga,fecha,hora,local,visita,gl,gv,estado] = l.split("|");
   const ok = gl !== undefined && gl !== "";
-  return {liga, fecha:"2026-"+f, hora, local, visita, gl: ok?+gl:null, gv: ok?+gv:null};
+  return {liga, fecha, hora, local, visita, gl: ok?+gl:null, gv: ok?+gv:null, estado: estado || (ok?"final":"previo"), reloj: ""};
 });
 
-/* Equipo, ganados, empatados, perdidos, puntos */
+let PARTIDOS = [...PARTIDOS_RESPALDO];
+
+/* Tablas base */
 const TABLAS = {
   "Premier League":[["Arsenal",9,1,1,28],["Brighton",7,1,2,22],["Manchester City",7,1,3,22],["Bournemouth",5,3,3,18],["Liverpool",5,3,2,18],["Leeds United",4,5,2,17],["Everton",4,4,2,16],["Chelsea",5,1,5,16],["Tottenham",4,3,4,15],["Brentford",3,5,2,14],["Aston Villa",3,5,3,14],["Newcastle",3,4,4,13],["Coventry City",4,0,7,12],["Hull City",2,5,3,11],["Fulham",2,5,4,11],["Ipswich Town",3,2,6,11],["Nottingham Forest",2,3,6,9],["Sunderland",2,3,6,9],["Manchester United",1,5,4,8],["Crystal Palace",2,1,8,7]],
   "LaLiga":[["Barcelona",11,0,1,33],["Real Madrid",11,0,2,33],["Atlético Madrid",9,1,2,28],["Real Betis",8,3,2,27],["Real Sociedad",7,1,4,22],["Sevilla",5,4,4,19],["Athletic Bilbao",4,4,4,16],["Alavés",4,4,5,16],["Villarreal",4,3,5,15],["Espanyol",4,3,6,15],["Deportivo",3,6,4,15],["Racing Santander",4,2,6,14],["Celta de Vigo",2,7,4,13],["Rayo Vallecano",3,3,6,12],["Getafe",3,3,6,12],["Osasuna",3,3,6,12],["Valencia",3,3,7,12],["Levante",2,5,5,11],["Elche",2,4,6,10],["Málaga",0,5,7,5]],
@@ -237,9 +383,8 @@ const TABLAS = {
   "Bundesliga":[["Dortmund",7,3,0,24],["Bayern Múnich",6,4,0,22],["Friburgo",7,1,2,22],["RB Leipzig",7,0,3,21],["Leverkusen",6,1,3,19],["Werder Bremen",4,3,2,15],["Eintracht Frankfurt",4,3,3,15],["Stuttgart",4,1,5,13],["Elversberg",4,1,5,13],["Hoffenheim",4,0,6,12],["Hamburgo",4,0,5,12],["Mainz",3,1,5,10],["Colonia",2,4,4,10],["Paderborn",2,4,4,10],["Augsburgo",2,3,4,9],["Schalke 04",1,4,5,7],["Union Berlín",1,4,5,7],["Gladbach",1,1,8,4]]
 };
 
-/* Mapa directo de escudos (ESPN CDN - cargan al instante sin bloqueo CORS) */
+/* Escudos directos (ESPN CDN) + escudos dinámicos desde la API */
 const ESCUDOS_DIRECTOS = {
-  // Premier League
   "Arsenal": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
   "Brighton": "https://a.espncdn.com/i/teamlogos/soccer/500/331.png",
   "Manchester City": "https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
@@ -260,8 +405,6 @@ const ESCUDOS_DIRECTOS = {
   "Sunderland": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
   "Manchester United": "https://a.espncdn.com/i/teamlogos/soccer/500/360.png",
   "Crystal Palace": "https://a.espncdn.com/i/teamlogos/soccer/500/384.png",
-
-  // LaLiga
   "Barcelona": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
   "Real Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
   "Atlético Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
@@ -282,8 +425,6 @@ const ESCUDOS_DIRECTOS = {
   "Levante": "https://a.espncdn.com/i/teamlogos/soccer/500/1538.png",
   "Elche": "https://a.espncdn.com/i/teamlogos/soccer/500/3751.png",
   "Málaga": "https://a.espncdn.com/i/teamlogos/soccer/500/99.png",
-
-  // Serie A
   "Lazio": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
   "Roma": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
   "Inter": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
@@ -304,8 +445,6 @@ const ESCUDOS_DIRECTOS = {
   "Monza": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
   "Venezia": "https://a.espncdn.com/i/teamlogos/soccer/500/3236.png",
   "Udinese": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png",
-
-  // Bundesliga
   "Dortmund": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
   "Bayern Múnich": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
   "Friburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png",
@@ -338,13 +477,20 @@ const DATOS = [
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const hoyClave = new Date().toLocaleDateString("sv-SE");
-const fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
-let diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length-1]);
+let fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
+let diaActivo = hoyClave;
 let ligaActiva = "Todas", tablaActiva = Object.keys(TABLAS)[0], indiceDato = 0;
 
 function leer(k, d){ try { return JSON.parse(localStorage.getItem(k)) || d; } catch(e){ return d; } }
 function guardar(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 let PRED = leer("pred", {}), FAVS = leer("favs", []);
+
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("mostrar");
+  setTimeout(() => t.classList.remove("mostrar"), 2600);
+}
 
 function slug(n){
   return n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -374,8 +520,86 @@ function marcarConLogo(img){
   if (txt) txt.style.display = 'none';
 }
 
+/* SINCRONIZACIÓN CON PARTIDOS REALES (ESPN Scoreboard API) */
+const ENDPOINTS_REALES = [
+  { liga: "Premier League", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard" },
+  { liga: "LaLiga", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard" },
+  { liga: "Serie A", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard" },
+  { liga: "Bundesliga", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard" }
+];
+
+async function actualizarPartidosReales(){
+  try {
+    const resultados = await Promise.all(
+      ENDPOINTS_REALES.map(async ({liga, url}) => {
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return (data.events || []).map(ev => {
+          const comp = ev.competitions[0];
+          const home = comp.competitors.find(c => c.homeAway === "home");
+          const away = comp.competitors.find(c => c.homeAway === "away");
+          const dt = new Date(ev.date);
+
+          // Fecha y hora en zona horaria de Colombia (America/Bogota)
+          const fechaCol = dt.toLocaleDateString("sv-SE", { timeZone: "America/Bogota" });
+          const horaCol = dt.toLocaleTimeString("en-GB", { timeZone: "America/Bogota", hour: "2-digit", minute: "2-digit" });
+
+          const nLocal = home.team.shortDisplayName || home.team.name;
+          const nVisita = away.team.shortDisplayName || away.team.name;
+
+          if (home.team.logo && !ESCUDOS_DIRECTOS[nLocal]) ESCUDOS_DIRECTOS[nLocal] = home.team.logo;
+          if (away.team.logo && !ESCUDOS_DIRECTOS[nVisita]) ESCUDOS_DIRECTOS[nVisita] = away.team.logo;
+
+          const state = ev.status.type.state; // "pre", "in", "post"
+          const estado = state === "in" ? "vivo" : (state === "post" ? "final" : "previo");
+          const tieneGol = state === "in" || state === "post";
+
+          return {
+            liga,
+            fecha: fechaCol,
+            hora: horaCol,
+            local: nLocal,
+            visita: nVisita,
+            gl: tieneGol ? Number(home.score) : null,
+            gv: tieneGol ? Number(away.score) : null,
+            estado,
+            reloj: ev.status.displayClock || ""
+          };
+        });
+      })
+    );
+
+    const reales = resultados.flat();
+    if (reales.length > 0) {
+      PARTIDOS = reales;
+      fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
+      diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length - 1]);
+      $("sub-partidos").textContent = "Actualizado en tiempo real con la jornada oficial de Europa.";
+      $("nota-actualizacion").textContent = "Datos sincronizados en vivo · Última actualización: " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit"});
+      refrescarTodo();
+    }
+  } catch (e) {
+    $("sub-partidos").textContent = "Mostrando calendario guardado (modo sin conexión).";
+  }
+}
+
+function refrescarTodo(){
+  pintarDestacado();
+  pintarTicker();
+  pintarContadores();
+  pintarTabsDias();
+  pintarFiltro();
+  pintarPartidos();
+  pintarPred();
+  pintarStats();
+  pintarEquipos($("buscador").value);
+  pintarFavoritos();
+  contarLogos();
+}
+
 function contarLogos(){
-  const todos = new Set(Object.values(TABLAS).flat().map(e => e[0]));
+  const todos = new Set([...Object.values(TABLAS).flat().map(e => e[0]), ...PARTIDOS.flatMap(p => [p.local, p.visita])]);
   const ok = [...todos].filter(n => ESCUDOS_DIRECTOS[n]).length;
   $("estado-logos").textContent = "Escudos cargados: " + ok + " de " + todos.size;
 }
@@ -393,13 +617,20 @@ const clave = p => p.fecha + "|" + p.local + "|" + p.visita;
 const esFav = n => FAVS.includes(n);
 const inicio = p => new Date(`${p.fecha}T${p.hora}:00-05:00`);
 const resultado = p => p.gl > p.gv ? "1" : p.gl < p.gv ? "2" : "X";
-const jugados = () => PARTIDOS.filter(p => p.gl !== null);
+const jugados = () => PARTIDOS.filter(p => p.estado === "final" || p.estado === "vivo");
 
 /* PORTADA */
 function pintarDestacado(){
+  const enVivo = PARTIDOS.find(p => p.estado === "vivo");
+  if (enVivo) {
+    $("destacado").innerHTML = `<p class="dest-tit"><span class="badge-vivo">EN VIVO · ${enVivo.reloj}</span> · ${enVivo.liga}</p>
+      <div class="dest-vs"><div>${escudo(enVivo.local)}<b>${enVivo.local}</b></div><span>${enVivo.gl} - ${enVivo.gv}</span><div>${escudo(enVivo.visita)}<b>${enVivo.visita}</b></div></div>
+      <p class="dest-tiempo">Partido en juego ahora mismo</p>`;
+    return;
+  }
   const ahora = new Date();
-  const sig = PARTIDOS.filter(p => p.gl === null && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
-  if (!sig) { $("destacado").innerHTML = `<p class="dest-tit">No hay partidos próximos</p>`; return; }
+  const sig = PARTIDOS.filter(p => p.estado === "previo" && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
+  if (!sig) { $("destacado").innerHTML = `<p class="dest-tit">Jornada completada</p>`; return; }
   const m = Math.round((inicio(sig) - ahora) / 60000);
   const d = Math.floor(m / 1440), hh = Math.floor(m % 1440 / 60), mm = m % 60;
   $("destacado").innerHTML = `<p class="dest-tit">Próximo partido · ${sig.liga}</p>
@@ -407,14 +638,15 @@ function pintarDestacado(){
     <p class="dest-tiempo">${etiquetaDia(sig.fecha)} · ${hora12(sig.hora)}<br><strong>faltan ${d ? d + " d " : ""}${hh} h ${mm} min</strong></p>`;
 }
 function pintarTicker(){
-  const ult = jugados().sort((a,b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora)).slice(0,16);
-  const html = ult.map(p => `<span>${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span>`).join("");
+  const ult = jugados().slice(0,16);
+  const html = ult.map(p => `<span>${p.estado === "vivo" ? "🔴 " : ""}${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span>`).join("");
   $("ticker").innerHTML = `<div class="pista">${html}${html}</div>`;
 }
 function pintarContadores(){
-  const j = jugados(), goles = j.reduce((s,p) => s + p.gl + p.gv, 0);
+  const j = jugados(), goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
   const equipos = new Set(PARTIDOS.flatMap(p => [p.local, p.visita])).size;
-  const datos = [[j.length,"partidos jugados"],[goles,"goles marcados"],[(goles/j.length).toFixed(2),"goles por partido"],[equipos,"equipos en la página"]];
+  const prom = j.length ? (goles / j.length).toFixed(2) : "0.00";
+  const datos = [[j.length,"partidos jugados"],[goles,"goles marcados"],[prom,"goles por partido"],[equipos,"equipos en cartelera"]];
   $("contadores").innerHTML = datos.map(([n,t]) => `<div class="contador"><b>${n}</b><span>${t}</span></div>`).join("");
 }
 
@@ -432,21 +664,26 @@ function pintarFiltro(){
 }
 
 function tarjeta(p, conFecha){
-  const jugado = p.gl !== null;
-  const real = jugado ? resultado(p) : "";
+  const esVivo = p.estado === "vivo";
+  const jugado = p.estado === "final" || esVivo;
+  const real = p.estado === "final" ? resultado(p) : "";
   const pr = PRED[clave(p)];
   let extra = "";
-  if (!jugado) {
+  if (p.estado === "previo") {
     extra = `<div class="pred"><span>Tu pronóstico</span>` +
       [["1", p.local], ["X", "Empate"], ["2", p.visita]].map(([k,t]) =>
         `<button class="${pr===k?'sel':''}" title="${t}" onclick="pronosticar('${clave(p)}','${k}')">${k}</button>`).join("") + `</div>`;
-  } else if (pr) {
+  } else if (pr && p.estado === "final") {
     extra = `<div class="pred ${pr===real?'acierto':'fallo'}">Tu pronóstico: ${pr} · ${pr===real?'acertaste ✔':'fallaste ✘'}</div>`;
   }
   const marc = jugado ? `<b>${p.gl}</b><i>-</i><b>${p.gv}</b>` : `<span class="hora">${hora12(p.hora)}</span>`;
   const star = n => esFav(n) ? '<span class="fav">★</span> ' : '';
-  return `<div class="partido">
-    <div class="cab"><span>${p.liga}</span><span>${jugado ? "Finalizado" : "Por jugar"}${conFecha ? " · " + etiquetaDia(p.fecha) : ""}</span></div>
+  const estadoHtml = esVivo
+    ? `<span class="badge-vivo">EN VIVO ${p.reloj}</span>`
+    : `${p.estado === "final" ? "Finalizado" : "Por jugar"}${conFecha ? " · " + etiquetaDia(p.fecha) : ""}`;
+
+  return `<div class="partido ${esVivo ? 'en-vivo' : ''}">
+    <div class="cab"><span>${p.liga}</span><span>${estadoHtml}</span></div>
     <div class="vs">
       <div class="eq ${real==="1"?'ganador':''}">${escudo(p.local)}<span>${star(p.local)}${p.local}</span></div>
       <div class="marc">${marc}</div>
@@ -467,7 +704,7 @@ function pintarPartidos(){
   const goleada = jug.slice().sort((a,b) => Math.abs(b.gl-b.gv) - Math.abs(a.gl-a.gv))[0];
   $("resumen").innerHTML = lista.length ? `
     <div><b>${lista.length}</b><span>partidos</span></div>
-    <div><b>${jug.length}</b><span>finalizados</span></div>
+    <div><b>${jug.length}</b><span>jugados / en vivo</span></div>
     <div><b>${goles}</b><span>goles marcados</span></div>
     ${goleada ? `<div><b>${goleada.gl}-${goleada.gv}</b><span>mayor goleada: ${goleada.local} vs ${goleada.visita}</span></div>` : ""}` : "";
   $("lista-partidos").innerHTML = lista.length ? lista.map(p => tarjeta(p, !!q)).join("")
@@ -479,13 +716,14 @@ function pronosticar(c, k){
   if (PRED[c] === k) delete PRED[c]; else PRED[c] = k;
   guardar("pred", PRED);
   pintarPartidos(); pintarFavoritos(); pintarPred();
+  toast("Pronóstico guardado");
 }
 function pintarPred(){
   let ac = 0, fa = 0, pe = 0;
   PARTIDOS.forEach(p => {
     const pr = PRED[clave(p)];
     if (!pr) return;
-    if (p.gl === null) pe++; else if (pr === resultado(p)) ac++; else fa++;
+    if (p.estado !== "final") pe++; else if (pr === resultado(p)) ac++; else fa++;
   });
   $("marcador-pred").innerHTML = (ac + fa + pe)
     ? `<b>Tus pronósticos:</b> ${ac} aciertos · ${fa} fallos · ${pe} pendientes`
@@ -512,7 +750,7 @@ function pintarStats(){
   const ligas = [...new Set(PARTIDOS.map(p => p.liga))];
   const datos = ligas.map(l => {
     const j = jugados().filter(p => p.liga === l);
-    const g = j.reduce((s,p) => s + p.gl + p.gv, 0);
+    const g = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
     return {l, prom: j.length ? g / j.length : 0};
   });
   const max = Math.max(...datos.map(d => d.prom)) || 1;
@@ -520,7 +758,7 @@ function pintarStats(){
     `<div class="barra-fila"><span class="barra-n">${d.l}</span><div class="barra"><i style="width:${d.prom/max*100}%"></i></div><b>${d.prom.toFixed(2)}</b></div>`).join("");
   const top = jugados().sort((a,b) => (Math.abs(b.gl-b.gv)*100 + b.gl + b.gv) - (Math.abs(a.gl-a.gv)*100 + a.gl + a.gv)).slice(0,6);
   $("goleadas").innerHTML = top.map(p => `<li><span>${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span><small>${p.liga}</small></li>`).join("");
-  const empates = jugados().filter(p => p.gl === p.gv).length, tot = jugados().length;
+  const empates = jugados().filter(p => p.gl === p.gv).length, tot = jugados().length || 1;
   const loc = jugados().filter(p => p.gl > p.gv).length, vis = jugados().filter(p => p.gl < p.gv).length;
   const pct = n => Math.round(n / tot * 100);
   $("resultados-pct").innerHTML = [["Gana el local",loc],["Empate",empates],["Gana el visitante",vis]].map(([t,n]) =>
@@ -546,9 +784,11 @@ function verEquipo(n){
   $("partidos").scrollIntoView({behavior:"smooth"});
 }
 function toggleFav(n){
-  FAVS = esFav(n) ? FAVS.filter(x => x !== n) : [...FAVS, n];
+  const agregado = !esFav(n);
+  FAVS = agregado ? [...FAVS, n] : FAVS.filter(x => x !== n);
   guardar("favs", FAVS);
   pintarEquipos($("buscador").value); pintarFavoritos(); pintarPartidos();
+  toast(agregado ? `${n} añadido a favoritos ★` : `${n} quitado de favoritos`);
 }
 function pintarFavoritos(){
   const lista = PARTIDOS.filter(p => esFav(p.local) || esFav(p.visita))
@@ -582,19 +822,90 @@ function pintarComparar(){
     }).join("");
 }
 
-/* ARMA TU ONCE */
-const FORMACIONES = {"4-3-3":[4,3,3],"4-4-2":[4,4,2],"3-5-2":[3,5,2],"4-2-3-1":[4,2,3,1]};
-let ONCE = leer("once", {f:"4-3-3", j:{}});
-function pintarOnce(){
-  const lin = FORMACIONES[ONCE.f] || FORMACIONES["4-3-3"];
-  let idx = 0;
-  const filas = [1, ...lin].map(c => Array.from({length:c}, () => idx++));
-  $("cancha").innerHTML = filas.reverse().map(f =>
-    `<div class="linea">${f.map(i => `<label class="jugador"><span class="camiseta">${i+1}</span><input maxlength="18" placeholder="Jugador" value="${esc(ONCE.j[i] || "")}" oninput="guardarJugador(${i},this.value)"></label>`).join("")}</div>`).join("");
+/* ARMA TU ONCE IDEAL PRO */
+const FORMACIONES_PRO = {
+  "4-3-3": {
+    filas: [1, 4, 3, 3],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MC", "MC", "MCO", "EI", "DC", "ED"],
+    dorsales: [1, 3, 4, 5, 2, 6, 8, 10, 11, 9, 7]
+  },
+  "4-4-2": {
+    filas: [1, 4, 4, 2],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MI", "MC", "MC", "MD", "DC", "DC"],
+    dorsales: [1, 3, 4, 5, 2, 11, 6, 8, 7, 9, 10]
+  },
+  "3-5-2": {
+    filas: [1, 3, 5, 2],
+    posiciones: ["POR", "DFC", "DFC", "DFC", "CAI", "MC", "MCD", "MC", "CAD", "DC", "DC"],
+    dorsales: [1, 4, 5, 3, 11, 8, 6, 10, 2, 9, 7]
+  },
+  "4-2-3-1": {
+    filas: [1, 4, 2, 3, 1],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MCD", "MCD", "EI", "MCO", "ED", "DC"],
+    dorsales: [1, 3, 4, 5, 2, 6, 8, 11, 10, 7, 9]
+  }
+};
+
+let ONCE = leer("once_pro", { nombre: "", escudo: "", f: "4-3-3", j: {} });
+
+function cargarOnceDesdeURL(){
+  const params = new URLSearchParams(window.location.search);
+  const shared = params.get("once");
+  if (!shared) return;
+  try {
+    const data = JSON.parse(decodeURIComponent(escape(atob(shared))));
+    if (data && data.f) {
+      ONCE = data;
+      guardar("once_pro", ONCE);
+    }
+  } catch (e) {}
 }
-function guardarJugador(i, v){ ONCE.j[i] = v; guardar("once", ONCE); }
-function cambiarFormacion(f){ ONCE.f = f; guardar("once", ONCE); pintarOnce(); }
-function limpiarOnce(){ ONCE.j = {}; guardar("once", ONCE); pintarOnce(); }
+
+function pintarOnce(){
+  const cfg = FORMACIONES_PRO[ONCE.f] || FORMACIONES_PRO["4-3-3"];
+  let idx = 0;
+  const matriz = cfg.filas.map(c => Array.from({length: c}, () => idx++));
+  const logoClub = ONCE.escudo && ESCUDOS_DIRECTOS[ONCE.escudo] ? ESCUDOS_DIRECTOS[ONCE.escudo] : "";
+
+  const lineasHtml = matriz.reverse().map(fila =>
+    `<div class="linea">${fila.map(i => {
+      const pos = cfg.posiciones[i] || "JUG";
+      const dorsal = cfg.dorsales[i] || (i + 1);
+      const visual = logoClub
+        ? `<img src="${logoClub}" alt="${ONCE.escudo}">`
+        : `<span class="num-dorsal">${dorsal}</span>`;
+      return `<label class="jugador-pro">
+        <div class="ficha-camiseta">
+          ${visual}
+          <span class="pos-tag">${pos}</span>
+        </div>
+        <input maxlength="18" placeholder="${pos}" value="${esc(ONCE.j[i] || "")}" oninput="guardarJugador(${i},this.value)">
+      </label>`;
+    }).join("")}</div>`
+  ).join("");
+
+  $("cancha").innerHTML = `<div class="area-top"></div>${lineasHtml}<div class="area-bottom"></div>`;
+}
+
+function guardarJugador(i, v){ ONCE.j[i] = v; guardar("once_pro", ONCE); }
+function cambiarFormacion(f){ ONCE.f = f; guardar("once_pro", ONCE); pintarOnce(); }
+function limpiarOnce(){
+  ONCE.j = {};
+  ONCE.nombre = "";
+  $("nombre-equipo-once").value = "";
+  guardar("once_pro", ONCE);
+  pintarOnce();
+  toast("Alineación reiniciada");
+}
+function compartirOnce(){
+  const payload = btoa(unescape(encodeURIComponent(JSON.stringify(ONCE))));
+  const url = `${window.location.origin}${window.location.pathname}?once=${payload}#alineacion`;
+  navigator.clipboard.writeText(url).then(() => {
+    toast("¡Enlace de tu alineación copiado al portapapeles!");
+  }).catch(() => {
+    prompt("Copia este enlace para compartir tu once:", url);
+  });
+}
 
 /* VARIOS */
 function cambiarTexto(){
@@ -607,27 +918,46 @@ function cambiarFondo(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  cargarOnceDesdeURL();
   if (leer("claro", false)) document.body.classList.add("claro");
   $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   $("texto").textContent = DATOS[0];
-  contarLogos();
-  pintarDestacado(); pintarTicker(); pintarContadores();
-  pintarTabsDias(); pintarFiltro(); pintarPartidos(); pintarPred();
-  pintarTabla(); pintarStats(); pintarEquipos(); pintarFavoritos();
+
+  refrescarTodo();
+  pintarTabla();
+
   const ligas = Object.keys(TABLAS);
   $("cmp-liga").innerHTML = ligas.map(l => `<option>${l}</option>`).join("");
   $("cmp-liga").value = ligas[0];
   pintarComparar();
-  $("formacion").innerHTML = Object.keys(FORMACIONES).map(f => `<option>${f}</option>`).join("");
+
+  // Controles Arma tu once
+  $("formacion").innerHTML = Object.keys(FORMACIONES_PRO).map(f => `<option>${f}</option>`).join("");
   $("formacion").value = ONCE.f;
+  $("nombre-equipo-once").value = ONCE.nombre || "";
+
+  const equiposOrdenados = Object.keys(ESCUDOS_DIRECTOS).sort();
+  $("escudo-once").innerHTML = `<option value="">Camiseta con dorsal</option>` +
+    equiposOrdenados.map(eq => `<option value="${eq}">${eq}</option>`).join("");
+  $("escudo-once").value = ONCE.escudo || "";
+
   pintarOnce();
+
+  // Eventos
   $("cmp-liga").addEventListener("change", pintarComparar);
   $("cmp-a").addEventListener("change", pintarComparar);
   $("cmp-b").addEventListener("change", pintarComparar);
   $("formacion").addEventListener("change", e => cambiarFormacion(e.target.value));
+  $("nombre-equipo-once").addEventListener("input", e => { ONCE.nombre = e.target.value; guardar("once_pro", ONCE); });
+  $("escudo-once").addEventListener("change", e => { ONCE.escudo = e.target.value; guardar("once_pro", ONCE); pintarOnce(); });
   $("buscar-partido").addEventListener("input", pintarPartidos);
   $("buscador").addEventListener("input", e => pintarEquipos(e.target.value));
+
+  // Sincronización inicial y actualización automática cada 60 segundos
+  actualizarPartidosReales();
+  setInterval(actualizarPartidosReales, 60000);
   setInterval(pintarDestacado, 30000);
+
   if ("IntersectionObserver" in window) {
     const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }), {threshold:.06});
     document.querySelectorAll("main section").forEach(s => { s.classList.add("reveal"); obs.observe(s); });
