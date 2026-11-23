@@ -9,6 +9,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>
+  .escudo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .escudo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+</style>
 </head>
 <body>
 
@@ -222,6 +237,95 @@ const TABLAS = {
   "Bundesliga":[["Dortmund",7,3,0,24],["Bayern Múnich",6,4,0,22],["Friburgo",7,1,2,22],["RB Leipzig",7,0,3,21],["Leverkusen",6,1,3,19],["Werder Bremen",4,3,2,15],["Eintracht Frankfurt",4,3,3,15],["Stuttgart",4,1,5,13],["Elversberg",4,1,5,13],["Hoffenheim",4,0,6,12],["Hamburgo",4,0,5,12],["Mainz",3,1,5,10],["Colonia",2,4,4,10],["Paderborn",2,4,4,10],["Augsburgo",2,3,4,9],["Schalke 04",1,4,5,7],["Union Berlín",1,4,5,7],["Gladbach",1,1,8,4]]
 };
 
+/* Mapa directo de escudos (ESPN CDN - cargan al instante sin bloqueo CORS) */
+const ESCUDOS_DIRECTOS = {
+  // Premier League
+  "Arsenal": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
+  "Brighton": "https://a.espncdn.com/i/teamlogos/soccer/500/331.png",
+  "Manchester City": "https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
+  "Bournemouth": "https://a.espncdn.com/i/teamlogos/soccer/500/349.png",
+  "Liverpool": "https://a.espncdn.com/i/teamlogos/soccer/500/364.png",
+  "Leeds United": "https://a.espncdn.com/i/teamlogos/soccer/500/357.png",
+  "Everton": "https://a.espncdn.com/i/teamlogos/soccer/500/368.png",
+  "Chelsea": "https://a.espncdn.com/i/teamlogos/soccer/500/363.png",
+  "Tottenham": "https://a.espncdn.com/i/teamlogos/soccer/500/367.png",
+  "Brentford": "https://a.espncdn.com/i/teamlogos/soccer/500/337.png",
+  "Aston Villa": "https://a.espncdn.com/i/teamlogos/soccer/500/362.png",
+  "Newcastle": "https://a.espncdn.com/i/teamlogos/soccer/500/361.png",
+  "Coventry City": "https://a.espncdn.com/i/teamlogos/soccer/500/388.png",
+  "Hull City": "https://a.espncdn.com/i/teamlogos/soccer/500/306.png",
+  "Fulham": "https://a.espncdn.com/i/teamlogos/soccer/500/370.png",
+  "Ipswich Town": "https://a.espncdn.com/i/teamlogos/soccer/500/373.png",
+  "Nottingham Forest": "https://a.espncdn.com/i/teamlogos/soccer/500/393.png",
+  "Sunderland": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
+  "Manchester United": "https://a.espncdn.com/i/teamlogos/soccer/500/360.png",
+  "Crystal Palace": "https://a.espncdn.com/i/teamlogos/soccer/500/384.png",
+
+  // LaLiga
+  "Barcelona": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
+  "Real Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
+  "Atlético Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
+  "Real Betis": "https://a.espncdn.com/i/teamlogos/soccer/500/244.png",
+  "Real Sociedad": "https://a.espncdn.com/i/teamlogos/soccer/500/89.png",
+  "Sevilla": "https://a.espncdn.com/i/teamlogos/soccer/500/243.png",
+  "Athletic Bilbao": "https://a.espncdn.com/i/teamlogos/soccer/500/93.png",
+  "Alavés": "https://a.espncdn.com/i/teamlogos/soccer/500/96.png",
+  "Villarreal": "https://a.espncdn.com/i/teamlogos/soccer/500/102.png",
+  "Espanyol": "https://a.espncdn.com/i/teamlogos/soccer/500/88.png",
+  "Deportivo": "https://a.espncdn.com/i/teamlogos/soccer/500/90.png",
+  "Racing Santander": "https://a.espncdn.com/i/teamlogos/soccer/500/91.png",
+  "Celta de Vigo": "https://a.espncdn.com/i/teamlogos/soccer/500/85.png",
+  "Rayo Vallecano": "https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
+  "Getafe": "https://a.espncdn.com/i/teamlogos/soccer/500/2922.png",
+  "Osasuna": "https://a.espncdn.com/i/teamlogos/soccer/500/97.png",
+  "Valencia": "https://a.espncdn.com/i/teamlogos/soccer/500/94.png",
+  "Levante": "https://a.espncdn.com/i/teamlogos/soccer/500/1538.png",
+  "Elche": "https://a.espncdn.com/i/teamlogos/soccer/500/3751.png",
+  "Málaga": "https://a.espncdn.com/i/teamlogos/soccer/500/99.png",
+
+  // Serie A
+  "Lazio": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
+  "Roma": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
+  "Inter": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
+  "Como": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
+  "Milan": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
+  "Frosinone": "https://a.espncdn.com/i/teamlogos/soccer/500/4057.png",
+  "Napoli": "https://a.espncdn.com/i/teamlogos/soccer/500/114.png",
+  "Juventus": "https://a.espncdn.com/i/teamlogos/soccer/500/111.png",
+  "Bologna": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
+  "Cagliari": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png",
+  "Atalanta": "https://a.espncdn.com/i/teamlogos/soccer/500/105.png",
+  "Torino": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png",
+  "Genoa": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png",
+  "Lecce": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
+  "Fiorentina": "https://a.espncdn.com/i/teamlogos/soccer/500/109.png",
+  "Parma": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
+  "Sassuolo": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
+  "Monza": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
+  "Venezia": "https://a.espncdn.com/i/teamlogos/soccer/500/3236.png",
+  "Udinese": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png",
+
+  // Bundesliga
+  "Dortmund": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
+  "Bayern Múnich": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
+  "Friburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png",
+  "RB Leipzig": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png",
+  "Leverkusen": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png",
+  "Werder Bremen": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png",
+  "Eintracht Frankfurt": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png",
+  "Stuttgart": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png",
+  "Elversberg": "https://a.espncdn.com/i/teamlogos/soccer/500/6416.png",
+  "Hoffenheim": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png",
+  "Hamburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png",
+  "Mainz": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png",
+  "Colonia": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png",
+  "Paderborn": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png",
+  "Augsburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png",
+  "Schalke 04": "https://a.espncdn.com/i/teamlogos/soccer/500/133.png",
+  "Union Berlín": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png",
+  "Gladbach": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+};
+
 const DATOS = [
   "El primer Mundial se jugó en Uruguay en 1930.",
   "Brasil es el único país que ha jugado todos los Mundiales.",
@@ -238,7 +342,6 @@ const fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
 let diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length-1]);
 let ligaActiva = "Todas", tablaActiva = Object.keys(TABLAS)[0], indiceDato = 0;
 
-/* Memoria del navegador (favoritos, pronósticos y tema) */
 function leer(k, d){ try { return JSON.parse(localStorage.getItem(k)) || d; } catch(e){ return d; } }
 function guardar(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 let PRED = leer("pred", {}), FAVS = leer("favs", []);
@@ -255,26 +358,11 @@ function siglas(n){
   return (p.length > 1 ? p[0][0] + p[1][0] + (p[2]?p[2][0]:"") : n.slice(0,3)).toUpperCase();
 }
 
-/* LOGOS: 1) archivo propio en logos/  2) escudo real buscado en internet (TheSportsDB)  3) siglas */
-const BUSCAR = {
-  "Bayern Múnich":"Bayern Munich","Union Berlín":"Union Berlin","Gladbach":"Borussia Monchengladbach","Dortmund":"Borussia Dortmund",
-  "Leverkusen":"Bayer Leverkusen","Friburgo":"SC Freiburg","Colonia":"1. FC Koln","Augsburgo":"FC Augsburg","Hamburgo":"Hamburger SV",
-  "Mainz":"1. FSV Mainz 05","Stuttgart":"VfB Stuttgart","Hoffenheim":"TSG 1899 Hoffenheim","Elversberg":"SV Elversberg","Paderborn":"SC Paderborn 07",
-  "Schalke 04":"FC Schalke 04","Inter":"Inter Milan","Milan":"AC Milan","Roma":"AS Roma","Venezia":"Venezia FC",
-  "Alavés":"Deportivo Alaves","Deportivo":"Deportivo La Coruna","Celta de Vigo":"Celta Vigo","Atlético Madrid":"Atletico Madrid",
-  "Barcelona":"FC Barcelona","Málaga":"Malaga CF","Tottenham":"Tottenham Hotspur","Newcastle":"Newcastle United",
-  "Brighton":"Brighton and Hove Albion","Leeds United":"Leeds United","Coventry City":"Coventry City","Hull City":"Hull City",
-  "Ipswich Town":"Ipswich Town","Racing Santander":"Racing Santander","Frosinone":"Frosinone Calcio"
-};
-
-let LOGOS = leer("logos", {});
-
 function escudo(n){
-  const urlGuardada = LOGOS[n];
-  const srcInicial = urlGuardada ? urlGuardada : `logos/${slug(n)}.png`;
-  return `<span class="escudo" data-n="${n}" style="background:${color(n)}">
+  const url = ESCUDOS_DIRECTOS[n] || `logos/${slug(n)}.png`;
+  return `<span class="escudo" style="background:${color(n)}">
     <span class="siglas-txt">${siglas(n)}</span>
-    <img src="${srcInicial}" alt="Escudo de ${n}" onload="marcarConLogo(this)" onerror="fallbackLogo(this)">
+    <img src="${url}" alt="Escudo de ${n}" onload="marcarConLogo(this)" onerror="this.remove()">
   </span>`;
 }
 
@@ -286,94 +374,10 @@ function marcarConLogo(img){
   if (txt) txt.style.display = 'none';
 }
 
-function fallbackLogo(img){
-  const n = img.parentNode.dataset.n;
-  if (LOGOS[n] && img.src !== LOGOS[n]) {
-    img.src = LOGOS[n];
-  } else {
-    img.remove();
-  }
-}
-
-function ponerLogo(n, url){
-  LOGOS[n] = url;
-  guardar("logos", LOGOS);
-  document.querySelectorAll(".escudo").forEach(s => {
-    if (s.dataset.n !== n) return;
-    let i = s.querySelector("img");
-    if (!i) {
-      i = document.createElement("img");
-      i.alt = "Escudo de " + n;
-      i.onload = () => marcarConLogo(i);
-      i.onerror = () => i.remove();
-      s.appendChild(i);
-    }
-    i.src = url;
-  });
-}
-
-async function buscarLogo(n){
-  try {
-    const query = BUSCAR[n] || n;
-    const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=" + encodeURIComponent(query));
-    const d = await r.json();
-    const t = (d.teams || []).find(x => x.strSport === "Soccer" && x.strGender !== "Female");
-    const url = t && (t.strBadge || t.strTeamBadge);
-    if (url) ponerLogo(n, url);
-  } catch(e) {}
-}
-
-const EXTRA = {"Bayern Múnich":"Bayern Munchen","Colonia":"Köln","Atlético Madrid":"Atlético de Madrid"};
-/* Incluye 1ra y 2da división de cada país para cubrir todos los equipos */
-const LIGAS_IDS = [4328, 4329, 4335, 4400, 4332, 4394, 4331, 4399];
-
-const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
-  .replace(/\b(fc|afc|cf|sc|ac|as|ssc|us|the|club|de|ud|cd|rc|sv|vfb|vfl|tsg|fsv|1907|1899|1846|04|05|07)\b/g," ")
-  .replace(/[^a-z0-9]/g,"");
-
-function emparejar(n, lista){
-  const cands = [BUSCAR[n], EXTRA[n], n].filter(Boolean).map(norm);
-  let t = lista.find(x => x.nombres.some(m => cands.includes(m)));
-  if (!t) t = lista.find(x => x.nombres.some(m => m.length >= 4 && cands.some(c => c.length >= 4 && (m.includes(c) || c.includes(m)))));
-  return t ? t.url : null;
-}
-
 function contarLogos(){
   const todos = new Set(Object.values(TABLAS).flat().map(e => e[0]));
-  const ok = [...todos].filter(n => LOGOS[n]).length;
-  $("estado-logos").textContent = "Escudos reales cargados: " + ok + " de " + todos.size;
-}
-
-async function cargarLogos(){
-  contarLogos();
-  const todosEquipos = [...new Set(Object.values(TABLAS).flat().map(e => e[0]))];
-
-  for (const id of LIGAS_IDS) {
-    try {
-      const r = await fetch("https://www.thesportsdb.com/api/v1/json/3/lookup_all_teams.php?id=" + id);
-      const d = await r.json();
-      const lista = (d.teams || []).map(t => ({
-        url: t.strBadge || t.strTeamBadge,
-        nombres: [t.strTeam, t.strTeamShort, ...(t.strTeamAlternate || "").split(",")].filter(Boolean).map(norm)
-      })).filter(t => t.url);
-
-      todosEquipos.forEach(n => {
-        if (!LOGOS[n]) {
-          const u = emparejar(n, lista);
-          if (u) ponerLogo(n, u);
-        }
-      });
-    } catch(e) {}
-    contarLogos();
-  }
-
-  /* Respaldo rápido para los pocos que falten */
-  const faltan = todosEquipos.filter(n => !LOGOS[n]);
-  for (const n of faltan) {
-    await buscarLogo(n);
-    contarLogos();
-    await new Promise(r => setTimeout(r, 450));
-  }
+  const ok = [...todos].filter(n => ESCUDOS_DIRECTOS[n]).length;
+  $("estado-logos").textContent = "Escudos cargados: " + ok + " de " + todos.size;
 }
 
 function hora12(h){
@@ -391,7 +395,7 @@ const inicio = p => new Date(`${p.fecha}T${p.hora}:00-05:00`);
 const resultado = p => p.gl > p.gv ? "1" : p.gl < p.gv ? "2" : "X";
 const jugados = () => PARTIDOS.filter(p => p.gl !== null);
 
-/* PORTADA: partido destacado, marquesina y contadores */
+/* PORTADA */
 function pintarDestacado(){
   const ahora = new Date();
   const sig = PARTIDOS.filter(p => p.gl === null && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
@@ -606,6 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (leer("claro", false)) document.body.classList.add("claro");
   $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   $("texto").textContent = DATOS[0];
+  contarLogos();
   pintarDestacado(); pintarTicker(); pintarContadores();
   pintarTabsDias(); pintarFiltro(); pintarPartidos(); pintarPred();
   pintarTabla(); pintarStats(); pintarEquipos(); pintarFavoritos();
@@ -627,7 +632,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }), {threshold:.06});
     document.querySelectorAll("main section").forEach(s => { s.classList.add("reveal"); obs.observe(s); });
   }
-  cargarLogos();
   window.addEventListener("scroll", () => { $("subir").style.display = window.scrollY > 600 ? "block" : "none"; });
 });
 </script>
