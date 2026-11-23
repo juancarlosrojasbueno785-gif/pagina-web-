@@ -3,237 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Resultados, partidos de hoy, tablas, estadísticas y equipos de las grandes ligas de Europa.">
-<title>Mundo Fútbol | Resultados, tablas y estadísticas</title>
+<meta name="description" content="Resultados en vivo, próximos partidos, tablas reales, goleadores y once ideal de las grandes ligas de Europa.">
+<title>Mundo Fútbol | Resultados en vivo, tablas y once ideal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<style>
-  /* Escudos */
-  .escudo {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .escudo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-
-  /* Indicador EN VIVO */
-  .badge-vivo {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #ef4444;
-    color: #fff;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    letter-spacing: 0.5px;
-    animation: pulsoVivo 1.4s infinite;
-  }
-  .badge-vivo::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    background: #fff;
-    border-radius: 50%;
-  }
-  @keyframes pulsoVivo {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.65; transform: scale(0.96); }
-  }
-  .partido.en-vivo {
-    border-color: #ef4444 !important;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
-  }
-
-  /* Cancha Pro - Arma tu Once Ideal */
-  .once-header-info {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .once-header-info input {
-    padding: 9px 14px;
-    border-radius: 8px;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    background: rgba(15, 23, 42, 0.6);
-    color: inherit;
-    font-weight: 600;
-    min-width: 210px;
-  }
-  .cancha-pro {
-    position: relative;
-    background: repeating-linear-gradient(
-      0deg,
-      #166534,
-      #166534 48px,
-      #15803d 48px,
-      #15803d 96px
-    );
-    border: 3px solid rgba(255, 255, 255, 0.85);
-    border-radius: 16px;
-    padding: 28px 14px;
-    min-height: 540px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35), 0 12px 30px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-  }
-  /* Líneas tácticas del campo */
-  .cancha-pro::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.55);
-    pointer-events: none;
-  }
-  .cancha-pro::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 110px;
-    height: 110px;
-    transform: translate(-50%, -50%);
-    border: 2px solid rgba(255, 255, 255, 0.55);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .area-top, .area-bottom {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 52%;
-    max-width: 260px;
-    height: 75px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    pointer-events: none;
-  }
-  .area-top { top: -2px; border-top: none; }
-  .area-bottom { bottom: -2px; border-bottom: none; }
-
-  .cancha-pro .linea {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 8px;
-    margin: 6px 0;
-  }
-  .jugador-pro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 105px;
-    cursor: pointer;
-    transition: transform 0.18s ease;
-  }
-  .jugador-pro:hover {
-    transform: translateY(-4px) scale(1.04);
-  }
-  .ficha-camiseta {
-    position: relative;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    border: 2.5px solid #f8fafc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
-    margin-bottom: 5px;
-  }
-  .ficha-camiseta img {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-  }
-  .ficha-camiseta .num-dorsal {
-    color: #fff;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 1.15rem;
-  }
-  .pos-tag {
-    position: absolute;
-    bottom: -5px;
-    right: -6px;
-    background: #facc15;
-    color: #0f172a;
-    font-size: 0.65rem;
-    font-weight: 800;
-    padding: 1px 5px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-  }
-  .jugador-pro input {
-    width: 100%;
-    text-align: center;
-    background: rgba(15, 23, 42, 0.88);
-    color: #f8fafc;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 6px;
-    padding: 4px 6px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    outline: none;
-  }
-  .jugador-pro input:focus {
-    border-color: #38bdf8;
-    background: #0f172a;
-  }
-  .toast-aviso {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: #10b981;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 9999;
-  }
-  .toast-aviso.mostrar {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-</style>
 </head>
 <body>
 
 <header class="hero" id="inicio">
   <div class="hero-in">
     <div class="hero-txt">
-      <p class="chip"><span class="punto"></span> Fútbol en vivo</p>
+      <p class="chip"><span class="punto"></span> Datos en tiempo real</p>
       <h1>Mundo <span>Fútbol</span></h1>
-      <p class="lema">Resultados reales, tablas y estadísticas de las grandes ligas de Europa. Pronostica, compara equipos y arma tu once ideal.</p>
+      <p class="lema">Resultados en vivo, calendario oficial, tablas de posiciones reales y goleadores de Europa. Arma y despliega el once titular de tu club favorito.</p>
       <p id="fecha-hoy" class="fecha"></p>
       <div class="botones">
         <a class="btn" href="#partidos">Ver partidos</a>
         <a class="btn sec" href="#alineacion">Arma tu once</a>
-        <button class="icono" onclick="cambiarFondo()" aria-label="Cambiar entre modo claro y oscuro">◐</button>
+        <button class="icono" onclick="cambiarFondo()" aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">◐</button>
       </div>
     </div>
     <aside id="destacado" class="destacado"></aside>
@@ -245,13 +34,13 @@
 <nav>
   <ul>
     <li><a href="#partidos">Partidos</a></li>
-    <li><a href="#tabla">Tabla</a></li>
+    <li><a href="#tabla">Tabla Real</a></li>
+    <li><a href="#goleadores">Goleadores</a></li>
     <li><a href="#estadisticas">Estadísticas</a></li>
     <li><a href="#equipos">Equipos</a></li>
     <li><a href="#favoritos">Favoritos</a></li>
     <li><a href="#comparar">Comparar</a></li>
-    <li><a href="#alineacion">Mi once</a></li>
-    <li><a href="#leyendas">Leyendas</a></li>
+    <li><a href="#alineacion">Mi Once</a></li>
   </ul>
 </nav>
 
@@ -260,57 +49,91 @@
   <div id="contadores" class="contadores"></div>
 
   <section id="partidos">
-    <h2>Partidos</h2>
-    <p class="sub" id="sub-partidos">Sincronizando calendario y marcadores reales...</p>
+    <div class="sec-head">
+      <div>
+        <h2>Partidos y Calendario</h2>
+        <p class="sub" id="sub-partidos">Sincronizando resultados y próximos encuentros...</p>
+      </div>
+      <div class="estado-filtros" id="filtros-estado">
+        <button class="activo" onclick="setEstadoFiltro('todos', this)">Todos</button>
+        <button onclick="setEstadoFiltro('vivo', this)">En vivo</button>
+        <button onclick="setEstadoFiltro('final', this)">Finalizados</button>
+        <button onclick="setEstadoFiltro('previo', this)">Próximos</button>
+      </div>
+    </div>
+
     <div class="tabs" id="tabs-dias"></div>
     <div class="buscar-fila">
-      <input id="buscar-partido" type="search" placeholder="Busca un equipo y ve todos sus partidos..." aria-label="Buscar partido">
+      <input id="buscar-partido" type="search" placeholder="Busca un equipo y ve su calendario completo..." aria-label="Buscar partido">
       <select id="filtro-liga" aria-label="Filtrar por liga"></select>
     </div>
     <div id="marcador-pred" class="marcador-pred"></div>
     <div id="resumen" class="resumen"></div>
     <div id="lista-partidos" class="grid-partidos"></div>
-    <p class="nota" id="nota-actualizacion">Conectado en tiempo real · Horas de Colombia (UTC-5).</p>
+    <p class="nota" id="nota-actualizacion">Actualización automática cada 60 segundos · Hora oficial de Colombia (UTC-5).</p>
   </section>
 
   <section id="tabla">
     <h2>Tabla de posiciones</h2>
+    <p class="sub" id="sub-tabla">Clasificación oficial actualizada en tiempo real.</p>
     <div class="tabs" id="tabs-ligas"></div>
     <div id="grafica" class="grafica"></div>
     <div class="scroll">
       <table>
-        <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>Pts</th></tr></thead>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Equipo</th>
+            <th>PJ</th>
+            <th>G</th>
+            <th>E</th>
+            <th>P</th>
+            <th>DG</th>
+            <th>Pts</th>
+          </tr>
+        </thead>
         <tbody id="cuerpo-tabla"></tbody>
       </table>
     </div>
-    <p class="leyenda">Verde: puestos de arriba. Rojo: zona de descenso.</p>
+    <p class="leyenda">
+      <span class="dot-leyenda top"></span> Champions League &nbsp;&nbsp;
+      <span class="dot-leyenda baja"></span> Zona de descenso
+    </p>
+  </section>
+
+  <section id="goleadores">
+    <h2>Bota de Oro · Goleadores</h2>
+    <p class="sub">Máximos artilleros reales de la temporada por liga.</p>
+    <div class="tabs" id="tabs-goleadores"></div>
+    <div id="grid-goleadores" class="grid-goleadores"></div>
   </section>
 
   <section id="estadisticas">
-    <h2>Estadísticas</h2>
-    <p class="sub">Calculadas con los partidos ya jugados.</p>
+    <h2>Estadísticas de la jornada</h2>
+    <p class="sub">Promedios y tendencias calculados con los encuentros reales.</p>
     <div class="cols">
       <div class="panel"><h3>Goles por partido</h3><div id="stats-ligas"></div></div>
-      <div class="panel"><h3>Cómo terminan los partidos</h3><div id="resultados-pct"></div></div>
-      <div class="panel"><h3>Mayores goleadas</h3><ul id="goleadas"></ul></div>
+      <div class="panel"><h3>Tendencia de resultados</h3><div id="resultados-pct"></div></div>
+      <div class="panel"><h3>Partidos con más goles</h3><ul id="goleadas"></ul></div>
     </div>
   </section>
 
   <section id="equipos">
-    <h2>Equipos</h2>
-    <p class="sub">Toca la ★ para guardar un favorito o toca el equipo para ver sus partidos.</p>
+    <h2>Clubes de Europa</h2>
+    <p class="sub">Toca ★ para seguir a un club o pulsa la tarjeta para filtrar su calendario.</p>
     <input id="buscador" type="search" placeholder="Busca un equipo o una liga..." aria-label="Buscar equipo">
     <div id="grid-equipos" class="grid-equipos"></div>
   </section>
 
   <section id="favoritos">
-    <h2>Mis equipos</h2>
-    <p class="sub">Aquí aparecen todos los partidos de tus equipos favoritos.</p>
+    <h2>Mis equipos seguidos</h2>
+    <p class="sub">Resultados y próximos partidos de tus clubes favoritos.</p>
     <div id="lista-favoritos" class="grid-partidos"></div>
   </section>
 
   <section id="comparar">
-    <h2>Comparar equipos</h2>
+    <h2>Cara a cara · Comparador</h2>
+    <p class="sub">Compara el rendimiento actual de dos equipos de la misma liga.</p>
     <div class="cmp-controles">
       <select id="cmp-liga" aria-label="Liga"></select>
       <select id="cmp-a" aria-label="Equipo A"></select>
@@ -321,29 +144,15 @@
 
   <section id="alineacion">
     <h2>Arma tu once ideal</h2>
-    <p class="sub">Personaliza el nombre de tu equipo, elige el escudo de las camisetas, la formación y comparte tu alineación.</p>
-    <div class="once-header-info">
-      <input id="nombre-equipo-once" type="text" maxlength="28" placeholder="Nombre de tu equipo (ej. Galácticos FC)">
-      <select id="escudo-once" aria-label="Escudo de camiseta"></select>
+    <p class="sub">Selecciona un club para desplegar automáticamente su plantilla titular en la cancha o edita los nombres a tu gusto.</p>
+    <div class="once-controles">
+      <select id="escudo-once" aria-label="Seleccionar club"></select>
       <select id="formacion" aria-label="Formación"></select>
-      <button onclick="compartirOnce()">Compartir enlace</button>
-      <button onclick="limpiarOnce()">Limpiar</button>
+      <input id="nombre-equipo-once" type="text" maxlength="28" placeholder="Nombre de tu equipo...">
+      <button class="btn-sec-sm" onclick="compartirOnce()">Compartir enlace</button>
+      <button class="btn-sec-sm danger" onclick="limpiarOnce()">Limpiar</button>
     </div>
     <div id="cancha" class="cancha-pro"></div>
-  </section>
-
-  <section id="leyendas">
-    <h2>Leyendas y récords</h2>
-    <div class="grid-leyendas">
-      <article><h3>Pelé</h3><p>Brasil. Único jugador con tres Copas del Mundo (1958, 1962 y 1970).</p></article>
-      <article><h3>Diego Maradona</h3><p>Argentina. Campeón en México 1986 y símbolo del Napoli.</p></article>
-      <article><h3>Lionel Messi</h3><p>Argentina. Campeón del mundo en Qatar 2022 y ocho Balones de Oro.</p></article>
-      <article><h3>Cristiano Ronaldo</h3><p>Portugal. Máximo goleador histórico del fútbol.</p></article>
-      <article><h3>James Rodríguez</h3><p>Colombia. Bota de Oro del Mundial de Brasil 2014 con seis goles.</p></article>
-      <article><h3>Just Fontaine</h3><p>Francia. 13 goles en un solo Mundial (1958), récord vigente.</p></article>
-    </div>
-    <p id="texto" class="dato"></p>
-    <button onclick="cambiarTexto()">Otro dato curioso</button>
   </section>
 
 </main>
@@ -352,38 +161,38 @@
 <button id="subir" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Subir">↑</button>
 
 <footer>
-  <p>Mundo Fútbol · Premier League, LaLiga, Serie A y Bundesliga</p>
-  <p>Contacto: <strong>tucorreo@ejemplo.com</strong></p>
+  <p><strong>Mundo Fútbol</strong> · Premier League, LaLiga, Serie A y Bundesliga</p>
+  <p>Datos deportivos sincronizados en vivo</p>
   <small id="estado-logos"></small>
 </footer>
 
 <script>
-/* Respaldo offline por si no hay conexión a internet */
-const PARTIDOS_RESPALDO = `
-Premier League|2026-11-22|09:00|Hull City|Brighton|1|2|final
-Premier League|2026-11-22|11:30|Liverpool|Manchester United|3|1|final
-Premier League|2026-11-23|15:00|Brentford|Everton|||previo
-LaLiga|2026-11-22|08:00|Barcelona|Villarreal|2|0|final
-LaLiga|2026-11-22|15:00|Getafe|Atlético Madrid|0|1|final
-Serie A|2026-11-22|14:45|Atalanta|Inter|1|2|final
-Bundesliga|2026-11-22|11:30|Werder Bremen|Hamburgo|2|2|final
-`.trim().split("\n").map(l => {
-  const [liga,fecha,hora,local,visita,gl,gv,estado] = l.split("|");
-  const ok = gl !== undefined && gl !== "";
-  return {liga, fecha, hora, local, visita, gl: ok?+gl:null, gv: ok?+gv:null, estado: estado || (ok?"final":"previo"), reloj: ""};
-});
+/* Respaldo offline inicial */
+const PARTIDOS_RESPALDO = [
+  {liga:"Premier League", fecha:"2026-11-22", hora:"11:30", local:"Liverpool", visita:"Manchester United", gl:3, gv:1, estado:"final", reloj:"FT"},
+  {liga:"LaLiga", fecha:"2026-11-22", hora:"15:00", local:"Barcelona", visita:"Villarreal", gl:2, gv:0, estado:"final", reloj:"FT"},
+  {liga:"Serie A", fecha:"2026-11-22", hora:"14:45", local:"Atalanta", visita:"Inter", gl:1, gv:2, estado:"final", reloj:"FT"},
+  {liga:"Bundesliga", fecha:"2026-11-22", hora:"11:30", local:"Bayern Múnich", visita:"Dortmund", gl:2, gv:1, estado:"final", reloj:"FT"}
+];
 
 let PARTIDOS = [...PARTIDOS_RESPALDO];
 
-/* Tablas base */
-const TABLAS = {
-  "Premier League":[["Arsenal",9,1,1,28],["Brighton",7,1,2,22],["Manchester City",7,1,3,22],["Bournemouth",5,3,3,18],["Liverpool",5,3,2,18],["Leeds United",4,5,2,17],["Everton",4,4,2,16],["Chelsea",5,1,5,16],["Tottenham",4,3,4,15],["Brentford",3,5,2,14],["Aston Villa",3,5,3,14],["Newcastle",3,4,4,13],["Coventry City",4,0,7,12],["Hull City",2,5,3,11],["Fulham",2,5,4,11],["Ipswich Town",3,2,6,11],["Nottingham Forest",2,3,6,9],["Sunderland",2,3,6,9],["Manchester United",1,5,4,8],["Crystal Palace",2,1,8,7]],
-  "LaLiga":[["Barcelona",11,0,1,33],["Real Madrid",11,0,2,33],["Atlético Madrid",9,1,2,28],["Real Betis",8,3,2,27],["Real Sociedad",7,1,4,22],["Sevilla",5,4,4,19],["Athletic Bilbao",4,4,4,16],["Alavés",4,4,5,16],["Villarreal",4,3,5,15],["Espanyol",4,3,6,15],["Deportivo",3,6,4,15],["Racing Santander",4,2,6,14],["Celta de Vigo",2,7,4,13],["Rayo Vallecano",3,3,6,12],["Getafe",3,3,6,12],["Osasuna",3,3,6,12],["Valencia",3,3,7,12],["Levante",2,5,5,11],["Elche",2,4,6,10],["Málaga",0,5,7,5]],
-  "Serie A":[["Lazio",10,2,0,32],["Roma",9,3,0,30],["Inter",9,1,1,28],["Como",8,2,2,26],["Milan",7,3,1,24],["Frosinone",6,2,3,20],["Napoli",5,3,4,18],["Juventus",5,3,3,18],["Bologna",5,2,4,17],["Cagliari",5,1,6,16],["Atalanta",4,2,5,14],["Torino",4,2,6,14],["Genoa",4,1,6,13],["Lecce",3,1,8,10],["Fiorentina",2,3,6,9],["Parma",2,2,8,8],["Sassuolo",2,2,7,8],["Monza",2,1,8,7],["Venezia",2,0,9,6],["Udinese",1,2,8,5]],
-  "Bundesliga":[["Dortmund",7,3,0,24],["Bayern Múnich",6,4,0,22],["Friburgo",7,1,2,22],["RB Leipzig",7,0,3,21],["Leverkusen",6,1,3,19],["Werder Bremen",4,3,2,15],["Eintracht Frankfurt",4,3,3,15],["Stuttgart",4,1,5,13],["Elversberg",4,1,5,13],["Hoffenheim",4,0,6,12],["Hamburgo",4,0,5,12],["Mainz",3,1,5,10],["Colonia",2,4,4,10],["Paderborn",2,4,4,10],["Augsburgo",2,3,4,9],["Schalke 04",1,4,5,7],["Union Berlín",1,4,5,7],["Gladbach",1,1,8,4]]
+/* Tablas base (se reemplazan automáticamente con las tablas reales de ESPN) */
+let TABLAS = {
+  "Premier League":[["Arsenal",11,9,1,1,18,28],["Liverpool",11,8,2,1,15,26],["Manchester City",11,7,2,2,12,23],["Chelsea",11,6,3,2,9,21],["Brighton",11,6,3,2,6,21],["Aston Villa",11,5,3,3,2,18],["Tottenham",11,5,2,4,5,17],["Newcastle",11,5,2,4,1,17],["Bournemouth",11,4,3,4,-1,15],["Fulham",11,4,3,4,0,15]],
+  "LaLiga":[["Barcelona",12,11,0,1,28,33],["Real Madrid",12,9,2,1,17,29],["Atlético Madrid",12,8,3,1,14,27],["Villarreal",12,7,3,2,7,24],["Athletic Bilbao",12,6,4,2,6,22],["Real Betis",12,5,4,3,3,19],["Real Sociedad",12,5,3,4,2,18],["Sevilla",12,4,4,4,-1,16]],
+  "Serie A":[["Napoli",12,9,2,1,14,29],["Inter",12,8,3,1,16,27],["Atalanta",12,8,2,2,15,26],["Fiorentina",12,7,3,2,11,24],["Lazio",12,7,2,3,8,23],["Juventus",12,5,7,0,10,22],["Milan",12,5,4,3,6,19],["Roma",12,4,4,4,-2,16]],
+  "Bundesliga":[["Bayern Múnich",11,9,2,0,26,29],["RB Leipzig",11,7,3,1,11,24],["Eintracht Frankfurt",11,7,2,2,10,23],["Leverkusen",11,6,4,1,9,22],["Friburgo",11,6,2,3,3,20],["Dortmund",11,5,3,3,4,18],["Stuttgart",11,4,4,3,1,16]]
 };
 
-/* Escudos directos (ESPN CDN) + escudos dinámicos desde la API */
+let GOLEADORES = {
+  "Premier League": [],
+  "LaLiga": [],
+  "Serie A": [],
+  "Bundesliga": []
+};
+
+/* Escudos directos */
 const ESCUDOS_DIRECTOS = {
   "Arsenal": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
   "Brighton": "https://a.espncdn.com/i/teamlogos/soccer/500/331.png",
@@ -397,14 +206,16 @@ const ESCUDOS_DIRECTOS = {
   "Brentford": "https://a.espncdn.com/i/teamlogos/soccer/500/337.png",
   "Aston Villa": "https://a.espncdn.com/i/teamlogos/soccer/500/362.png",
   "Newcastle": "https://a.espncdn.com/i/teamlogos/soccer/500/361.png",
-  "Coventry City": "https://a.espncdn.com/i/teamlogos/soccer/500/388.png",
-  "Hull City": "https://a.espncdn.com/i/teamlogos/soccer/500/306.png",
   "Fulham": "https://a.espncdn.com/i/teamlogos/soccer/500/370.png",
   "Ipswich Town": "https://a.espncdn.com/i/teamlogos/soccer/500/373.png",
   "Nottingham Forest": "https://a.espncdn.com/i/teamlogos/soccer/500/393.png",
   "Sunderland": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
   "Manchester United": "https://a.espncdn.com/i/teamlogos/soccer/500/360.png",
   "Crystal Palace": "https://a.espncdn.com/i/teamlogos/soccer/500/384.png",
+  "West Ham": "https://a.espncdn.com/i/teamlogos/soccer/500/371.png",
+  "Wolves": "https://a.espncdn.com/i/teamlogos/soccer/500/380.png",
+  "Leicester City": "https://a.espncdn.com/i/teamlogos/soccer/500/375.png",
+  "Southampton": "https://a.espncdn.com/i/teamlogos/soccer/500/376.png",
   "Barcelona": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
   "Real Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
   "Atlético Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
@@ -415,22 +226,21 @@ const ESCUDOS_DIRECTOS = {
   "Alavés": "https://a.espncdn.com/i/teamlogos/soccer/500/96.png",
   "Villarreal": "https://a.espncdn.com/i/teamlogos/soccer/500/102.png",
   "Espanyol": "https://a.espncdn.com/i/teamlogos/soccer/500/88.png",
-  "Deportivo": "https://a.espncdn.com/i/teamlogos/soccer/500/90.png",
-  "Racing Santander": "https://a.espncdn.com/i/teamlogos/soccer/500/91.png",
   "Celta de Vigo": "https://a.espncdn.com/i/teamlogos/soccer/500/85.png",
   "Rayo Vallecano": "https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
   "Getafe": "https://a.espncdn.com/i/teamlogos/soccer/500/2922.png",
   "Osasuna": "https://a.espncdn.com/i/teamlogos/soccer/500/97.png",
   "Valencia": "https://a.espncdn.com/i/teamlogos/soccer/500/94.png",
-  "Levante": "https://a.espncdn.com/i/teamlogos/soccer/500/1538.png",
-  "Elche": "https://a.espncdn.com/i/teamlogos/soccer/500/3751.png",
-  "Málaga": "https://a.espncdn.com/i/teamlogos/soccer/500/99.png",
+  "Girona": "https://a.espncdn.com/i/teamlogos/soccer/500/9812.png",
+  "Mallorca": "https://a.espncdn.com/i/teamlogos/soccer/500/84.png",
+  "Las Palmas": "https://a.espncdn.com/i/teamlogos/soccer/500/98.png",
+  "Leganés": "https://a.espncdn.com/i/teamlogos/soccer/500/17534.png",
+  "Valladolid": "https://a.espncdn.com/i/teamlogos/soccer/500/95.png",
   "Lazio": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
   "Roma": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
   "Inter": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
   "Como": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
   "Milan": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
-  "Frosinone": "https://a.espncdn.com/i/teamlogos/soccer/500/4057.png",
   "Napoli": "https://a.espncdn.com/i/teamlogos/soccer/500/114.png",
   "Juventus": "https://a.espncdn.com/i/teamlogos/soccer/500/111.png",
   "Bologna": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
@@ -441,10 +251,11 @@ const ESCUDOS_DIRECTOS = {
   "Lecce": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
   "Fiorentina": "https://a.espncdn.com/i/teamlogos/soccer/500/109.png",
   "Parma": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
-  "Sassuolo": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
   "Monza": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
   "Venezia": "https://a.espncdn.com/i/teamlogos/soccer/500/3236.png",
   "Udinese": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png",
+  "Empoli": "https://a.espncdn.com/i/teamlogos/soccer/500/2574.png",
+  "Hellas Verona": "https://a.espncdn.com/i/teamlogos/soccer/500/119.png",
   "Dortmund": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
   "Bayern Múnich": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
   "Friburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png",
@@ -453,33 +264,44 @@ const ESCUDOS_DIRECTOS = {
   "Werder Bremen": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png",
   "Eintracht Frankfurt": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png",
   "Stuttgart": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png",
-  "Elversberg": "https://a.espncdn.com/i/teamlogos/soccer/500/6416.png",
   "Hoffenheim": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png",
-  "Hamburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png",
   "Mainz": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png",
-  "Colonia": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png",
-  "Paderborn": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png",
   "Augsburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png",
-  "Schalke 04": "https://a.espncdn.com/i/teamlogos/soccer/500/133.png",
   "Union Berlín": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png",
-  "Gladbach": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+  "Gladbach": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png",
+  "Wolfsburgo": "https://a.espncdn.com/i/teamlogos/soccer/500/138.png",
+  "Bochum": "https://a.espncdn.com/i/teamlogos/soccer/500/121.png",
+  "Heidenheim": "https://a.espncdn.com/i/teamlogos/soccer/500/6418.png",
+  "St. Pauli": "https://a.espncdn.com/i/teamlogos/soccer/500/270.png",
+  "Holstein Kiel": "https://a.espncdn.com/i/teamlogos/soccer/500/7884.png"
 };
 
-const DATOS = [
-  "El primer Mundial se jugó en Uruguay en 1930.",
-  "Brasil es el único país que ha jugado todos los Mundiales.",
-  "Colombia ganó su única Copa América en 2001, jugando de local.",
-  "Just Fontaine marcó 13 goles en el Mundial de 1958.",
-  "El balón oficial pesa entre 410 y 450 gramos.",
-  "Un partido dura 90 minutos, más el tiempo añadido por el árbitro."
-];
+/* Plantillas titulares para despliegue automático en "Arma tu once ideal" */
+const PLANTILLAS_CLUBES = {
+  "Real Madrid": ["Courtois", "Mendy", "Rüdiger", "Militão", "Carvajal", "Tchouaméni", "Valverde", "Bellingham", "Vinícius Jr", "Mbappé", "Rodrygo"],
+  "Barcelona": ["Iñaki Peña", "Balde", "Iñigo Martínez", "Cubarsí", "Koundé", "Casadó", "Pedri", "Dani Olmo", "Raphinha", "Lewandowski", "Lamine Yamal"],
+  "Atlético Madrid": ["Oblak", "Galán", "Lenglet", "Giménez", "Llorente", "De Paul", "Koke", "Griezmann", "Lino", "Julián Álvarez", "Sørloth"],
+  "Manchester City": ["Ederson", "Gvardiol", "Rúben Dias", "Akanji", "Walker", "Kovačić", "Gündoğan", "De Bruyne", "Doku", "Haaland", "Foden"],
+  "Arsenal": ["David Raya", "Calafiori", "Gabriel", "Saliba", "Timber", "Rice", "Merino", "Ødegaard", "Martinelli", "Havertz", "Saka"],
+  "Liverpool": ["Alisson", "Robertson", "Van Dijk", "Konaté", "Alexander-Arnold", "Gravenberch", "Mac Allister", "Szoboszlai", "Luis Díaz", "Darwin Núñez", "Salah"],
+  "Chelsea": ["Robert Sánchez", "Cucurella", "Colwill", "Fofana", "Gusto", "Caicedo", "Enzo Fernández", "Cole Palmer", "Neto", "Nicolas Jackson", "Madueke"],
+  "Manchester United": ["Onana", "Dalot", "Lisandro", "De Ligt", "Mazraoui", "Ugarte", "Mainoo", "Bruno Fernandes", "Rashford", "Højlund", "Garnacho"],
+  "Inter": ["Sommer", "Dimarco", "Bastoni", "Acerbi", "Darmian", "Mkhitaryan", "Çalhanoğlu", "Barella", "Thuram", "Lautaro", "Dumfries"],
+  "Milan": ["Maignan", "Theo Hernández", "Tomori", "Gabbia", "Emerson", "Fofana", "Reijnders", "Pulisic", "Rafael Leão", "Morata", "Chukwueze"],
+  "Juventus": ["Di Gregorio", "Cambiaso", "Kalulu", "Gatti", "Savona", "Locatelli", "Thuram", "Koopmeiners", "Yildiz", "Vlahović", "Conceição"],
+  "Napoli": ["Meret", "Olivera", "Buongiorno", "Rrahmani", "Di Lorenzo", "McTominay", "Lobotka", "Anguissa", "Kvaratskhelia", "Lukaku", "Politano"],
+  "Bayern Múnich": ["Neuer", "Davies", "Kim Min-jae", "Upamecano", "Guerreiro", "Kimmich", "Palhinha", "Musiala", "Gnabry", "Harry Kane", "Olise"],
+  "Leverkusen": ["Hrádecký", "Grimaldo", "Tapsoba", "Tah", "Frimpong", "Xhaka", "Andrich", "Wirtz", "Terrier", "Boniface", "Adli"],
+  "Dortmund": ["Kobel", "Bensebaini", "Schlotterbeck", "Anton", "Ryerson", "Can", "Gross", "Brandt", "Gittens", "Guirassy", "Malen"]
+};
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const hoyClave = new Date().toLocaleDateString("sv-SE");
 let fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
 let diaActivo = hoyClave;
-let ligaActiva = "Todas", tablaActiva = Object.keys(TABLAS)[0], indiceDato = 0;
+let estadoFiltro = "todos";
+let ligaActiva = "Todas", tablaActiva = "Premier League", goleadorLigaActiva = "Premier League";
 
 function leer(k, d){ try { return JSON.parse(localStorage.getItem(k)) || d; } catch(e){ return d; } }
 function guardar(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -520,19 +342,30 @@ function marcarConLogo(img){
   if (txt) txt.style.display = 'none';
 }
 
-/* SINCRONIZACIÓN CON PARTIDOS REALES (ESPN Scoreboard API) */
-const ENDPOINTS_REALES = [
-  { liga: "Premier League", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard" },
-  { liga: "LaLiga", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard" },
-  { liga: "Serie A", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard" },
-  { liga: "Bundesliga", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard" }
+/* CONFIGURACIÓN DE LIGAS EN VIVO (ESPN API) */
+const LIGAS_API = [
+  { nombre: "Premier League", slug: "eng.1" },
+  { nombre: "LaLiga", slug: "esp.1" },
+  { nombre: "Serie A", slug: "ita.1" },
+  { nombre: "Bundesliga", slug: "ger.1" }
 ];
 
-async function actualizarPartidosReales(){
+/* Formatea rango de fechas (hace 3 días hasta dentro de 10 días) para traer resultados y calendario futuro */
+function obtenerRangoFechasAPI(){
+  const d1 = new Date(); d1.setDate(d1.getDate() - 3);
+  const d2 = new Date(); d2.setDate(d2.getDate() + 10);
+  const fmt = d => d.toISOString().slice(0, 10).replace(/-/g, "");
+  return `${fmt(d1)}-${fmt(d2)}`;
+}
+
+async function sincronizarTodoEnVivo(){
+  const rango = obtenerRangoFechasAPI();
+
+  // 1. Partidos (Resultados recientes + En vivo + Próximos partidos)
   try {
-    const resultados = await Promise.all(
-      ENDPOINTS_REALES.map(async ({liga, url}) => {
-        const res = await fetch(url);
+    const resPartidos = await Promise.all(
+      LIGAS_API.map(async ({nombre, slug}) => {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard?dates=${rango}`);
         if (!res.ok) return [];
         const data = await res.json();
         return (data.events || []).map(ev => {
@@ -541,7 +374,6 @@ async function actualizarPartidosReales(){
           const away = comp.competitors.find(c => c.homeAway === "away");
           const dt = new Date(ev.date);
 
-          // Fecha y hora en zona horaria de Colombia (America/Bogota)
           const fechaCol = dt.toLocaleDateString("sv-SE", { timeZone: "America/Bogota" });
           const horaCol = dt.toLocaleTimeString("en-GB", { timeZone: "America/Bogota", hour: "2-digit", minute: "2-digit" });
 
@@ -551,12 +383,12 @@ async function actualizarPartidosReales(){
           if (home.team.logo && !ESCUDOS_DIRECTOS[nLocal]) ESCUDOS_DIRECTOS[nLocal] = home.team.logo;
           if (away.team.logo && !ESCUDOS_DIRECTOS[nVisita]) ESCUDOS_DIRECTOS[nVisita] = away.team.logo;
 
-          const state = ev.status.type.state; // "pre", "in", "post"
+          const state = ev.status.type.state;
           const estado = state === "in" ? "vivo" : (state === "post" ? "final" : "previo");
           const tieneGol = state === "in" || state === "post";
 
           return {
-            liga,
+            liga: nombre,
             fecha: fechaCol,
             hora: horaCol,
             local: nLocal,
@@ -570,21 +402,77 @@ async function actualizarPartidosReales(){
       })
     );
 
-    const reales = resultados.flat();
-    if (reales.length > 0) {
-      PARTIDOS = reales;
+    const todos = resPartidos.flat();
+    if (todos.length > 0) {
+      PARTIDOS = todos;
       fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
-      diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length - 1]);
-      $("sub-partidos").textContent = "Actualizado en tiempo real con la jornada oficial de Europa.";
-      $("nota-actualizacion").textContent = "Datos sincronizados en vivo · Última actualización: " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit"});
-      refrescarTodo();
+      if (!fechas.includes(diaActivo)) {
+        diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length - 1]);
+      }
+      $("sub-partidos").textContent = "Resultados oficiales y próximos partidos sincronizados en vivo.";
+      $("nota-actualizacion").textContent = "Conectado en vivo · Última actualización: " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit"});
     }
   } catch (e) {
-    $("sub-partidos").textContent = "Mostrando calendario guardado (modo sin conexión).";
+    $("sub-partidos").textContent = "Mostrando partidos guardados (sin conexión a internet).";
   }
+
+  // 2. Tablas de posiciones reales y Goleadores
+  try {
+    await Promise.all(
+      LIGAS_API.map(async ({nombre, slug}) => {
+        const res = await fetch(`https://site.api.espn.com/apis/v2/sports/soccer/${slug}/standings`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const entries = data.children?.[0]?.standings?.entries || [];
+        if (entries.length > 0) {
+          TABLAS[nombre] = entries.map(item => {
+            const eq = item.team.shortDisplayName || item.team.name;
+            const logo = item.team.logos?.[0]?.href;
+            if (logo && !ESCUDOS_DIRECTOS[eq]) ESCUDOS_DIRECTOS[eq] = logo;
+
+            const getStat = name => {
+              const s = item.stats.find(x => x.name === name);
+              return s ? Number(s.value) : 0;
+            };
+            const pj = getStat("gamesPlayed");
+            const g = getStat("wins");
+            const e = getStat("ties");
+            const p = getStat("losses");
+            const dg = getStat("pointDifferential");
+            const pts = getStat("points");
+            return [eq, pj, g, e, p, dg, pts];
+          });
+        }
+      })
+    );
+    $("sub-tabla").textContent = "Tabla oficial actualizada con los resultados de la temporada.";
+  } catch (e) {}
+
+  // 3. Goleadores reales por liga
+  try {
+    await Promise.all(
+      LIGAS_API.map(async ({nombre, slug}) => {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/leaders`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const catGoles = (data.leaders || []).find(c => c.name === "goals" || c.abbreviation === "G");
+        if (catGoles && catGoles.leaders) {
+          GOLEADORES[nombre] = catGoles.leaders.slice(0, 8).map((l, idx) => ({
+            pos: idx + 1,
+            nombre: l.athlete.displayName,
+            equipo: l.athlete.team?.shortDisplayName || l.athlete.team?.name || "",
+            foto: l.athlete.headshot?.href || "",
+            goles: l.displayValue || l.value
+          }));
+        }
+      })
+    );
+  } catch (e) {}
+
+  refrescarInterfazCompleta();
 }
 
-function refrescarTodo(){
+function refrescarInterfazCompleta(){
   pintarDestacado();
   pintarTicker();
   pintarContadores();
@@ -592,16 +480,20 @@ function refrescarTodo(){
   pintarFiltro();
   pintarPartidos();
   pintarPred();
+  pintarTabla();
+  pintarGoleadores();
   pintarStats();
   pintarEquipos($("buscador").value);
   pintarFavoritos();
+  pintarComparar();
+  poblarSelectorClubesOnce();
   contarLogos();
 }
 
 function contarLogos(){
   const todos = new Set([...Object.values(TABLAS).flat().map(e => e[0]), ...PARTIDOS.flatMap(p => [p.local, p.visita])]);
   const ok = [...todos].filter(n => ESCUDOS_DIRECTOS[n]).length;
-  $("estado-logos").textContent = "Escudos cargados: " + ok + " de " + todos.size;
+  $("estado-logos").textContent = "Escudos activos: " + ok + " de " + todos.size;
 }
 
 function hora12(h){
@@ -625,32 +517,51 @@ function pintarDestacado(){
   if (enVivo) {
     $("destacado").innerHTML = `<p class="dest-tit"><span class="badge-vivo">EN VIVO · ${enVivo.reloj}</span> · ${enVivo.liga}</p>
       <div class="dest-vs"><div>${escudo(enVivo.local)}<b>${enVivo.local}</b></div><span>${enVivo.gl} - ${enVivo.gv}</span><div>${escudo(enVivo.visita)}<b>${enVivo.visita}</b></div></div>
-      <p class="dest-tiempo">Partido en juego ahora mismo</p>`;
+      <p class="dest-tiempo">Partido disputándose ahora mismo</p>`;
     return;
   }
   const ahora = new Date();
   const sig = PARTIDOS.filter(p => p.estado === "previo" && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
-  if (!sig) { $("destacado").innerHTML = `<p class="dest-tit">Jornada completada</p>`; return; }
+  if (!sig) {
+    const ult = jugados()[0];
+    $("destacado").innerHTML = ult
+      ? `<p class="dest-tit">Último marcador · ${ult.liga}</p><div class="dest-vs"><div>${escudo(ult.local)}<b>${ult.local}</b></div><span>${ult.gl} - ${ult.gv}</span><div>${escudo(ult.visita)}<b>${ult.visita}</b></div></div><p class="dest-tiempo">Finalizado</p>`
+      : `<p class="dest-tit">Sin partidos programados hoy</p>`;
+    return;
+  }
   const m = Math.round((inicio(sig) - ahora) / 60000);
   const d = Math.floor(m / 1440), hh = Math.floor(m % 1440 / 60), mm = m % 60;
   $("destacado").innerHTML = `<p class="dest-tit">Próximo partido · ${sig.liga}</p>
     <div class="dest-vs"><div>${escudo(sig.local)}<b>${sig.local}</b></div><span>VS</span><div>${escudo(sig.visita)}<b>${sig.visita}</b></div></div>
     <p class="dest-tiempo">${etiquetaDia(sig.fecha)} · ${hora12(sig.hora)}<br><strong>faltan ${d ? d + " d " : ""}${hh} h ${mm} min</strong></p>`;
 }
+
 function pintarTicker(){
   const ult = jugados().slice(0,16);
-  const html = ult.map(p => `<span>${p.estado === "vivo" ? "🔴 " : ""}${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span>`).join("");
+  const items = ult.length ? ult : PARTIDOS.slice(0, 12);
+  const html = items.map(p => {
+    const marc = p.gl !== null ? `<b>${p.gl}-${p.gv}</b>` : `<b>${hora12(p.hora)}</b>`;
+    return `<span>${p.estado === "vivo" ? "🔴 " : ""}${p.local} ${marc} ${p.visita}</span>`;
+  }).join("");
   $("ticker").innerHTML = `<div class="pista">${html}${html}</div>`;
 }
+
 function pintarContadores(){
-  const j = jugados(), goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
-  const equipos = new Set(PARTIDOS.flatMap(p => [p.local, p.visita])).size;
+  const j = jugados(), prox = PARTIDOS.filter(p => p.estado === "previo").length;
+  const goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
   const prom = j.length ? (goles / j.length).toFixed(2) : "0.00";
-  const datos = [[j.length,"partidos jugados"],[goles,"goles marcados"],[prom,"goles por partido"],[equipos,"equipos en cartelera"]];
+  const datos = [[j.length,"partidos jugados"],[prox,"próximos partidos"],[goles,"goles marcados"],[prom,"goles por partido"]];
   $("contadores").innerHTML = datos.map(([n,t]) => `<div class="contador"><b>${n}</b><span>${t}</span></div>`).join("");
 }
 
 /* PARTIDOS */
+function setEstadoFiltro(est, btn){
+  estadoFiltro = est;
+  document.querySelectorAll("#filtros-estado button").forEach(b => b.classList.remove("activo"));
+  btn.classList.add("activo");
+  pintarPartidos();
+}
+
 function pintarTabsDias(){
   $("tabs-dias").innerHTML = fechas.map(f =>
     `<button class="${f===diaActivo?'activo':''} ${f===hoyClave?'hoy':''}" onclick="elegirDia('${f}')">${f===hoyClave?'Hoy · ':''}${etiquetaDia(f)}</button>`).join("");
@@ -658,8 +569,10 @@ function pintarTabsDias(){
 function elegirDia(f){ diaActivo = f; $("buscar-partido").value = ""; pintarTabsDias(); pintarPartidos(); }
 
 function pintarFiltro(){
+  const prev = $("filtro-liga").value;
   const ligas = ["Todas", ...new Set(PARTIDOS.map(p => p.liga))];
   $("filtro-liga").innerHTML = ligas.map(l => `<option>${l}</option>`).join("");
+  if (ligas.includes(prev)) $("filtro-liga").value = prev;
   $("filtro-liga").onchange = e => { ligaActiva = e.target.value; pintarPartidos(); };
 }
 
@@ -670,7 +583,7 @@ function tarjeta(p, conFecha){
   const pr = PRED[clave(p)];
   let extra = "";
   if (p.estado === "previo") {
-    extra = `<div class="pred"><span>Tu pronóstico</span>` +
+    extra = `<div class="pred"><span>Pronóstico</span>` +
       [["1", p.local], ["X", "Empate"], ["2", p.visita]].map(([k,t]) =>
         `<button class="${pr===k?'sel':''}" title="${t}" onclick="pronosticar('${clave(p)}','${k}')">${k}</button>`).join("") + `</div>`;
   } else if (pr && p.estado === "final") {
@@ -696,19 +609,28 @@ function tarjeta(p, conFecha){
 function pintarPartidos(){
   const q = $("buscar-partido").value.trim().toLowerCase();
   let lista = PARTIDOS.filter(p => ligaActiva === "Todas" || p.liga === ligaActiva);
-  lista = q ? lista.filter(p => (p.local + " " + p.visita).toLowerCase().includes(q))
-            : lista.filter(p => p.fecha === diaActivo);
+  if (estadoFiltro !== "todos") {
+    lista = lista.filter(p => p.estado === estadoFiltro);
+  } else if (!q) {
+    lista = lista.filter(p => p.fecha === diaActivo);
+  }
+  if (q) {
+    lista = lista.filter(p => (p.local + " " + p.visita).toLowerCase().includes(q));
+  }
   lista.sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+
   const jug = lista.filter(p => p.gl !== null);
   const goles = jug.reduce((s,p) => s + p.gl + p.gv, 0);
   const goleada = jug.slice().sort((a,b) => Math.abs(b.gl-b.gv) - Math.abs(a.gl-a.gv))[0];
   $("resumen").innerHTML = lista.length ? `
-    <div><b>${lista.length}</b><span>partidos</span></div>
+    <div><b>${lista.length}</b><span>partidos mostrados</span></div>
     <div><b>${jug.length}</b><span>jugados / en vivo</span></div>
-    <div><b>${goles}</b><span>goles marcados</span></div>
-    ${goleada ? `<div><b>${goleada.gl}-${goleada.gv}</b><span>mayor goleada: ${goleada.local} vs ${goleada.visita}</span></div>` : ""}` : "";
-  $("lista-partidos").innerHTML = lista.length ? lista.map(p => tarjeta(p, !!q)).join("")
-    : `<p class="vacio">No hay partidos con ese filtro.</p>`;
+    <div><b>${goles}</b><span>goles</span></div>
+    ${goleada ? `<div><b>${goleada.gl}-${goleada.gv}</b><span>destacado: ${goleada.local} vs ${goleada.visita}</span></div>` : ""}` : "";
+
+  const mostrarFecha = !!q || estadoFiltro !== "todos";
+  $("lista-partidos").innerHTML = lista.length ? lista.map(p => tarjeta(p, mostrarFecha)).join("")
+    : `<p class="vacio">No hay partidos en esta categoría.</p>`;
 }
 
 /* PRONÓSTICOS */
@@ -727,27 +649,66 @@ function pintarPred(){
   });
   $("marcador-pred").innerHTML = (ac + fa + pe)
     ? `<b>Tus pronósticos:</b> ${ac} aciertos · ${fa} fallos · ${pe} pendientes`
-    : `Pronostica los partidos que faltan: <b>1</b> gana el local, <b>X</b> empate, <b>2</b> gana el visitante. Se guardan en tu navegador.`;
+    : `Pronostica los próximos encuentros: <b>1</b> local, <b>X</b> empate, <b>2</b> visitante.`;
 }
 
-/* TABLA + GRÁFICA */
+/* TABLA DE POSICIONES REAL */
 function pintarTabla(){
   $("tabs-ligas").innerHTML = Object.keys(TABLAS).map(l =>
     `<button class="${l===tablaActiva?'activo':''}" onclick="elegirTabla('${l}')">${l}</button>`).join("");
-  const filas = TABLAS[tablaActiva];
-  const max = filas[0][4];
-  $("grafica").innerHTML = `<h3>Los 8 primeros · puntos</h3>` + filas.slice(0,8).map(e =>
-    `<div class="barra-fila"><span class="barra-n">${e[0]}</span><div class="barra"><i style="width:${e[4]/max*100}%"></i></div><b>${e[4]}</b></div>`).join("");
+  const filas = TABLAS[tablaActiva] || [];
+  if (!filas.length) return;
+  const max = filas[0][6] || 1;
+  $("grafica").innerHTML = `<h3>Top 6 · Carrera por el título</h3>` + filas.slice(0,6).map(e =>
+    `<div class="barra-fila"><span class="barra-n">${e[0]}</span><div class="barra"><i style="width:${e[6]/max*100}%"></i></div><b>${e[6]} pts</b></div>`).join("");
   $("cuerpo-tabla").innerHTML = filas.map((f,i) => {
     const clase = i < 4 ? "top" : (i >= filas.length-3 ? "baja" : "");
-    return `<tr class="${clase}"><td>${i+1}</td><td><span style="display:inline-flex;align-items:center;gap:10px">${escudo(f[0])}${f[0]}</span></td><td>${f[1]+f[2]+f[3]}</td><td>${f[1]}</td><td>${f[2]}</td><td>${f[3]}</td><td>${f[4]}</td></tr>`;
+    const dgStr = f[5] > 0 ? `+${f[5]}` : f[5];
+    return `<tr class="${clase}">
+      <td>${i+1}</td>
+      <td><span class="td-eq">${escudo(f[0])}${f[0]}</span></td>
+      <td>${f[1]}</td>
+      <td>${f[2]}</td>
+      <td>${f[3]}</td>
+      <td>${f[4]}</td>
+      <td>${dgStr}</td>
+      <td><strong>${f[6]}</strong></td>
+    </tr>`;
   }).join("");
 }
 function elegirTabla(l){ tablaActiva = l; pintarTabla(); }
 
+/* GOLEADORES REALES */
+function pintarGoleadores(){
+  $("tabs-goleadores").innerHTML = Object.keys(TABLAS).map(l =>
+    `<button class="${l===goleadorLigaActiva?'activo':''}" onclick="elegirGoleadorLiga('${l}')">${l}</button>`).join("");
+  const lista = GOLEADORES[goleadorLigaActiva] || [];
+  if (!lista.length) {
+    $("grid-goleadores").innerHTML = `<p class="vacio">Cargando tabla de goleadores oficiales...</p>`;
+    return;
+  }
+  $("grid-goleadores").innerHTML = lista.map(g => `
+    <div class="card-goleador">
+      <div class="gol-pos">${g.pos}</div>
+      <div class="gol-avatar">
+        ${g.foto ? `<img src="${g.foto}" alt="${g.nombre}" onerror="this.remove()">` : `<span>⚽</span>`}
+      </div>
+      <div class="gol-info">
+        <h4>${g.nombre}</h4>
+        <p>${escudo(g.equipo)} ${g.equipo}</p>
+      </div>
+      <div class="gol-cifra">
+        <b>${g.goles}</b>
+        <span>Goles</span>
+      </div>
+    </div>
+  `).join("");
+}
+function elegirGoleadorLiga(l){ goleadorLigaActiva = l; pintarGoleadores(); }
+
 /* ESTADÍSTICAS */
 function pintarStats(){
-  const ligas = [...new Set(PARTIDOS.map(p => p.liga))];
+  const ligas = Object.keys(TABLAS);
   const datos = ligas.map(l => {
     const j = jugados().filter(p => p.liga === l);
     const g = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
@@ -756,12 +717,14 @@ function pintarStats(){
   const max = Math.max(...datos.map(d => d.prom)) || 1;
   $("stats-ligas").innerHTML = datos.map(d =>
     `<div class="barra-fila"><span class="barra-n">${d.l}</span><div class="barra"><i style="width:${d.prom/max*100}%"></i></div><b>${d.prom.toFixed(2)}</b></div>`).join("");
-  const top = jugados().sort((a,b) => (Math.abs(b.gl-b.gv)*100 + b.gl + b.gv) - (Math.abs(a.gl-a.gv)*100 + a.gl + a.gv)).slice(0,6);
-  $("goleadas").innerHTML = top.map(p => `<li><span>${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span><small>${p.liga}</small></li>`).join("");
+  const top = jugados().sort((a,b) => (b.gl + b.gv) - (a.gl + a.gv)).slice(0,5);
+  $("goleadas").innerHTML = top.length
+    ? top.map(p => `<li><span>${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span><small>${p.liga}</small></li>`).join("")
+    : `<li><span>Esperando resultados de la jornada</span></li>`;
   const empates = jugados().filter(p => p.gl === p.gv).length, tot = jugados().length || 1;
   const loc = jugados().filter(p => p.gl > p.gv).length, vis = jugados().filter(p => p.gl < p.gv).length;
   const pct = n => Math.round(n / tot * 100);
-  $("resultados-pct").innerHTML = [["Gana el local",loc],["Empate",empates],["Gana el visitante",vis]].map(([t,n]) =>
+  $("resultados-pct").innerHTML = [["Local",loc],["Empate",empates],["Visitante",vis]].map(([t,n]) =>
     `<div class="barra-fila"><span class="barra-n">${t}</span><div class="barra"><i style="width:${pct(n)}%"></i></div><b>${pct(n)}%</b></div>`).join("");
 }
 
@@ -769,17 +732,21 @@ function pintarStats(){
 function pintarEquipos(filtro=""){
   const q = filtro.toLowerCase();
   const mapa = {};
-  PARTIDOS.forEach(p => { mapa[p.local] = p.liga; mapa[p.visita] = p.liga; });
+  Object.entries(TABLAS).forEach(([liga, eqs]) => eqs.forEach(([n]) => mapa[n] = liga));
+  PARTIDOS.forEach(p => { if (!mapa[p.local]) mapa[p.local] = p.liga; if (!mapa[p.visita]) mapa[p.visita] = p.liga; });
+
   const lista = Object.entries(mapa).sort((a,b) => a[0].localeCompare(b[0]))
     .filter(([n,l]) => (n + " " + l).toLowerCase().includes(q));
   $("grid-equipos").innerHTML = lista.map(([n,l]) =>
     `<div class="equipo" data-n="${n}" onclick="verEquipo(this.dataset.n)">
-      <button class="estrella ${esFav(n)?'on':''}" title="Favorito" onclick="event.stopPropagation();toggleFav(this.closest('.equipo').dataset.n)">${esFav(n)?'★':'☆'}</button>
+      <button class="estrella ${esFav(n)?'on':''}" title="Seguir equipo" onclick="event.stopPropagation();toggleFav(this.closest('.equipo').dataset.n)">${esFav(n)?'★':'☆'}</button>
       ${escudo(n)}<h3>${n}</h3><p>${l}</p></div>`).join("")
     || `<p class="vacio">No encontramos ese equipo.</p>`;
 }
 function verEquipo(n){
   $("buscar-partido").value = n;
+  estadoFiltro = "todos";
+  document.querySelectorAll("#filtros-estado button").forEach((b,i) => b.classList.toggle("activo", i === 0));
   pintarPartidos();
   $("partidos").scrollIntoView({behavior:"smooth"});
 }
@@ -794,12 +761,14 @@ function pintarFavoritos(){
   const lista = PARTIDOS.filter(p => esFav(p.local) || esFav(p.visita))
     .sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
   $("lista-favoritos").innerHTML = lista.length ? lista.map(p => tarjeta(p, true)).join("")
-    : `<p class="vacio">Aún no tienes equipos favoritos.</p>`;
+    : `<p class="vacio">Toca la ★ en cualquier equipo para ver aquí su calendario.</p>`;
 }
 
 /* COMPARADOR */
 function pintarComparar(){
-  const eqs = TABLAS[$("cmp-liga").value];
+  const ligaSel = $("cmp-liga").value || Object.keys(TABLAS)[0];
+  const eqs = TABLAS[ligaSel] || [];
+  if (eqs.length < 2) return;
   ["cmp-a","cmp-b"].forEach((id,i) => {
     const s = $(id), previo = s.value;
     s.innerHTML = eqs.map(e => `<option>${e[0]}</option>`).join("");
@@ -807,22 +776,27 @@ function pintarComparar(){
   });
   const A = eqs.find(e => e[0] === $("cmp-a").value), B = eqs.find(e => e[0] === $("cmp-b").value);
   const pos = e => eqs.indexOf(e) + 1;
-  const pj = e => e[1] + e[2] + e[3];
-  const pct = e => Math.round(e[1] / pj(e) * 100);
+  const pct = e => e[1] ? Math.round(e[2] / e[1] * 100) : 0;
   const filas = [
-    ["Posición", pos(A), pos(B), true], ["Puntos", A[4], B[4]], ["Partidos", pj(A), pj(B), null],
-    ["Ganados", A[1], B[1]], ["Empates", A[2], B[2], null], ["Perdidos", A[3], B[3], true],
-    ["% de victorias", pct(A), pct(B)]
+    ["Posición", pos(A), pos(B), true],
+    ["Puntos", A[6], B[6]],
+    ["Partidos", A[1], B[1], null],
+    ["Ganados", A[2], B[2]],
+    ["Empates", A[3], B[3], null],
+    ["Perdidos", A[4], B[4], true],
+    ["Dif. de gol", A[5], B[5]],
+    ["% Victorias", pct(A) + "%", pct(B) + "%"]
   ];
-  $("cmp").innerHTML = `<div class="cmp-cab"><div>${escudo(A[0])}${A[0]}</div><div>vs</div><div>${escudo(B[0])}${B[0]}</div></div>` +
+  $("cmp").innerHTML = `<div class="cmp-cab"><div>${escudo(A[0])}${A[0]}</div><div>VS</div><div>${escudo(B[0])}${B[0]}</div></div>` +
     filas.map(([t,a,b,menor]) => {
-      const mejorA = menor === null || a === b ? false : (menor ? a < b : a > b);
-      const mejorB = menor === null || a === b ? false : (menor ? b < a : b > a);
+      const va = parseFloat(a), vb = parseFloat(b);
+      const mejorA = menor === null || va === vb ? false : (menor ? va < vb : va > vb);
+      const mejorB = menor === null || va === vb ? false : (menor ? vb < va : vb > va);
       return `<div class="cmp-fila"><b class="${mejorA?'mejor':''}">${a}</b><span>${t}</span><b class="${mejorB?'mejor':''}">${b}</b></div>`;
     }).join("");
 }
 
-/* ARMA TU ONCE IDEAL PRO */
+/* ARMA TU ONCE IDEAL CON DESPLIEGUE AUTOMÁTICO DE PLANTILLA */
 const FORMACIONES_PRO = {
   "4-3-3": {
     filas: [1, 4, 3, 3],
@@ -847,6 +821,36 @@ const FORMACIONES_PRO = {
 };
 
 let ONCE = leer("once_pro", { nombre: "", escudo: "", f: "4-3-3", j: {} });
+
+function poblarSelectorClubesOnce(){
+  const sel = $("escudo-once");
+  const previo = ONCE.escudo || "";
+  const todos = [...new Set([...Object.keys(PLANTILLAS_CLUBES), ...Object.keys(ESCUDOS_DIRECTOS)])].sort();
+  sel.innerHTML = `<option value="">-- Elige un club para desplegar su 11 --</option>` +
+    todos.map(eq => `<option value="${eq}">${eq}${PLANTILLAS_CLUBES[eq] ? ' ★' : ''}</option>`).join("");
+  sel.value = previo;
+}
+
+/* Al elegir un equipo, despliega automáticamente sus jugadores en cada posición */
+function seleccionarClubOnce(club){
+  ONCE.escudo = club;
+  if (club) {
+    ONCE.nombre = club;
+    $("nombre-equipo-once").value = club;
+    const plantilla = PLANTILLAS_CLUBES[club];
+    if (plantilla) {
+      ONCE.j = {};
+      plantilla.forEach((jugador, idx) => { ONCE.j[idx] = jugador; });
+      toast(`Once titular de ${club} desplegado`);
+    } else {
+      ONCE.j = {};
+      for (let i = 0; i < 11; i++) ONCE.j[i] = `Titular ${i + 1}`;
+      toast(`Escudo de ${club} equipado`);
+    }
+  }
+  guardar("once_pro", ONCE);
+  pintarOnce();
+}
 
 function cargarOnceDesdeURL(){
   const params = new URLSearchParams(window.location.search);
@@ -879,39 +883,35 @@ function pintarOnce(){
           ${visual}
           <span class="pos-tag">${pos}</span>
         </div>
-        <input maxlength="18" placeholder="${pos}" value="${esc(ONCE.j[i] || "")}" oninput="guardarJugador(${i},this.value)">
+        <input maxlength="20" placeholder="${pos}" value="${esc(ONCE.j[i] || "")}" oninput="guardarJugador(${i},this.value)">
       </label>`;
     }).join("")}</div>`
   ).join("");
 
-  $("cancha").innerHTML = `<div class="area-top"></div>${lineasHtml}<div class="area-bottom"></div>`;
+  const cartelEquipo = ONCE.nombre ? `<div class="cartel-equipo">${logoClub ? `<img src="${logoClub}" alt="">` : ''}<span>${esc(ONCE.nombre)} · ${ONCE.f}</span></div>` : '';
+  $("cancha").innerHTML = `${cartelEquipo}<div class="area-top"></div>${lineasHtml}<div class="area-bottom"></div>`;
 }
 
 function guardarJugador(i, v){ ONCE.j[i] = v; guardar("once_pro", ONCE); }
 function cambiarFormacion(f){ ONCE.f = f; guardar("once_pro", ONCE); pintarOnce(); }
 function limpiarOnce(){
-  ONCE.j = {};
-  ONCE.nombre = "";
+  ONCE = { nombre: "", escudo: "", f: ONCE.f, j: {} };
   $("nombre-equipo-once").value = "";
+  $("escudo-once").value = "";
   guardar("once_pro", ONCE);
   pintarOnce();
-  toast("Alineación reiniciada");
+  toast("Cancha despejada");
 }
 function compartirOnce(){
   const payload = btoa(unescape(encodeURIComponent(JSON.stringify(ONCE))));
   const url = `${window.location.origin}${window.location.pathname}?once=${payload}#alineacion`;
   navigator.clipboard.writeText(url).then(() => {
-    toast("¡Enlace de tu alineación copiado al portapapeles!");
+    toast("¡Enlace de tu once copiado!");
   }).catch(() => {
-    prompt("Copia este enlace para compartir tu once:", url);
+    prompt("Copia este enlace para compartir:", url);
   });
 }
 
-/* VARIOS */
-function cambiarTexto(){
-  indiceDato = (indiceDato + 1) % DATOS.length;
-  $("texto").textContent = DATOS[indiceDato];
-}
 function cambiarFondo(){
   document.body.classList.toggle("claro");
   guardar("claro", document.body.classList.contains("claro"));
@@ -921,26 +921,16 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarOnceDesdeURL();
   if (leer("claro", false)) document.body.classList.add("claro");
   $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  $("texto").textContent = DATOS[0];
-
-  refrescarTodo();
-  pintarTabla();
 
   const ligas = Object.keys(TABLAS);
   $("cmp-liga").innerHTML = ligas.map(l => `<option>${l}</option>`).join("");
   $("cmp-liga").value = ligas[0];
-  pintarComparar();
 
-  // Controles Arma tu once
   $("formacion").innerHTML = Object.keys(FORMACIONES_PRO).map(f => `<option>${f}</option>`).join("");
   $("formacion").value = ONCE.f;
   $("nombre-equipo-once").value = ONCE.nombre || "";
 
-  const equiposOrdenados = Object.keys(ESCUDOS_DIRECTOS).sort();
-  $("escudo-once").innerHTML = `<option value="">Camiseta con dorsal</option>` +
-    equiposOrdenados.map(eq => `<option value="${eq}">${eq}</option>`).join("");
-  $("escudo-once").value = ONCE.escudo || "";
-
+  refrescarInterfazCompleta();
   pintarOnce();
 
   // Eventos
@@ -948,21 +938,17 @@ document.addEventListener("DOMContentLoaded", () => {
   $("cmp-a").addEventListener("change", pintarComparar);
   $("cmp-b").addEventListener("change", pintarComparar);
   $("formacion").addEventListener("change", e => cambiarFormacion(e.target.value));
-  $("nombre-equipo-once").addEventListener("input", e => { ONCE.nombre = e.target.value; guardar("once_pro", ONCE); });
-  $("escudo-once").addEventListener("change", e => { ONCE.escudo = e.target.value; guardar("once_pro", ONCE); pintarOnce(); });
+  $("nombre-equipo-once").addEventListener("input", e => { ONCE.nombre = e.target.value; guardar("once_pro", ONCE); pintarOnce(); });
+  $("escudo-once").addEventListener("change", e => seleccionarClubOnce(e.target.value));
   $("buscar-partido").addEventListener("input", pintarPartidos);
   $("buscador").addEventListener("input", e => pintarEquipos(e.target.value));
 
-  // Sincronización inicial y actualización automática cada 60 segundos
-  actualizarPartidosReales();
-  setInterval(actualizarPartidosReales, 60000);
+  // Sincronización en tiempo real
+  sincronizarTodoEnVivo();
+  setInterval(sincronizarTodoEnVivo, 60000);
   setInterval(pintarDestacado, 30000);
 
-  if ("IntersectionObserver" in window) {
-    const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }), {threshold:.06});
-    document.querySelectorAll("main section").forEach(s => { s.classList.add("reveal"); obs.observe(s); });
-  }
-  window.addEventListener("scroll", () => { $("subir").style.display = window.scrollY > 600 ? "block" : "none"; });
+  window.addEventListener("scroll", () => { $("subir").style.display = window.scrollY > 500 ? "block" : "none"; });
 });
 </script>
 </body>
