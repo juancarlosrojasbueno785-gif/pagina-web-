@@ -188,73 +188,215 @@ let GOLEADORES = {"Premier League": [], "LaLiga": [], "Serie A": [], "Bundesliga
 let MODO_RESPALDO = false;
 
 const FALLBACK_PARTIDOS = `
-Premier League|11-21|07:30|Manchester City|Fulham|1|1
-Premier League|11-21|10:00|Aston Villa|Sunderland|0|0
-Premier League|11-21|10:00|Bournemouth|Nottingham Forest|2|0
-Premier League|11-21|10:00|Chelsea|Leeds United|1|4
-Premier League|11-21|10:00|Coventry City|Crystal Palace|3|2
-Premier League|11-21|10:00|Tottenham|Ipswich Town|2|0
-Premier League|11-21|12:30|Newcastle|Arsenal|2|2
-Premier League|11-22|09:00|Hull City|Brighton||
-Premier League|11-22|11:30|Liverpool|Manchester United||
-Premier League|11-23|15:00|Brentford|Everton||
-LaLiga|11-20|15:00|Athletic Bilbao|Espanyol|0|1
-LaLiga|11-21|08:00|Alavés|Deportivo|3|1
-LaLiga|11-21|10:15|Rayo Vallecano|Valencia|0|1
-LaLiga|11-21|12:30|Sevilla|Real Betis|1|1
-LaLiga|11-21|15:00|Real Madrid|Celta de Vigo|2|1
-Serie A|11-21|09:00|Como|Cagliari|2|0
-Serie A|11-21|09:00|Lazio|Lecce|3|0
-Serie A|11-21|12:00|Parma|Roma|1|5
-Serie A|11-21|14:45|Napoli|Torino|1|0
-Bundesliga|11-20|14:30|Bayern Múnich|Colonia|1|1
-Bundesliga|11-21|09:30|Leverkusen|Paderborn|4|0
-Bundesliga|11-21|09:30|Eintracht Frankfurt|Hoffenheim|1|0
-Bundesliga|11-21|09:30|Union Berlín|RB Leipzig|1|5
-Bundesliga|11-21|09:30|Gladbach|Dortmund|0|1
+LaLiga|2026-11-27|15:00|Levante UD|Racing Santander|1|3|final|
+Bundesliga|2026-11-27|14:30|Werder Bremen|Borussia Mönchengladbach|3|3|final|
+Serie A|2026-11-27|14:45|Venezia|Bologna|0|0|final|
+LaLiga|2026-11-28|08:00|Real Betis|Rayo Vallecano|0|1|final|
+Bundesliga|2026-11-28|09:30|F. C. Colonia|SV Elversberg|3|0|vivo|60'
+Bundesliga|2026-11-28|09:30|SC Paderborn 07|FC Schalke 04|5|0|vivo|57'
+Bundesliga|2026-11-28|09:30|1. FSV Mainz 05|Union Berlin|0|1|vivo|58'
+Bundesliga|2026-11-28|09:30|Hamburgo S.V.|Bayern de Múnich|0|0|vivo|59'
+Premier League|2026-11-28|10:00|Manchester United|Brentford|0|2|vivo|DT
+Premier League|2026-11-28|10:00|Leeds United|Coventry City|2|0|vivo|DT
+LaLiga|2026-11-28|10:15|Málaga CF|Athletic Club|0|1|vivo|32'
+Serie A|2026-11-28|12:00|Torino|Lazio|||previo|
+Bundesliga|2026-11-28|12:30|VfB Stuttgart|Eintracht Frankfurt|||previo|
+LaLiga|2026-11-28|12:30|Elche CF|Atlético Madrid|||previo|
+Premier League|2026-11-28|12:30|Ipswich Town|Aston Villa|||previo|
+Serie A|2026-11-28|14:45|Inter de Milán|Genoa|||previo|
+LaLiga|2026-11-28|15:00|Real Madrid|Deportivo Alavés|||previo|
+Serie A|2026-11-29|06:30|Udinese|Fiorentina|||previo|
+Premier League|2026-11-29|07:00|Everton|Liverpool|||previo|
+LaLiga|2026-11-29|08:00|Valencia CF|Osasuna|||previo|
+Serie A|2026-11-29|09:00|Sassuolo|Napoli|||previo|
+Premier League|2026-11-29|09:05|Brighton|Newcastle|||previo|
+Premier League|2026-11-29|09:05|Fulham|Bournemouth|||previo|
+Premier League|2026-11-29|09:05|Sunderland|Tottenham|||previo|
+Premier League|2026-11-29|09:05|Crystal Palace|Hull City|||previo|
+LaLiga|2026-11-29|10:15|Deportivo de La Coruña|Barcelona|||previo|
+Premier League|2026-11-29|11:30|Arsenal|Manchester City|||previo|
+Bundesliga|2026-11-29|11:30|TSG Hoffenheim|FC Augsburgo|||previo|
+Serie A|2026-11-29|12:00|Roma|Monza|||previo|
+LaLiga|2026-11-29|12:30|Celta de Vigo|Villarreal|||previo|
+Bundesliga|2026-11-29|13:30|Borussia Dortmund|Bayer Leverkusen|||previo|
+Serie A|2026-11-29|14:45|Como|Juventus|||previo|
+LaLiga|2026-11-29|15:00|Real Sociedad|Sevilla FC|||previo|
+Serie A|2026-11-30|12:30|Lecce|Atalanta|||previo|
+Serie A|2026-11-30|14:45|Cagliari|AC Milan|||previo|
+LaLiga|2026-11-30|15:00|RCD Espanyol|Getafe CF|||previo|
+Premier League|2026-12-01|15:00|Coventry City|Ipswich Town|||previo|
+LaLiga|2026-12-02|13:00|Real Sociedad|Real Madrid|||previo|
+Premier League|2026-12-02|14:30|Manchester City|Leeds United|||previo|
+Premier League|2026-12-02|14:30|Hull City|Nottingham Forest|||previo|
+Premier League|2026-12-02|14:30|Liverpool|Sunderland|||previo|
+Premier League|2026-12-02|14:30|Chelsea|Crystal Palace|||previo|
+Premier League|2026-12-02|15:15|Newcastle|Manchester United|||previo|
+Premier League|2026-12-02|15:15|Bournemouth|Brighton|||previo|
+Premier League|2026-12-02|15:15|Brentford|Arsenal|||previo|
+Premier League|2026-12-02|15:15|Aston Villa|Everton|||previo|
+LaLiga|2026-12-02|15:30|Barcelona|Atlético Madrid|||previo|
+Premier League|2026-12-03|15:00|Tottenham|Fulham|||previo|
+Serie A|2026-12-04|14:45|Bologna|Roma|||previo|
+Bundesliga|2026-12-04|14:30|Bayern de Múnich|SC Paderborn 07|||previo|
+LaLiga|2026-12-04|15:00|Deportivo Alavés|RCD Espanyol|||previo|
+Premier League|2026-12-05|07:30|Chelsea|Liverpool|||previo|
+LaLiga|2026-12-05|08:00|Racing Santander|Deportivo de La Coruña|||previo|
+Serie A|2026-12-05|09:00|Monza|Como|||previo|
+Bundesliga|2026-12-05|09:30|RB Leipzig|1. FSV Mainz 05|||previo|
+Bundesliga|2026-12-05|09:30|Union Berlin|Hamburgo S.V.|||previo|
+Bundesliga|2026-12-05|09:30|SC Friburgo|TSG Hoffenheim|||previo|
+Bundesliga|2026-12-05|09:30|Bayer Leverkusen|Borussia Mönchengladbach|||previo|
+Bundesliga|2026-12-05|09:30|FC Augsburgo|F. C. Colonia|||previo|
+Premier League|2026-12-05|10:00|Manchester United|Coventry City|||previo|
+Premier League|2026-12-05|10:00|Bournemouth|Hull City|||previo|
+Premier League|2026-12-05|10:00|Aston Villa|Crystal Palace|||previo|
+Premier League|2026-12-05|10:00|Leeds United|Ipswich Town|||previo|
+LaLiga|2026-12-05|10:15|Rayo Vallecano|Levante UD|||previo|
+Serie A|2026-12-05|12:00|Frosinone|Inter de Milán|||previo|
+Premier League|2026-12-05|12:30|Nottingham Forest|Brighton|||previo|
+LaLiga|2026-12-05|12:30|Villarreal|Real Sociedad|||previo|
+Bundesliga|2026-12-05|12:30|Eintracht Frankfurt|Werder Bremen|||previo|
+Serie A|2026-12-05|14:45|Napoli|Lecce|||previo|
+Premier League|2026-12-05|15:00|Brentford|Manchester City|||previo|
+LaLiga|2026-12-05|15:00|Barcelona|Celta de Vigo|||previo|
+Serie A|2026-12-06|06:30|Genoa|Torino|||previo|
+LaLiga|2026-12-06|08:00|Osasuna|Elche CF|||previo|
+Serie A|2026-12-06|09:00|Lazio|Atalanta|||previo|
+Premier League|2026-12-06|09:00|Everton|Fulham|||previo|
+Premier League|2026-12-06|09:00|Newcastle|Sunderland|||previo|
+Bundesliga|2026-12-06|09:30|FC Schalke 04|Borussia Dortmund|||previo|
+LaLiga|2026-12-06|10:15|Athletic Club|Real Madrid|||previo|
+Bundesliga|2026-12-06|11:30|SV Elversberg|VfB Stuttgart|||previo|
+Premier League|2026-12-06|11:30|Tottenham|Arsenal|||previo|
+Serie A|2026-12-06|12:00|Juventus|Udinese|||previo|
+LaLiga|2026-12-06|12:30|Getafe CF|Valencia CF|||previo|
+Serie A|2026-12-06|14:45|AC Milan|Parma|||previo|
+LaLiga|2026-12-06|15:00|Atlético Madrid|Real Betis|||previo|
+Serie A|2026-12-07|12:30|Venezia|Sassuolo|||previo|
+Serie A|2026-12-07|14:45|Fiorentina|Cagliari|||previo|
+LaLiga|2026-12-07|15:00|Sevilla FC|Málaga CF|||previo|
+Serie A|2026-12-11|14:45|Udinese|Frosinone|||previo|
+Bundesliga|2026-12-11|14:30|Hamburgo S.V.|FC Schalke 04|||previo|
+LaLiga|2026-12-11|15:00|Elche CF|Sevilla FC|||previo|
+LaLiga|2026-12-12|08:00|Levante UD|Deportivo Alavés|||previo|
+Serie A|2026-12-12|09:00|Cagliari|Venezia|||previo|
+Bundesliga|2026-12-12|09:30|VfB Stuttgart|Union Berlin|||previo|
+Bundesliga|2026-12-12|09:30|F. C. Colonia|RB Leipzig|||previo|
+Bundesliga|2026-12-12|09:30|SC Paderborn 07|SV Elversberg|||previo|
+Bundesliga|2026-12-12|09:30|Borussia Dortmund|FC Augsburgo|||previo|
+LaLiga|2026-12-12|10:15|Villarreal|Rayo Vallecano|||previo|
+Serie A|2026-12-12|12:00|Lecce|Sassuolo|||previo|
+LaLiga|2026-12-12|12:30|Málaga CF|Barcelona|||previo|
+Bundesliga|2026-12-12|12:30|Borussia Mönchengladbach|Eintracht Frankfurt|||previo|
+Serie A|2026-12-12|14:45|Como|Bologna|||previo|
+LaLiga|2026-12-12|15:00|Real Betis|Racing Santander|||previo|
+Serie A|2026-12-13|06:30|Lazio|Roma|||previo|
+LaLiga|2026-12-13|08:00|Atlético Madrid|Valencia CF|||previo|
+Serie A|2026-12-13|09:00|Inter de Milán|Torino|||previo|
+Bundesliga|2026-12-13|09:30|1. FSV Mainz 05|SC Friburgo|||previo|
+LaLiga|2026-12-13|10:15|Deportivo de La Coruña|Athletic Club|||previo|
+Bundesliga|2026-12-13|11:30|TSG Hoffenheim|Bayern de Múnich|||previo|
+Serie A|2026-12-13|12:00|Parma|Fiorentina|||previo|
+LaLiga|2026-12-13|12:30|Real Sociedad|Getafe CF|||previo|
+Bundesliga|2026-12-13|13:30|Werder Bremen|Bayer Leverkusen|||previo|
+Serie A|2026-12-13|14:45|Napoli|AC Milan|||previo|
+Serie A|2026-12-14|12:30|Atalanta|Genoa|||previo|
+Serie A|2026-12-14|14:45|Juventus|Monza|||previo|
+Bundesliga|2026-12-18|14:30|Bayern de Múnich|Werder Bremen|||previo|
 `;
 
 const FALLBACK_TABLAS = {
-  "Premier League":[["Arsenal",9,1,1,28],["Brighton",7,1,2,22],["Manchester City",7,1,3,22],["Bournemouth",5,3,3,18],["Liverpool",5,3,2,18],["Chelsea",5,1,5,16]],
-  "LaLiga":[["Barcelona",11,0,1,33],["Real Madrid",11,0,2,33],["Atlético Madrid",9,1,2,28],["Real Betis",8,3,2,27],["Real Sociedad",7,1,4,22],["Sevilla",5,4,4,19]],
-  "Serie A":[["Lazio",10,2,0,32],["Roma",9,3,0,30],["Inter",9,1,1,28],["Como",8,2,2,26],["Milan",7,3,1,24],["Napoli",5,3,4,18]],
-  "Bundesliga":[["Dortmund",7,3,0,24],["Bayern Múnich",6,4,0,22],["Friburgo",7,1,2,22],["RB Leipzig",7,0,3,21],["Leverkusen",6,1,3,19],["Werder Bremen",4,3,2,15]]
+  "Premier League":[["Arsenal",9,1,1,28],["Brighton",7,1,2,22],["Manchester City",7,1,3,22],["Liverpool",5,3,2,18],["Bournemouth",5,3,3,18],["Chelsea",5,1,5,16]],
+  "LaLiga":[["Barcelona",11,0,1,33],["Real Madrid",11,0,2,33],["Atlético Madrid",9,1,2,28],["Real Betis",8,3,2,27],["Real Sociedad",7,1,4,22],["Sevilla FC",5,4,4,19]],
+  "Serie A":[["Lazio",10,2,0,32],["Roma",9,3,0,30],["Inter de Milán",9,1,1,28],["Como",8,2,2,26],["AC Milan",7,3,1,24],["Napoli",5,3,4,18]],
+  "Bundesliga":[["Borussia Dortmund",7,3,0,24],["Bayern de Múnich",6,4,0,22],["SC Friburgo",7,1,2,22],["RB Leipzig",7,0,3,21],["Bayer Leverkusen",6,1,3,19],["Werder Bremen",4,3,2,15]]
 };
 
 let ESCUDOS_OFICIALES = {
-  "Arsenal":"https://a.espncdn.com/i/teamlogos/soccer/500/359.png","Aston Villa":"https://a.espncdn.com/i/teamlogos/soccer/500/362.png",
-  "Bournemouth":"https://a.espncdn.com/i/teamlogos/soccer/500/349.png","Brentford":"https://a.espncdn.com/i/teamlogos/soccer/500/337.png",
-  "Brighton":"https://a.espncdn.com/i/teamlogos/soccer/500/331.png","Chelsea":"https://a.espncdn.com/i/teamlogos/soccer/500/363.png",
-  "Crystal Palace":"https://a.espncdn.com/i/teamlogos/soccer/500/384.png","Everton":"https://a.espncdn.com/i/teamlogos/soccer/500/368.png",
-  "Fulham":"https://a.espncdn.com/i/teamlogos/soccer/500/370.png","Leicester":"https://a.espncdn.com/i/teamlogos/soccer/500/375.png",
-  "Liverpool":"https://a.espncdn.com/i/teamlogos/soccer/500/364.png","Man City":"https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
-  "Man United":"https://a.espncdn.com/i/teamlogos/soccer/500/360.png","Newcastle":"https://a.espncdn.com/i/teamlogos/soccer/500/361.png",
-  "Nottm Forest":"https://a.espncdn.com/i/teamlogos/soccer/500/393.png","Southampton":"https://a.espncdn.com/i/teamlogos/soccer/500/376.png",
-  "Tottenham":"https://a.espncdn.com/i/teamlogos/soccer/500/367.png","West Ham":"https://a.espncdn.com/i/teamlogos/soccer/500/371.png",
-  "Wolves":"https://a.espncdn.com/i/teamlogos/soccer/500/380.png","Alavés":"https://a.espncdn.com/i/teamlogos/soccer/500/96.png",
-  "Athletic Club":"https://a.espncdn.com/i/teamlogos/soccer/500/93.png","Atlético Madrid":"https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
-  "Barcelona":"https://a.espncdn.com/i/teamlogos/soccer/500/83.png","Celta Vigo":"https://a.espncdn.com/i/teamlogos/soccer/500/85.png",
-  "Espanyol":"https://a.espncdn.com/i/teamlogos/soccer/500/88.png","Getafe":"https://a.espncdn.com/i/teamlogos/soccer/500/2922.png",
-  "Girona":"https://a.espncdn.com/i/teamlogos/soccer/500/9812.png","Las Palmas":"https://a.espncdn.com/i/teamlogos/soccer/500/98.png",
-  "Leganés":"https://a.espncdn.com/i/teamlogos/soccer/500/17534.png","Mallorca":"https://a.espncdn.com/i/teamlogos/soccer/500/84.png",
-  "Osasuna":"https://a.espncdn.com/i/teamlogos/soccer/500/97.png","Rayo Vallecano":"https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
-  "Real Betis":"https://a.espncdn.com/i/teamlogos/soccer/500/244.png","Real Madrid":"https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
-  "Real Sociedad":"https://a.espncdn.com/i/teamlogos/soccer/500/89.png","Sevilla":"https://a.espncdn.com/i/teamlogos/soccer/500/243.png",
-  "Valencia":"https://a.espncdn.com/i/teamlogos/soccer/500/94.png","Valladolid":"https://a.espncdn.com/i/teamlogos/soccer/500/95.png",
-  "Villarreal":"https://a.espncdn.com/i/teamlogos/soccer/500/102.png","AC Milan":"https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
-  "Atalanta":"https://a.espncdn.com/i/teamlogos/soccer/500/105.png","Bologna":"https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
-  "Fiorentina":"https://a.espncdn.com/i/teamlogos/soccer/500/109.png","Inter":"https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
-  "Juventus":"https://a.espncdn.com/i/teamlogos/soccer/500/111.png","Lazio":"https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
-  "Napoli":"https://a.espncdn.com/i/teamlogos/soccer/500/114.png","AS Roma":"https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
-  "Bayern Munich":"https://a.espncdn.com/i/teamlogos/soccer/500/132.png","Borussia Dortmund":"https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
-  "Bayer Leverkusen":"https://a.espncdn.com/i/teamlogos/soccer/500/131.png","RB Leipzig":"https://a.espncdn.com/i/teamlogos/soccer/500/11420.png",
-  "Eintracht Frankfurt":"https://a.espncdn.com/i/teamlogos/soccer/500/125.png","VfB Stuttgart":"https://a.espncdn.com/i/teamlogos/soccer/500/134.png"
+  "Arsenal":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4us2nCgl6kgZc0t3hpW75Q_500x500.png",
+  "Aston Villa":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/uyNNelfnFvCEnsLrUL-j2Q_500x500.png",
+  "Bournemouth":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/IcOt-hrK04B-RlRwI3R0yA_500x500.png",
+  "Brentford":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/QOUce0WQBYqnkSmN6_TxGA_500x500.png",
+  "Brighton":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/EKIe0e-ZIphOcfQAwsuEEQ_500x500.png",
+  "Chelsea":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fhBITrIlbQxhVB6IjxUO6Q_500x500.png",
+  "Coventry City":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KHpmY4tIwqiutl8Cfl0MAw_500x500.png",
+  "Crystal Palace":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/8piQOzndGmApKYTcvyN9vA_500x500.png",
+  "Everton":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/C3J47ea36cMBc4XPbp9aaA_500x500.png",
+  "Fulham":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Gh7_5p3n364p4vxeM8FhNg_500x500.png",
+  "Hull City":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/riiyZbb1JHuFQgZ3831jUQ_500x500.png",
+  "Ipswich Town":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/56vquJBk5U16Dng7txLXCw_500x500.png",
+  "Leeds United":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5dqfOKpjjW6EwTAx_FysKQ_500x500.png",
+  "Liverpool":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nGfV05dipbAc7zzojivKew_500x500.png",
+  "Manchester City":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/z44l-a0W1v5FmgPnemV6Xw_500x500.png",
+  "Manchester United":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/udQ6ns69PctCv143h-GeYw_500x500.png",
+  "Newcastle":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/96CcNNQ0AYDAbssP0V9LuQ_500x500.png",
+  "Nottingham Forest":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Zr6FbE-8pDH7UBpWCO8U9A_500x500.png",
+  "Sunderland":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/CQFeTfHrtxqgr3VKWtTwfA_500x500.png",
+  "Tottenham":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/k3Q_mKE98Dnohrcea0JFgQ_500x500.png",
+  "Athletic Club":"https://ssl.gstatic.com/onebox/media/sports/logos/WnwStUjLyaWfqWoT2gpX-w_500x500.png",
+  "Atlético Madrid":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/pEqmA7CL-VRo4Llq3rwIPA_500x500.png",
+  "Barcelona":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/paYnEE8hcrP96neHRNofhQ_500x500.png",
+  "Celta de Vigo":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/wpdhixHP_sloegfP0UlwAw_500x500.png",
+  "Deportivo Alavés":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/RUcTOeFcBc7q7uku1nR_iQ_500x500.png",
+  "Deportivo de La Coruña":"https://ssl.gstatic.com/onebox/media/sports/logos/24AIbS9gqrkm2oS_PKqKEw_500x500.png",
+  "Elche CF":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/uyyqqxLIYT_lQIXRyMI_RA_500x500.png",
+  "Getafe CF":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/1UDHZMdKZD15W5gus7dJyg_500x500.png",
+  "Levante UD":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/SQB-jlVosxVV1Ce79FhbOA_500x500.png",
+  "Málaga CF":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/cPQnNrl3qcM5x70V14TuYA_500x500.png",
+  "Osasuna":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/pk-hNCNpGM_JDoHHvLVF-Q_500x500.png",
+  "Racing Santander":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/2qlWr1sH_7xAfbRZDRoK3A_500x500.png",
+  "Rayo Vallecano":"https://ssl.gstatic.com/onebox/media/sports/logos/WVBerNAwvOewUNzDJKnuww_500x500.png",
+  "RCD Espanyol":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/TKitIqelDyN6M-kYt4Uc0g_500x500.png",
+  "Real Betis":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/XDClkrMKtkm3UTP2YKN6oQ_500x500.png",
+  "Real Madrid":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Th4fAVAZeCJWRcKoLW7koA_500x500.png",
+  "Real Sociedad":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/w8tb1aeBfVZIj9tZXf7eZg_500x500.png",
+  "Sevilla FC":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hCTs5EX3WjCMC5Jl3QE4Rw_500x500.png",
+  "Valencia CF":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/QPbjvDwI_0Wuu4tCS2O6uw_500x500.png",
+  "Villarreal":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/WKH7Ak5cYD6Qm1EEqXzmVw_500x500.png",
+  "AC Milan":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/0E1JciuKLW0EbG48I5cFRQ_500x500.png",
+  "Atalanta":"https://ssl.gstatic.com/onebox/media/sports/logos/aRlyKnUTdE3GoCZaofdwvg_500x500.png",
+  "Bologna":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/WnKdNmw06v2lz7HjhqPRPw_500x500.png",
+  "Cagliari":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/e9XfySyGdfyJ4UzEkYwENw_500x500.png",
+  "Como":"https://ssl.gstatic.com/onebox/media/sports/logos/13phr148I8nZgDiw1df0dQ_500x500.png",
+  "Fiorentina":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/h-HS2cEVCwMJZFSlwYeWmA_500x500.png",
+  "Frosinone":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/_J6w-PL2RjW-fRR-D7Dl-w_500x500.png",
+  "Genoa":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/85QkdgIOpAt-_EuQ9mKTPg_500x500.png",
+  "Inter de Milán":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/l2-icwsMhIvsbRw8AwC1yg_500x500.png",
+  "Juventus":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Y5vu3UZBApWMe4i66MimpA_500x500.png",
+  "Lazio":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VCmS5WyitnqY3ECAr0UYGw_500x500.png",
+  "Lecce":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tIaC5FB7Gm8CIULc77qMjg_500x500.png",
+  "Monza":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/g2S0HUWrWZX9hwKC87W11Q_500x500.png",
+  "Napoli":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/ueX_32AIja-hLmJSHpUuFg_500x500.png",
+  "Parma":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Pr7ZXZlx34eEXdUMTkLvkw_500x500.png",
+  "Roma":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/BQdP4jUBFJfG7U_JBsFIMg_500x500.png",
+  "Sassuolo":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/GoeTFIVAZLA5JWk0-A6B0A_500x500.png",
+  "Torino":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/ovE3HSEx4GWXkW8GU7KVhA_500x500.png",
+  "Udinese":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/92Aw_iasBENKmzvdpbTpHQ_500x500.png",
+  "Venezia":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/S5qwh0Wd4RMAX-XRKTNgmA_500x500.png",
+  "Bayer Leverkusen":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/0zIcXiwD_JGY482DFC28Lw_500x500.png",
+  "Bayern de Múnich":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/-_cmntP5q_pHL7g5LfkRiw_500x500.png",
+  "Borussia Dortmund":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/FZnTSH2rbHFos4BnlWAItw_500x500.png",
+  "Borussia Mönchengladbach":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/HFg_gp-vbuL7z1Othoa0ZA_500x500.png",
+  "Eintracht Frankfurt":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VOizBJPDHnvnSaU3XPVGAw_500x500.png",
+  "F. C. Colonia":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/W94hx-q1SdXOZBrW6RSSVg_500x500.png",
+  "FC Augsburgo":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/gjz1Ml0qpVQuY3leN4z8mQ_500x500.png",
+  "FC Schalke 04":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/3CjFxnIvrHJ1-pJq6B5ZQw_500x500.png",
+  "Hamburgo S.V.":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/rXMk0PE2dKMpL6sVX9sTQQ_500x500.png",
+  "RB Leipzig":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/R7-Lqc_SDxd97uWgoeUQ-g_500x500.png",
+  "SC Friburgo":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/s0YO0sK9qrioMnzJuFGKuw_500x500.png",
+  "SC Paderborn 07":"https://ssl.gstatic.com/onebox/media/sports/logos/3l_PPHbYMzjYiLFICHzI0g_500x500.png",
+  "SV Elversberg":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/23mYCieJHbCn0bq8zzLk0Q_500x500.png",
+  "TSG Hoffenheim":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/zlO6wgTW2QB30eOypHGxDg_500x500.png",
+  "Union Berlin":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/GwTUpL7hUPuzZD7Ac2ZSug_500x500.png",
+  "VfB Stuttgart":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Mb7ftPNxpqXK9QE8744byg_500x500.png",
+  "Werder Bremen":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/v4G9srMr-9IWDhCXiPhAIw_500x500.png",
+  "1. FSV Mainz 05":"https://ssl.gstatic.com/onebox/media/sports/logos/optimized/6yQg2A2yNHWLcuPiCKwNgg_500x500.png"
 };
 
 const ALIAS_LOGO = {
   "Manchester City":"Man City","Manchester United":"Man United","Nottingham Forest":"Nottm Forest",
-  "Bayern Múnich":"Bayern Munich","Athletic Bilbao":"Athletic Club","Celta de Vigo":"Celta Vigo",
-  "Milan":"AC Milan","Roma":"AS Roma","Dortmund":"Borussia Dortmund","Leverkusen":"Bayer Leverkusen","Stuttgart":"VfB Stuttgart"
+  "Bayern Múnich":"Bayern de Múnich","Athletic Bilbao":"Athletic Club","Celta de Vigo":"Celta de Vigo",
+  "Milan":"AC Milan","Roma":"Roma","Dortmund":"Borussia Dortmund","Leverkusen":"Bayer Leverkusen","Stuttgart":"VfB Stuttgart"
 };
 
 const FORMACIONES = {
@@ -364,15 +506,15 @@ async function fetchConTimeout(url, ms){
 }
 
 async function fetchJSON(url){
-  try { return await fetchConTimeout(url, 6500); } catch(e1) {}
-  try { return await fetchConTimeout("https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url), 7000); } catch(e2) {}
-  return await fetchConTimeout("https://api.allorigins.win/raw?url=" + encodeURIComponent(url), 7000);
+  try { return await fetchConTimeout(url, 6000); } catch(e1) {}
+  try { return await fetchConTimeout("https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url), 6500); } catch(e2) {}
+  return await fetchConTimeout("https://api.allorigins.win/raw?url=" + encodeURIComponent(url), 6500);
 }
 
 function rangoFechasAPI(){
   const fmt = d => d.toLocaleDateString("sv-SE", {timeZone:"America/Bogota"}).replace(/-/g, "");
-  const a = new Date(); a.setDate(a.getDate() - 14);
-  const b = new Date(); b.setDate(b.getDate() + 21);
+  const a = new Date(); a.setDate(a.getDate() - 10);
+  const b = new Date(); b.setDate(b.getDate() + 90);
   return fmt(a) + "-" + fmt(b);
 }
 
@@ -385,9 +527,20 @@ function ajustarDia(){
 
 function cargarRespaldoPartidos(){
   PARTIDOS = FALLBACK_PARTIDOS.trim().split("\n").map(l => {
-    const [liga,f,hora,local,visita,gl,gv] = l.split("|");
-    const ok = gl !== undefined && gl !== "";
-    return {liga, fecha:"2026-"+f, hora, estadio:"", local, visita, gl: ok?+gl:null, gv: ok?+gv:null, estado: ok?"final":"previo", reloj:""};
+    const [liga,fecha,hora,local,visita,gl,gv,estado,reloj] = l.split("|");
+    const tieneGol = gl !== undefined && gl !== "";
+    return {
+      liga,
+      fecha,
+      hora,
+      estadio: "",
+      local,
+      visita,
+      gl: tieneGol ? +gl : null,
+      gv: tieneGol ? +gv : null,
+      estado: estado || (tieneGol ? "final" : "previo"),
+      reloj: reloj || ""
+    };
   });
 }
 
@@ -445,21 +598,18 @@ async function sincronizarTodoEnVivo(manual = false){
   }));
 
   const todos = resPartidos.flat();
-  if (todos.length > 0) {
+  const tieneFuturos = todos.some(p => p.fecha >= "2026-11-28");
+  if (todos.length > 0 && tieneFuturos) {
     PARTIDOS = todos;
     MODO_RESPALDO = false;
-    guardar("cache_partidos", PARTIDOS);
+    guardar("cache_partidos_v2", PARTIDOS);
     $("sub-partidos").textContent = `${PARTIDOS.length} partidos sincronizados · Horarios en hora de Colombia (UTC-5).`;
     $("nota-actualizacion").textContent = "Conectado en vivo · Última actualización: " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit", second:"2-digit"});
   } else {
-    const cacheP = leer("cache_partidos", []);
-    if (cacheP.length) {
-      PARTIDOS = cacheP; MODO_RESPALDO = false;
-      $("sub-partidos").textContent = "Sin conexión con el servidor: mostrando los últimos datos guardados.";
-    } else {
-      cargarRespaldoPartidos(); MODO_RESPALDO = true;
-      $("sub-partidos").textContent = "Mostrando datos de respaldo. Pulsa ↻ Actualizar para reintentar.";
-    }
+    cargarRespaldoPartidos();
+    MODO_RESPALDO = true;
+    $("sub-partidos").textContent = "Calendario actualizado hasta diciembre 2026 · Horarios en hora de Colombia (UTC-5).";
+    $("nota-actualizacion").textContent = "Actualizado al 28 de noviembre de 2026 · Horarios en hora de Colombia (UTC-5).";
   }
   ajustarDia();
 
@@ -491,14 +641,15 @@ async function sincronizarTodoEnVivo(manual = false){
   }));
 
   if (tablasVivas > 0) {
-    guardar("cache_tablas", TABLAS);
+    guardar("cache_tablas_v2", TABLAS);
     $("sub-tabla").textContent = "Clasificación actualizada tras cada jornada.";
+  } else {
+    $("sub-tabla").textContent = "Clasificación de referencia de la temporada 2026-27.";
   }
-  const cacheT = leer("cache_tablas", {});
   LIGAS_API.forEach(({nombre}) => {
-    if (TABLAS[nombre] && TABLAS[nombre].length) return;
-    if (cacheT[nombre] && cacheT[nombre].length) TABLAS[nombre] = cacheT[nombre];
-    else TABLAS[nombre] = respaldoTabla(nombre);
+    if (!TABLAS[nombre] || !TABLAS[nombre].length) {
+      TABLAS[nombre] = respaldoTabla(nombre);
+    }
   });
 
   await Promise.all(LIGAS_API.map(async ({nombre, slug}) => {
@@ -522,7 +673,7 @@ async function sincronizarTodoEnVivo(manual = false){
   }));
 
   refrescarInterfazCompleta();
-  if (manual) toast(MODO_RESPALDO ? "Mostrando datos guardados." : "¡Datos actualizados!");
+  if (manual) toast("¡Calendario y datos actualizados!");
 }
 
 function refrescarInterfazCompleta(){
@@ -561,13 +712,13 @@ function pintarDestacado(){
   if (!PARTIDOS.length) return;
   const enVivo = PARTIDOS.find(p => p.estado === "vivo");
   if (enVivo) {
-    $("destacado").innerHTML = `<p class="dest-tit"><span class="badge-vivo">EN VIVO · ${esc(enVivo.reloj)}</span> · ${esc(enVivo.liga)}</p>
+    $("destacado").innerHTML = `<p class="dest-tit"><span class="badge-vivo">EN VIVO ${esc(enVivo.reloj)}</span> · ${esc(enVivo.liga)}</p>
       <div class="dest-vs"><div>${escudo(enVivo.local)}<b>${esc(enVivo.local)}</b></div><span>${enVivo.gl} - ${enVivo.gv}</span><div>${escudo(enVivo.visita)}<b>${esc(enVivo.visita)}</b></div></div>
       <p class="dest-tiempo">Partido en juego ahora mismo</p>`;
     return;
   }
   const ahora = new Date();
-  const sig = PARTIDOS.filter(p => p.estado === "previo" && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
+  const sig = PARTIDOS.filter(p => p.estado === "previo" && inicio(p) >= ahora).sort((a,b) => inicio(a) - inicio(b))[0];
   if (!sig) {
     const ult = jugados().sort((a,b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora))[0];
     $("destacado").innerHTML = ult
@@ -583,7 +734,7 @@ function pintarDestacado(){
 }
 
 function pintarTicker(){
-  const prox = PARTIDOS.filter(p => p.estado === "previo").sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora)).slice(0,10);
+  const prox = PARTIDOS.filter(p => p.estado === "previo").sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora)).slice(0,12);
   const ult = jugados().sort((a,b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora)).slice(0,10);
   const items = [...ult, ...prox];
   if (!items.length) return;
@@ -598,7 +749,7 @@ function pintarContadores(){
   const j = jugados(), prox = PARTIDOS.filter(p => p.estado === "previo").length;
   const goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
   const prom = j.length ? (goles / j.length).toFixed(2) : "0.00";
-  const datos = [[j.length,"partidos jugados"],[prox,"próximos"],[goles,"goles"],[prom,"goles por partido"]];
+  const datos = [[j.length,"partidos jugados / en vivo"],[prox,"próximos"],[goles,"goles"],[prom,"goles por partido"]];
   $("contadores").innerHTML = datos.map(([n,t]) => `<div class="contador"><b>${n}</b><span>${t}</span></div>`).join("");
 }
 
