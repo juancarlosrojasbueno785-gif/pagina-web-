@@ -375,6 +375,146 @@ footer small{ opacity:.7; }
 @media (max-width:480px){
   .jugador-ficha{ width:66px; }
   .jugador-ficha input{ font-size:10px; }
+  .intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.25), transparent 55%),
+    linear-gradient(160deg, #07110d 0%, #0b1922 60%, #050a0e 100%);
+  color: #f8fafc;
+  text-align: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease, transform 0.6s ease;
+}
+
+.intro-overlay.oculta {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+.intro-contenido {
+  max-width: 480px;
+  width: 100%;
+  animation: entradaSubir 0.7s ease-out;
+}
+
+.intro-balon {
+  font-size: 3.4rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: boteBalon 1.4s ease-in-out infinite;
+}
+
+.intro-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  margin-bottom: 14px;
+}
+
+.intro-titulo {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.6rem, 7vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  margin: 0 0 12px;
+}
+
+.intro-titulo span {
+  color: #10b981;
+}
+
+.intro-sub {
+  color: #cbd5e1;
+  font-size: 1rem;
+  margin: 0 0 24px;
+}
+
+.intro-barra {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.intro-progreso {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.intro-btn {
+  background: #10b981;
+  color: #042f2e;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 13px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.intro-btn:hover {
+  background: #34d399;
+  transform: translateY(-2px);
+}
+
+@keyframes boteBalon {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(12deg); }
+}
+
+@keyframes entradaSubir {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+3. JavaScript (agrégalo dentro de tu <script>)
+Este bloque anima la barra de carga, cierra la entrada automáticamente a los 2.6 segundos (o antes si el usuario pulsa "Entrar al estadio") y usa sessionStorage para que no vuelva a salir cada vez que recargue la página en la misma pestaña.
+
+JavaScript
+function cerrarIntro() {
+  const intro = $("intro-futbol");
+  if (!intro) return;
+  intro.classList.add("oculta");
+  sessionStorage.setItem("intro_vista", "1");
+}
+
+function iniciarIntro() {
+  const intro = $("intro-futbol");
+  const barra = $("intro-progreso");
+  if (!intro) return;
+
+  // Si ya entró en esta sesión, ocultar de inmediato
+  if (sessionStorage.getItem("intro_vista") === "1") {
+    intro.style.display = "none";
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    if (barra) barra.style.width = "100%";
+  });
+
+  setTimeout(cerrarIntro, 2600);
+}
   .cancha-campo{ min-height:540px; }
   .grid-goleadores{ grid-template-columns:1fr; }
 }
