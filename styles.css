@@ -284,22 +284,6 @@ footer{ text-align:center; padding:30px 18px; color:var(--suave); border-top:1px
 footer small{ opacity:.7; }
 #subir{ position:fixed; right:16px; bottom:16px; display:none; width:46px; height:46px; padding:0; font-size:20px; z-index:40; }
 
-/* ===== CELULAR ===== */
-@media (max-width:820px){
-  .hero-in{ grid-template-columns:1fr; padding:44px 18px 80px; }
-  .barra-fila{ grid-template-columns:105px 1fr 38px; }
-  .cancha{ min-height:520px; }
-  .jugador{ width:70px; }
-}
-@media (max-width:480px){
-  .grid-partidos{ grid-template-columns:1fr; }
-  nav a{ padding:7px 11px; font-size:13px; }
-}
-@media (prefers-reduced-motion:reduce){
-  *{ animation:none !important; transition:none !important; }
-  .reveal{ opacity:1; transform:none; }
-}
-
 /* ===== VERSIÓN EN VIVO: elementos nuevos ===== */
 .sec-head{ display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:flex-end; margin-bottom:6px; }
 .sec-head .sub{ margin-bottom:6px; }
@@ -372,10 +356,8 @@ footer small{ opacity:.7; }
 .toast-aviso.mostrar{ opacity:1; transform:translate(-50%,0); }
 #subir.visible{ display:block; }
 
-@media (max-width:480px){
-  .jugador-ficha{ width:66px; }
-  .jugador-ficha input{ font-size:10px; }
-  .intro-overlay {
+/* ===== PANTALLA DE ENTRADA ===== */
+.intro-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -487,34 +469,23 @@ footer small{ opacity:.7; }
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }
 }
-3. JavaScript (agrégalo dentro de tu <script>)
-Este bloque anima la barra de carga, cierra la entrada automáticamente a los 2.6 segundos (o antes si el usuario pulsa "Entrar al estadio") y usa sessionStorage para que no vuelva a salir cada vez que recargue la página en la misma pestaña.
 
-JavaScript
-function cerrarIntro() {
-  const intro = $("intro-futbol");
-  if (!intro) return;
-  intro.classList.add("oculta");
-  sessionStorage.setItem("intro_vista", "1");
+/* ===== CELULAR ===== */
+@media (max-width:820px){
+  .hero-in{ grid-template-columns:1fr; padding:44px 18px 80px; }
+  .barra-fila{ grid-template-columns:105px 1fr 38px; }
+  .cancha{ min-height:520px; }
+  .jugador{ width:70px; }
 }
-
-function iniciarIntro() {
-  const intro = $("intro-futbol");
-  const barra = $("intro-progreso");
-  if (!intro) return;
-
-  // Si ya entró en esta sesión, ocultar de inmediato
-  if (sessionStorage.getItem("intro_vista") === "1") {
-    intro.style.display = "none";
-    return;
-  }
-
-  requestAnimationFrame(() => {
-    if (barra) barra.style.width = "100%";
-  });
-
-  setTimeout(cerrarIntro, 2600);
-}
+@media (max-width:480px){
+  .grid-partidos{ grid-template-columns:1fr; }
+  nav a{ padding:7px 11px; font-size:13px; }
+  .jugador-ficha{ width:66px; }
+  .jugador-ficha input{ font-size:10px; }
   .cancha-campo{ min-height:540px; }
   .grid-goleadores{ grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+  .reveal{ opacity:1; transform:none; }
 }
