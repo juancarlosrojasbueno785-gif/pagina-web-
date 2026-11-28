@@ -889,5 +889,761 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", () => { $("subir").style.display = window.scrollY > 500 ? "block" : "none"; });
 });
 </script>
+  <script>
+let PARTIDOS = [];
+let TABLAS = {
+  "Premier League": [],
+  "LaLiga": [],
+  "Serie A": [],
+  "Bundesliga": []
+};
+let GOLEADORES = {
+  "Premier League": [],
+  "LaLiga": [],
+  "Serie A": [],
+  "Bundesliga": []
+};
+let ESCUDOS_OFICIALES = {};
+let EQUIPOS_INFO = {};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hoyClave = new Date().toLocaleDateString("sv-SE", { timeZone: "America/Bogota" });
+let fechas = [];
+let diaActivo = hoyClave;
+let estadoFiltro = "todos";
+let ligaActiva = "Todas", tablaActiva = "Premier League", goleadorLigaActiva = "Premier League";
+
+function leer(k, d){ try { return JSON.parse(localStorage.getItem(k)) || d; } catch(e){ return d; } }
+function guardar(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+let PRED = leer("pred", {}), FAVS = leer("favs", []);
+
+function toast(msg){
+  const t = $("toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add("mostrar");
+  setTimeout(() => t.classList.remove("mostrar"), 2600);
+}
+
+function color(n){
+  let h = 0; for (const c of n) h = (h*31 + c.charCodeAt(0)) % 360;
+  return `hsl(${h},55%,38%)`;
+}
+function siglas(n){
+  const p = n.split(" ");
+  return (p.length > 1 ? p[0][0] + p[1][0] + (p[2]?p[2][0]:"") : n.slice(0,3)).toUpperCase();
+}
+
+function escudo(n){
+  const url = ESCUDOS_OFICIALES[n];
+  if (!url) {
+    return `<span class="escudo" style="background:${color(n)}"><span class="siglas-txt">${siglas(n)}</span></span>`;
+  }
+  return `<span class="escudo" style="background:${color(n)}">
+    <span class="siglas-txt">${siglas(n)}</span>
+    <img src="${url}" alt="Escudo de ${n}" onload="marcarConLogo(this)" onerror="this.remove()">
+  </span>`;
+}
+
+function marcarConLogo(img){
+  const span = img.parentNode;
+  span.classList.add('con-logo');
+  span.style.background = 'transparent';
+  const txt = span.querySelector('.siglas-txt');
+  if (txt) txt.style.display = 'none';
+}
+
+const LIGAS_API = [
+  { nombre: "Premier League", slug: "eng.1" },
+  { nombre: "LaLiga", slug: "esp.1" },
+  { nombre: "Serie A", slug: "ita.1" },
+  { nombre: "Bundesliga", slug: "ger.1" }
+];
+
+/* FETCH CON RESPALDO AUTOMÁTICO (Directo -> Proxy CORS) */
+async function fetchJSON(url){
+  try {
+    const r = await fetch(url, { cache: "no-store" });
+    if (r.ok) return await r.json();
+  } catch (e) {}
+
+  // Respaldo si el navegador o red bloquea la conexión directa
+  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  const r2 = await fetch(proxyUrl, { cache: "no-store" });
+  if (!r2.ok) throw new Error("Error HTTP " + r2.status);
+  return await r2.json();
+}
+
+function obtenerRangoFechasAPI(){
+  const d1 = new Date(); d1.setDate(d1.getDate() - 7);
+  const d2 = new Date(); d2.setDate(d2.getDate() + 14);
+  const fmt = d => d.toLocaleDateString("sv-SE", { timeZone: "America/Bogota" }).replace(/-/g, "");
+  return `${fmt(d1)}-${fmt(d2)}`;
+}
+
+async function sincronizarTodoEnVivo(manual = false){
+  if (manual) toast("Conectando con servidores oficiales...");
+  const rango = obtenerRangoFechasAPI();
+  let errores = 0;
+
+  // 1. Descargar partidos reales (pasados, en vivo y próximos)
+  const resPartidos = await Promise.all(
+    LIGAS_API.map(async ({nombre, slug}) => {
+      try {
+        const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard?dates=${rango}`);
+        return (data.events || []).map(ev => {
+          const comp = ev.competitions[0];
+          const home = comp.competitors.find(c => c.homeAway === "home");
+          const away = comp.competitors.find(c => c.homeAway === "away");
+          const dt = new Date(ev.date);
+
+          const fechaCol = dt.toLocaleDateString("sv-SE", { timeZone: "America/Bogota" });
+          const horaCol = dt.toLocaleTimeString("en-GB", { timeZone: "America/Bogota", hour: "2-digit", minute: "2-digit" });
+
+          const nLocal = home.team.shortDisplayName || home.team.name;
+          const nVisita = away.team.shortDisplayName || away.team.name;
+
+          if (home.team.logo) ESCUDOS_OFICIALES[nLocal] = home.team.logo;
+          if (away.team.logo) ESCUDOS_OFICIALES[nVisita] = away.team.logo;
+          if (home.team.id) EQUIPOS_INFO[nLocal] = { id: home.team.id, slug };
+          if (away.team.id) EQUIPOS_INFO[nVisita] = { id: away.team.id, slug };
+
+          const state = ev.status?.type?.state || "pre";
+          const estado = state === "in" ? "vivo" : (state === "post" ? "final" : "previo");
+          const tieneGol = state === "in" || state === "post";
+
+          return {
+            liga: nombre,
+            fecha: fechaCol,
+            hora: horaCol,
+            local: nLocal,
+            visita: nVisita,
+            gl: tieneGol ? Number(home.score ?? 0) : null,
+            gv: tieneGol ? Number(away.score ?? 0) : null,
+            estado,
+            reloj: ev.status?.displayClock || ""
+          };
+        });
+      } catch (e) {
+        errores++;
+        return [];
+      }
+    })
+  );
+
+  const todos = resPartidos.flat();
+  if (todos.length > 0) {
+    PARTIDOS = todos;
+    fechas = [...new Set(PARTIDOS.map(p => p.fecha))].sort();
+    if (!fechas.includes(diaActivo)) {
+      diaActivo = fechas.includes(hoyClave) ? hoyClave : (fechas.find(f => f >= hoyClave) || fechas[fechas.length - 1]);
+    }
+    $("sub-partidos").textContent = "Resultados reales y calendario oficial de Europa en tiempo real.";
+    $("nota-actualizacion").textContent = "Conectado en vivo · Última actualización: " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+  } else {
+    $("sub-partidos").textContent = "Sin respuesta del servidor de partidos. Pulsa '↻ Actualizar' para reintentar.";
+    $("destacado").innerHTML = `<p class="dest-tit">Sin conexión con el servidor</p><p class="dest-tiempo">Verifica tu internet o pulsa Actualizar.</p>`;
+  }
+
+  // 2. Descargar tablas de posiciones oficiales completas
+  await Promise.all(
+    LIGAS_API.map(async ({nombre, slug}) => {
+      try {
+        const data = await fetchJSON(`https://site.api.espn.com/apis/v2/sports/soccer/${slug}/standings`);
+        const entries = data.children?.[0]?.standings?.entries || [];
+        if (entries.length > 0) {
+          TABLAS[nombre] = entries.map(item => {
+            const eq = item.team.shortDisplayName || item.team.name;
+            const logo = item.team.logos?.[0]?.href;
+            if (logo) ESCUDOS_OFICIALES[eq] = logo;
+            if (item.team.id) EQUIPOS_INFO[eq] = { id: item.team.id, slug };
+
+            const getStat = name => {
+              const s = item.stats.find(x => x.name === name);
+              return s ? Number(s.value) : 0;
+            };
+            return [
+              eq,
+              getStat("gamesPlayed"),
+              getStat("wins"),
+              getStat("ties"),
+              getStat("losses"),
+              getStat("pointDifferential"),
+              getStat("points")
+            ];
+          });
+        }
+      } catch (e) {}
+    })
+  );
+  if (Object.values(TABLAS).some(t => t.length > 0)) {
+    $("sub-tabla").textContent = "Clasificación oficial real actualizada tras cada jornada.";
+  }
+
+  // 3. Descargar goleadores oficiales reales
+  await Promise.all(
+    LIGAS_API.map(async ({nombre, slug}) => {
+      try {
+        const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/leaders`);
+        const listaCat = data.leaders || data.categories || [];
+        const catGoles = listaCat.find(c => c.name === "goals" || c.abbreviation === "G");
+        if (catGoles && catGoles.leaders) {
+          GOLEADORES[nombre] = catGoles.leaders.slice(0, 8).map((l, idx) => ({
+            pos: idx + 1,
+            nombre: l.athlete.displayName,
+            equipo: l.athlete.team?.shortDisplayName || l.athlete.team?.name || "",
+            foto: l.athlete.headshot?.href || "",
+            goles: l.displayValue || l.value
+          }));
+        }
+      } catch (e) {}
+    })
+  );
+
+  refrescarInterfazCompleta();
+  if (manual && todos.length > 0) toast("¡Datos oficiales conectados y actualizados!");
+}
+
+function refrescarInterfazCompleta(){
+  pintarDestacado();
+  pintarTicker();
+  pintarContadores();
+  pintarTabsDias();
+  pintarFiltro();
+  pintarPartidos();
+  pintarPred();
+  pintarTabla();
+  pintarGoleadores();
+  pintarStats();
+  pintarEquipos($("buscador").value);
+  pintarFavoritos();
+  pintarComparar();
+  poblarSelectorClubesOnce();
+  pintarOnce();
+  contarLogos();
+}
+
+function contarLogos(){
+  const todos = new Set([...Object.values(TABLAS).flat().map(e => e[0]), ...PARTIDOS.flatMap(p => [p.local, p.visita])]);
+  const ok = [...todos].filter(n => ESCUDOS_OFICIALES[n]).length;
+  $("estado-logos").textContent = todos.size ? `Escudos oficiales cargados: ${ok} de ${todos.size}` : "Esperando conexión...";
+}
+
+function hora12(h){
+  let [hh,mm] = h.split(":").map(Number);
+  const s = hh >= 12 ? "p. m." : "a. m.";
+  hh = hh % 12 || 12;
+  return `${hh}:${String(mm).padStart(2,"0")} ${s}`;
+}
+function etiquetaDia(f){
+  return new Date(f + "T12:00:00").toLocaleDateString("es-CO",{weekday:"short",day:"numeric",month:"short"});
+}
+const clave = p => p.fecha + "|" + p.local + "|" + p.visita;
+const esFav = n => FAVS.includes(n);
+const inicio = p => new Date(`${p.fecha}T${p.hora}:00-05:00`);
+const resultado = p => p.gl > p.gv ? "1" : p.gl < p.gv ? "2" : "X";
+const jugados = () => PARTIDOS.filter(p => p.estado === "final" || p.estado === "vivo");
+
+/* PORTADA */
+function pintarDestacado(){
+  if (!PARTIDOS.length) return;
+  const enVivo = PARTIDOS.find(p => p.estado === "vivo");
+  if (enVivo) {
+    $("destacado").innerHTML = `<p class="dest-tit"><span class="badge-vivo">EN VIVO · ${enVivo.reloj}</span> · ${enVivo.liga}</p>
+      <div class="dest-vs"><div>${escudo(enVivo.local)}<b>${enVivo.local}</b></div><span>${enVivo.gl} - ${enVivo.gv}</span><div>${escudo(enVivo.visita)}<b>${enVivo.visita}</b></div></div>
+      <p class="dest-tiempo">Partido disputándose en este momento</p>`;
+    return;
+  }
+  const ahora = new Date();
+  const sig = PARTIDOS.filter(p => p.estado === "previo" && inicio(p) > ahora).sort((a,b) => inicio(a) - inicio(b))[0];
+  if (!sig) {
+    const ult = jugados().sort((a,b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora))[0];
+    $("destacado").innerHTML = ult
+      ? `<p class="dest-tit">Último resultado oficial · ${ult.liga}</p><div class="dest-vs"><div>${escudo(ult.local)}<b>${ult.local}</b></div><span>${ult.gl} - ${ult.gv}</span><div>${escudo(ult.visita)}<b>${ult.visita}</b></div></div><p class="dest-tiempo">${etiquetaDia(ult.fecha)} · Finalizado</p>`
+      : `<p class="dest-tit">Sin partidos programados</p>`;
+    return;
+  }
+  const m = Math.round((inicio(sig) - ahora) / 60000);
+  const d = Math.floor(m / 1440), hh = Math.floor(m % 1440 / 60), mm = m % 60;
+  $("destacado").innerHTML = `<p class="dest-tit">Próximo partido oficial · ${sig.liga}</p>
+    <div class="dest-vs"><div>${escudo(sig.local)}<b>${sig.local}</b></div><span>VS</span><div>${escudo(sig.visita)}<b>${sig.visita}</b></div></div>
+    <p class="dest-tiempo">${etiquetaDia(sig.fecha)} · ${hora12(sig.hora)}<br><strong>faltan ${d ? d + " d " : ""}${hh} h ${mm} min</strong></p>`;
+}
+
+function pintarTicker(){
+  const ult = jugados().sort((a,b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora)).slice(0,18);
+  const items = ult.length ? ult : PARTIDOS.slice(0, 14);
+  if (!items.length) return;
+  const html = items.map(p => {
+    const marc = p.gl !== null ? `<b>${p.gl}-${p.gv}</b>` : `<b>${hora12(p.hora)}</b>`;
+    return `<span>${p.estado === "vivo" ? "🔴 " : ""}${p.local} ${marc} ${p.visita}</span>`;
+  }).join("");
+  $("ticker").innerHTML = `<div class="pista">${html}${html}</div>`;
+}
+
+function pintarContadores(){
+  const j = jugados(), prox = PARTIDOS.filter(p => p.estado === "previo").length;
+  const goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
+  const prom = j.length ? (goles / j.length).toFixed(2) : "0.00";
+  const datos = [[j.length,"partidos jugados"],[prox,"próximos partidos"],[goles,"goles reales"],[prom,"goles por partido"]];
+  $("contadores").innerHTML = datos.map(([n,t]) => `<div class="contador"><b>${n}</b><span>${t}</span></div>`).join("");
+}
+
+/* PARTIDOS */
+function setEstadoFiltro(est, btn){
+  estadoFiltro = est;
+  document.querySelectorAll("#filtros-estado button").forEach(b => b.classList.remove("activo"));
+  btn.classList.add("activo");
+  pintarPartidos();
+}
+
+function pintarTabsDias(){
+  $("tabs-dias").innerHTML = fechas.map(f =>
+    `<button class="${f===diaActivo?'activo':''} ${f===hoyClave?'hoy':''}" onclick="elegirDia('${f}')">${f===hoyClave?'Hoy · ':''}${etiquetaDia(f)}</button>`).join("");
+}
+function elegirDia(f){ diaActivo = f; $("buscar-partido").value = ""; pintarTabsDias(); pintarPartidos(); }
+
+function pintarFiltro(){
+  const prev = $("filtro-liga").value;
+  const ligas = ["Todas", ...LIGAS_API.map(l => l.nombre)];
+  $("filtro-liga").innerHTML = ligas.map(l => `<option>${l}</option>`).join("");
+  if (ligas.includes(prev)) $("filtro-liga").value = prev;
+  $("filtro-liga").onchange = e => { ligaActiva = e.target.value; pintarPartidos(); };
+}
+
+function tarjeta(p, conFecha){
+  const esVivo = p.estado === "vivo";
+  const jugado = p.estado === "final" || esVivo;
+  const real = p.estado === "final" ? resultado(p) : "";
+  const pr = PRED[clave(p)];
+  let extra = "";
+  if (p.estado === "previo") {
+    extra = `<div class="pred"><span>Pronóstico</span>` +
+      [["1", p.local], ["X", "Empate"], ["2", p.visita]].map(([k,t]) =>
+        `<button class="${pr===k?'sel':''}" title="${t}" onclick="pronosticar('${clave(p)}','${k}')">${k}</button>`).join("") + `</div>`;
+  } else if (pr && p.estado === "final") {
+    extra = `<div class="pred ${pr===real?'acierto':'fallo'}">Tu pronóstico: ${pr} · ${pr===real?'acertaste ✔':'fallaste ✘'}</div>`;
+  }
+  const marc = jugado ? `<b>${p.gl}</b><i>-</i><b>${p.gv}</b>` : `<span class="hora">${hora12(p.hora)}</span>`;
+  const star = n => esFav(n) ? '<span class="fav">★</span> ' : '';
+  const estadoHtml = esVivo
+    ? `<span class="badge-vivo">EN VIVO ${p.reloj}</span>`
+    : `${p.estado === "final" ? "Finalizado" : "Por jugar"}${conFecha ? " · " + etiquetaDia(p.fecha) : ""}`;
+
+  return `<div class="partido ${esVivo ? 'en-vivo' : ''}">
+    <div class="cab"><span>${p.liga}</span><span>${estadoHtml}</span></div>
+    <div class="vs">
+      <div class="eq ${real==="1"?'ganador':''}">${escudo(p.local)}<span>${star(p.local)}${p.local}</span></div>
+      <div class="marc">${marc}</div>
+      <div class="eq ${real==="2"?'ganador':''}">${escudo(p.visita)}<span>${star(p.visita)}${p.visita}</span></div>
+    </div>
+    ${extra}
+  </div>`;
+}
+
+function pintarPartidos(){
+  const q = $("buscar-partido").value.trim().toLowerCase();
+  let lista = PARTIDOS.filter(p => ligaActiva === "Todas" || p.liga === ligaActiva);
+  if (estadoFiltro !== "todos") {
+    lista = lista.filter(p => p.estado === estadoFiltro);
+  } else if (!q) {
+    lista = lista.filter(p => p.fecha === diaActivo);
+  }
+  if (q) {
+    lista = lista.filter(p => (p.local + " " + p.visita).toLowerCase().includes(q));
+  }
+  lista.sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+
+  const jug = lista.filter(p => p.gl !== null);
+  const goles = jug.reduce((s,p) => s + p.gl + p.gv, 0);
+  const goleada = jug.slice().sort((a,b) => Math.abs(b.gl-b.gv) - Math.abs(a.gl-a.gv))[0];
+  $("resumen").innerHTML = lista.length ? `
+    <div><b>${lista.length}</b><span>partidos mostrados</span></div>
+    <div><b>${jug.length}</b><span>jugados / en vivo</span></div>
+    <div><b>${goles}</b><span>goles</span></div>
+    ${goleada ? `<div><b>${goleada.gl}-${goleada.gv}</b><span>destacado: ${goleada.local} vs ${goleada.visita}</span></div>` : ""}` : "";
+
+  const mostrarFecha = !!q || estadoFiltro !== "todos";
+  $("lista-partidos").innerHTML = lista.length ? lista.map(p => tarjeta(p, mostrarFecha)).join("")
+    : `<p class="vacio">No hay partidos en esta fecha o filtro.</p>`;
+}
+
+/* PRONÓSTICOS */
+function pronosticar(c, k){
+  if (PRED[c] === k) delete PRED[c]; else PRED[c] = k;
+  guardar("pred", PRED);
+  pintarPartidos(); pintarFavoritos(); pintarPred();
+  toast("Pronóstico guardado");
+}
+function pintarPred(){
+  let ac = 0, fa = 0, pe = 0;
+  PARTIDOS.forEach(p => {
+    const pr = PRED[clave(p)];
+    if (!pr) return;
+    if (p.estado !== "final") pe++; else if (pr === resultado(p)) ac++; else fa++;
+  });
+  $("marcador-pred").innerHTML = (ac + fa + pe)
+    ? `<b>Tus pronósticos:</b> ${ac} aciertos · ${fa} fallos · ${pe} pendientes`
+    : `Pronostica los próximos encuentros oficiales: <b>1</b> local, <b>X</b> empate, <b>2</b> visitante.`;
+}
+
+/* TABLA DE POSICIONES REAL */
+function pintarTabla(){
+  $("tabs-ligas").innerHTML = Object.keys(TABLAS).map(l =>
+    `<button class="${l===tablaActiva?'activo':''}" onclick="elegirTabla('${l}')">${l}</button>`).join("");
+  const filas = TABLAS[tablaActiva] || [];
+  if (!filas.length) return;
+  const max = filas[0][6] || 1;
+  $("grafica").innerHTML = `<h3>Top 6 · Carrera por el título</h3>` + filas.slice(0,6).map(e =>
+    `<div class="barra-fila"><span class="barra-n">${e[0]}</span><div class="barra"><i style="width:${e[6]/max*100}%"></i></div><b>${e[6]} pts</b></div>`).join("");
+  $("cuerpo-tabla").innerHTML = filas.map((f,i) => {
+    const clase = i < 4 ? "top" : (i >= filas.length-3 ? "baja" : "");
+    const dgStr = f[5] > 0 ? `+${f[5]}` : f[5];
+    return `<tr class="${clase}">
+      <td>${i+1}</td>
+      <td><span class="td-eq">${escudo(f[0])}${f[0]}</span></td>
+      <td>${f[1]}</td>
+      <td>${f[2]}</td>
+      <td>${f[3]}</td>
+      <td>${f[4]}</td>
+      <td>${dgStr}</td>
+      <td><strong>${f[6]}</strong></td>
+    </tr>`;
+  }).join("");
+}
+function elegirTabla(l){ tablaActiva = l; pintarTabla(); }
+
+/* GOLEADORES REALES */
+function pintarGoleadores(){
+  $("tabs-goleadores").innerHTML = Object.keys(TABLAS).map(l =>
+    `<button class="${l===goleadorLigaActiva?'activo':''}" onclick="elegirGoleadorLiga('${l}')">${l}</button>`).join("");
+  const lista = GOLEADORES[goleadorLigaActiva] || [];
+  if (!lista.length) {
+    $("grid-goleadores").innerHTML = `<p class="vacio">Sin datos de goleadores disponibles aún para ${goleadorLigaActiva}.</p>`;
+    return;
+  }
+  $("grid-goleadores").innerHTML = lista.map(g => `
+    <div class="card-goleador">
+      <div class="gol-pos">${g.pos}</div>
+      <div class="gol-avatar">
+        ${g.foto ? `<img src="${g.foto}" alt="${g.nombre}" onerror="this.remove()">` : `<span>⚽</span>`}
+      </div>
+      <div class="gol-info">
+        <h4>${g.nombre}</h4>
+        <p>${escudo(g.equipo)} ${g.equipo}</p>
+      </div>
+      <div class="gol-cifra">
+        <b>${g.goles}</b>
+        <span>Goles</span>
+      </div>
+    </div>
+  `).join("");
+}
+function elegirGoleadorLiga(l){ goleadorLigaActiva = l; pintarGoleadores(); }
+
+/* ESTADÍSTICAS */
+function pintarStats(){
+  const ligas = Object.keys(TABLAS);
+  const datos = ligas.map(l => {
+    const j = jugados().filter(p => p.liga === l);
+    const g = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
+    return {l, prom: j.length ? g / j.length : 0};
+  });
+  const max = Math.max(...datos.map(d => d.prom)) || 1;
+  $("stats-ligas").innerHTML = datos.map(d =>
+    `<div class="barra-fila"><span class="barra-n">${d.l}</span><div class="barra"><i style="width:${d.prom/max*100}%"></i></div><b>${d.prom.toFixed(2)}</b></div>`).join("");
+  const top = jugados().sort((a,b) => (b.gl + b.gv) - (a.gl + a.gv)).slice(0,5);
+  $("goleadas").innerHTML = top.length
+    ? top.map(p => `<li><span>${p.local} <b>${p.gl}-${p.gv}</b> ${p.visita}</span><small>${p.liga}</small></li>`).join("")
+    : `<li><span>Esperando partidos finalizados</span></li>`;
+  const empates = jugados().filter(p => p.gl === p.gv).length, tot = jugados().length || 1;
+  const loc = jugados().filter(p => p.gl > p.gv).length, vis = jugados().filter(p => p.gl < p.gv).length;
+  const pct = n => Math.round(n / tot * 100);
+  $("resultados-pct").innerHTML = [["Local",loc],["Empate",empates],["Visitante",vis]].map(([t,n]) =>
+    `<div class="barra-fila"><span class="barra-n">${t}</span><div class="barra"><i style="width:${pct(n)}%"></i></div><b>${pct(n)}%</b></div>`).join("");
+}
+
+/* EQUIPOS Y FAVORITOS */
+function pintarEquipos(filtro=""){
+  const q = filtro.toLowerCase();
+  const mapa = {};
+  Object.entries(TABLAS).forEach(([liga, eqs]) => eqs.forEach(([n]) => mapa[n] = liga));
+  PARTIDOS.forEach(p => { if (!mapa[p.local]) mapa[p.local] = p.liga; if (!mapa[p.visita]) mapa[p.visita] = p.liga; });
+
+  const lista = Object.entries(mapa).sort((a,b) => a[0].localeCompare(b[0]))
+    .filter(([n,l]) => (n + " " + l).toLowerCase().includes(q));
+  $("grid-equipos").innerHTML = lista.length ? lista.map(([n,l]) =>
+    `<div class="equipo" data-n="${n}" onclick="verEquipo(this.dataset.n)">
+      <button class="estrella ${esFav(n)?'on':''}" title="Seguir equipo" onclick="event.stopPropagation();toggleFav(this.closest('.equipo').dataset.n)">${esFav(n)?'★':'☆'}</button>
+      ${escudo(n)}<h3>${n}</h3><p>${l}</p></div>`).join("")
+    : `<p class="vacio">Cargando clubes oficiales...</p>`;
+}
+function verEquipo(n){
+  $("buscar-partido").value = n;
+  estadoFiltro = "todos";
+  document.querySelectorAll("#filtros-estado button").forEach((b,i) => b.classList.toggle("activo", i === 0));
+  pintarPartidos();
+  $("partidos").scrollIntoView({behavior:"smooth"});
+}
+function toggleFav(n){
+  const agregado = !esFav(n);
+  FAVS = agregado ? [...FAVS, n] : FAVS.filter(x => x !== n);
+  guardar("favs", FAVS);
+  pintarEquipos($("buscador").value); pintarFavoritos(); pintarPartidos();
+  toast(agregado ? `${n} añadido a favoritos ★` : `${n} quitado de favoritos`);
+}
+function pintarFavoritos(){
+  const lista = PARTIDOS.filter(p => esFav(p.local) || esFav(p.visita))
+    .sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+  $("lista-favoritos").innerHTML = lista.length ? lista.map(p => tarjeta(p, true)).join("")
+    : `<p class="vacio">Toca la ★ en cualquier equipo para ver aquí sus partidos reales.</p>`;
+}
+
+/* COMPARADOR */
+function pintarComparar(){
+  const ligaSel = $("cmp-liga").value || Object.keys(TABLAS)[0];
+  const eqs = TABLAS[ligaSel] || [];
+  if (eqs.length < 2) return;
+  ["cmp-a","cmp-b"].forEach((id,i) => {
+    const s = $(id), previo = s.value;
+    s.innerHTML = eqs.map(e => `<option>${e[0]}</option>`).join("");
+    s.value = eqs.some(e => e[0] === previo) ? previo : eqs[i][0];
+  });
+  const A = eqs.find(e => e[0] === $("cmp-a").value), B = eqs.find(e => e[0] === $("cmp-b").value);
+  const pos = e => eqs.indexOf(e) + 1;
+  const pct = e => e[1] ? Math.round(e[2] / e[1] * 100) : 0;
+  const filas = [
+    ["Posición", pos(A), pos(B), true],
+    ["Puntos", A[6], B[6]],
+    ["Partidos", A[1], B[1], null],
+    ["Ganados", A[2], B[2]],
+    ["Empates", A[3], B[3], null],
+    ["Perdidos", A[4], B[4], true],
+    ["Dif. de gol", A[5], B[5]],
+    ["% Victorias", pct(A) + "%", pct(B) + "%"]
+  ];
+  $("cmp").innerHTML = `<div class="cmp-cab"><div>${escudo(A[0])}${A[0]}</div><div>VS</div><div>${escudo(B[0])}${B[0]}</div></div>` +
+    filas.map(([t,a,b,menor]) => {
+      const va = parseFloat(a), vb = parseFloat(b);
+      const mejorA = menor === null || va === vb ? false : (menor ? va < vb : va > vb);
+      const mejorB = menor === null || va === vb ? false : (menor ? vb < va : vb > va);
+      return `<div class="cmp-fila"><b class="${mejorA?'mejor':''}">${a}</b><span>${t}</span><b class="${mejorB?'mejor':''}">${b}</b></div>`;
+    }).join("");
+}
+
+/* ARMA TU ONCE IDEAL CON ESCUDO Y PLANTILLA REAL */
+const FORMACIONES_PRO = {
+  "4-3-3": {
+    filas: [1, 4, 3, 3],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MC", "MC", "MCO", "EI", "DC", "ED"],
+    dorsales: [1, 3, 4, 5, 2, 6, 8, 10, 11, 9, 7]
+  },
+  "4-4-2": {
+    filas: [1, 4, 4, 2],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MI", "MC", "MC", "MD", "DC", "DC"],
+    dorsales: [1, 3, 4, 5, 2, 11, 6, 8, 7, 9, 10]
+  },
+  "3-5-2": {
+    filas: [1, 3, 5, 2],
+    posiciones: ["POR", "DFC", "DFC", "DFC", "CAI", "MC", "MCD", "MC", "CAD", "DC", "DC"],
+    dorsales: [1, 4, 5, 3, 11, 8, 6, 10, 2, 9, 7]
+  },
+  "4-2-3-1": {
+    filas: [1, 4, 2, 3, 1],
+    posiciones: ["POR", "LI", "DFC", "DFC", "LD", "MCD", "MCD", "EI", "MCO", "ED", "DC"],
+    dorsales: [1, 3, 4, 5, 2, 6, 8, 11, 10, 7, 9]
+  }
+};
+
+let ONCE = leer("once_pro", { nombre: "", escudo: "", f: "4-3-3", j: {} });
+
+function poblarSelectorClubesOnce(){
+  const sel = $("escudo-once");
+  const previo = ONCE.escudo || "";
+  const todos = Object.keys(ESCUDOS_OFICIALES).sort();
+  sel.innerHTML = `<option value="">-- Elige un club para poner su escudo y plantilla real --</option>` +
+    todos.map(eq => `<option value="${eq}">${eq}</option>`).join("");
+  if (todos.includes(previo)) sel.value = previo;
+}
+
+async function seleccionarClubOnce(club){
+  ONCE.escudo = club;
+  if (!club) {
+    guardar("once_pro", ONCE);
+    pintarOnce();
+    return;
+  }
+  ONCE.nombre = club;
+  $("nombre-equipo-once").value = club;
+  pintarOnce();
+  toast(`Cargando plantilla real de ${club}...`);
+
+  const info = EQUIPOS_INFO[club];
+  if (info && info.id) {
+    try {
+      const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/soccer/${info.slug}/teams/${info.id}/roster`);
+      const atletas = data.athletes || [];
+      if (atletas.length > 0) {
+        const porPos = { GK: [], DEF: [], MID: [], FWD: [] };
+        atletas.forEach(a => {
+          const p = a.position?.abbreviation || "";
+          const item = { nombre: a.shortName || a.displayName, dorsal: a.jersey || "" };
+          if (p === "G" || p === "GK") porPos.GK.push(item);
+          else if (p === "D" || p === "DF") porPos.DEF.push(item);
+          else if (p === "M" || p === "MF") porPos.MID.push(item);
+          else porPos.FWD.push(item);
+        });
+
+        const f = FORMACIONES_PRO[ONCE.f] || FORMACIONES_PRO["4-3-3"];
+        ONCE.j = {};
+        f.posiciones.forEach((pos, idx) => {
+          let candidato = null;
+          if (pos === "POR") candidato = porPos.GK.shift();
+          else if (["LI", "DFC", "LD", "CAI", "CAD"].includes(pos)) candidato = porPos.DEF.shift();
+          else if (["MC", "MCO", "MCD", "MI", "MD"].includes(pos)) candidato = porPos.MID.shift();
+          else candidato = porPos.FWD.shift();
+
+          if (!candidato) {
+            candidato = porPos.MID.shift() || porPos.DEF.shift() || porPos.FWD.shift() || porPos.GK.shift();
+          }
+          if (candidato) {
+            ONCE.j[idx] = { nombre: candidato.nombre, dorsal: candidato.dorsal || f.dorsales[idx] };
+          }
+        });
+        toast(`Plantilla oficial de ${club} cargada`);
+      }
+    } catch (e) {
+      toast("No se pudo descargar la plantilla, puedes editar los nombres manualmente.");
+    }
+  }
+  guardar("once_pro", ONCE);
+  pintarOnce();
+}
+
+function pintarOnce(){
+  const selForm = $("formacion");
+  if (!selForm.options.length) {
+    selForm.innerHTML = Object.keys(FORMACIONES_PRO).map(f => `<option value="${f}">${f}</option>`).join("");
+  }
+  selForm.value = ONCE.f || "4-3-3";
+  $("nombre-equipo-once").value = ONCE.nombre || "";
+
+  const conf = FORMACIONES_PRO[selForm.value];
+  const logoHtml = ONCE.escudo && ESCUDOS_OFICIALES[ONCE.escudo]
+    ? `<img src="${ESCUDOS_OFICIALES[ONCE.escudo]}" alt="${esc(ONCE.escudo)}">`
+    : "";
+
+  let idx = 0;
+  const filasHtml = conf.filas.map(cant => {
+    let jugadores = "";
+    for (let i = 0; i < cant; i++) {
+      const actual = idx;
+      const pos = conf.posiciones[actual];
+      const dato = ONCE.j[actual] || {};
+      const dorsal = dato.dorsal || conf.dorsales[actual];
+      const nombre = dato.nombre || `Jugador ${actual + 1}`;
+      jugadores += `
+        <div class="jugador-ficha">
+          <div class="camiseta"><span>${esc(dorsal)}</span><small>${pos}</small></div>
+          <input type="text" value="${esc(nombre)}" maxlength="22" aria-label="${pos}"
+            onchange="editarJugador(${actual}, this.value)">
+        </div>`;
+      idx++;
+    }
+    return `<div class="fila-cancha">${jugadores}</div>`;
+  }).join("");
+
+  $("cancha").innerHTML = `
+    <div class="cancha-cab">
+      ${logoHtml}
+      <div>
+        <strong>${esc(ONCE.nombre || "Mi Once Ideal")}</strong>
+        <span>Formación ${selForm.value}</span>
+      </div>
+    </div>
+    <div class="cancha-campo">${filasHtml}</div>`;
+}
+
+function editarJugador(idx, val){
+  const conf = FORMACIONES_PRO[ONCE.f] || FORMACIONES_PRO["4-3-3"];
+  ONCE.j[idx] = {
+    nombre: val.trim() || `Jugador ${idx + 1}`,
+    dorsal: ONCE.j[idx]?.dorsal || conf.dorsales[idx]
+  };
+  guardar("once_pro", ONCE);
+}
+
+function limpiarOnce(){
+  ONCE = { nombre: "", escudo: "", f: ONCE.f || "4-3-3", j: {} };
+  $("escudo-once").value = "";
+  guardar("once_pro", ONCE);
+  pintarOnce();
+  toast("Alineación reiniciada");
+}
+
+function compartirOnce(){
+  const payload = btoa(encodeURIComponent(JSON.stringify(ONCE)));
+  const url = `${location.origin}${location.pathname}?once=${payload}#alineacion`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => toast("¡Enlace de tu Once copiado al portapapeles!"));
+  } else {
+    prompt("Copia este enlace para compartir tu Once:", url);
+  }
+}
+
+function cargarOnceDesdeURL(){
+  const params = new URLSearchParams(location.search);
+  const raw = params.get("once");
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(decodeURIComponent(atob(raw)));
+    if (parsed && parsed.f) {
+      ONCE = parsed;
+      guardar("once_pro", ONCE);
+    }
+  } catch (e) {}
+}
+
+/* TEMA CLARO / OSCURO */
+function cambiarFondo(){
+  document.body.classList.toggle("claro");
+  const esClaro = document.body.classList.contains("claro");
+  guardar("tema_claro", esClaro);
+  toast(esClaro ? "Modo claro activado" : "Modo oscuro activado");
+}
+
+/* INICIALIZACIÓN */
+window.addEventListener("DOMContentLoaded", () => {
+  if (leer("tema_claro", false)) document.body.classList.add("claro");
+
+  $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO", {
+    weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "America/Bogota"
+  });
+
+  $("cmp-liga").innerHTML = Object.keys(TABLAS).map(l => `<option>${l}</option>`).join("");
+  $("cmp-liga").onchange = pintarComparar;
+  $("cmp-a").onchange = pintarComparar;
+  $("cmp-b").onchange = pintarComparar;
+
+  $("buscar-partido").oninput = pintarPartidos;
+  $("buscador").oninput = e => pintarEquipos(e.target.value);
+
+  $("escudo-once").onchange = e => seleccionarClubOnce(e.target.value);
+  $("formacion").onchange = e => { ONCE.f = e.target.value; guardar("once_pro", ONCE); pintarOnce(); };
+  $("nombre-equipo-once").oninput = e => { ONCE.nombre = e.target.value; guardar("once_pro", ONCE); pintarOnce(); };
+
+  window.addEventListener("scroll", () => {
+    $("subir").classList.toggle("visible", window.scrollY > 400);
+  });
+
+  cargarOnceDesdeURL();
+  pintarOnce();
+  sincronizarTodoEnVivo();
+  setInterval(() => sincronizarTodoEnVivo(false), 60000);
+});
+</script>
+</body>
+</html>
 </body>
 </html>
