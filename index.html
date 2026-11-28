@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- 1. PEGA AQUÍ EL CÓDIGO HTML DE LA ENTRADA -->
   <div id="intro-futbol" class="intro-overlay" role="dialog" aria-label="Bienvenida a Mundo Fútbol">
     <div class="intro-contenido">
       <div class="intro-balon" aria-hidden="true">⚽</div>
@@ -28,7 +27,6 @@
       </button>
     </div>
   </div>
-  <!-- FIN DE LA ENTRADA -->
 
 <header class="hero" id="inicio">
   <div class="hero-in">
@@ -311,6 +309,27 @@ function leer(k, d){ try { return JSON.parse(localStorage.getItem(k)) || d; } ca
 function guardar(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 let PRED = leer("pred", {}), FAVS = leer("favs", []);
 
+function cerrarIntro(){
+  const intro = $("intro-futbol");
+  if (!intro) return;
+  intro.classList.add("oculta");
+  sessionStorage.setItem("intro_vista", "1");
+}
+
+function iniciarIntro(){
+  const intro = $("intro-futbol");
+  const barra = $("intro-progreso");
+  if (!intro) return;
+  if (sessionStorage.getItem("intro_vista") === "1") {
+    intro.style.display = "none";
+    return;
+  }
+  requestAnimationFrame(() => {
+    if (barra) barra.style.width = "100%";
+  });
+  setTimeout(cerrarIntro, 2600);
+}
+
 function toast(msg){
   const t = $("toast");
   if (!t) return;
@@ -515,7 +534,7 @@ async function sincronizarTodoEnVivo(manual = false){
   /* 3. Goleadores */
   await Promise.all(LIGAS_API.map(async ({nombre, slug}) => {
     try {
-      const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/leaders`);
+      const data = await fetchJSON(`https://site.api.espn.com/apis/v2/sports/soccer/${slug}/leaders`);
       const cats = data.leaders || data.categories || [];
       const cat = cats.find(c => { const t = (c.name || "") + " " + (c.displayName || ""); return /goal/i.test(t) && !/assist/i.test(t); });
       if (cat && cat.leaders && cat.leaders.length) {
@@ -600,385 +619,22 @@ function pintarContadores(){
   const j = jugados(), prox = PARTIDOS.filter(p => p.estado === "previo").length;
   const goles = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
   const prom = j.length ? (goles / j.length).toFixed(2) : "0.00";
-  const datos = [[j.length,"partidos jugados"],[prox,"próximos programados"],[goles,"goles marcados"],[prom,"goles por partido"]];
+  const datos = [[j.length,"partidos jugados"],[prox,"próximos"],[goles,"goles"],[prom,"goles por partido"]];
   $("contadores").innerHTML = datos.map(([n,t]) => `<div class="contador"><b>${n}</b><span>${t}</span></div>`).join("");
 }
 
-/* PARTIDOS Y HORARIOS */
-function setEstadoFiltro(est, btn){
-  estadoFiltro = est;
-  document.querySelectorAll("#filtros-estado button").forEach(b => b.classList.remove("activo"));
-  btn.classList.add("activo");
-  pintarTabsDias();
-  pintarPartidos();
-}
-function pintarTabsDias(){
-  $("tabs-dias").innerHTML = fechas.map(f => {
-    const cant = PARTIDOS.filter(p => p.fecha === f).length;
-    return `<button class="${f===diaActivo && estadoFiltro==='todos'?'activo':''} ${f===hoyClave?'hoy':''}" onclick="elegirDia('${f}')">${f===hoyClave?'Hoy · ':''}${etiquetaDia(f)} <small>(${cant})</small></button>`;
-  }).join("");
-  const activo = $("tabs-dias").querySelector(".activo");
-  if (activo && activo.scrollIntoView) activo.scrollIntoView({inline:"center", block:"nearest"});
-}
-function elegirDia(f){
-  diaActivo = f;
-  estadoFiltro = "todos";
-  document.querySelectorAll("#filtros-estado button").forEach((b,i) => b.classList.toggle("activo", i === 0));
-  $("buscar-partido").value = "";
-  pintarTabsDias();
-  pintarPartidos();
-}
-function pintarFiltro(){
-  const prev = $("filtro-liga").value;
-  const ligas = ["Todas", ...LIGAS_API.map(l => l.nombre)];
-  $("filtro-liga").innerHTML = ligas.map(l => `<option>${l}</option>`).join("");
-  if (ligas.includes(prev)) $("filtro-liga").value = prev;
-  $("filtro-liga").onchange = e => { ligaActiva = e.target.value; pintarPartidos(); };
-}
-
-function tarjeta(p, conFecha){
-  const esVivo = p.estado === "vivo";
-  const jugado = p.estado === "final" || esVivo;
-  const real = p.estado === "final" ? resultado(p) : "";
-  const pr = PRED[clave(p)];
-  let extra = "";
-  if (p.estado === "previo") {
-    extra = `<div class="pred"><span>Pronóstico</span>` +
-      [["1", p.local], ["X", "Empate"], ["2", p.visita]].map(([k,t]) =>
-        `<button class="${pr===k?'sel':''}" title="${esc(t)}" onclick="pronosticar('${esc(clave(p))}','${k}')">${k}</button>`).join("") + `</div>`;
-  } else if (pr && p.estado === "final") {
-    extra = `<div class="pred ${pr===real?'acierto':'fallo'}">Tu pronóstico: ${pr} · ${pr===real?'acertaste ✔':'fallaste ✘'}</div>`;
+document.addEventListener("DOMContentLoaded", () => {
+  iniciarIntro();
+  if ($("fecha-hoy")) {
+    $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO", {
+      timeZone: "America/Bogota",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
   }
-  const marc = jugado
-    ? `<div class="marc-box"><b>${p.gl}</b><i>-</i><b>${p.gv}</b></div><span class="sub-hora">${hora12(p.hora)}</span>`
-    : `<span class="hora-badge">🕒 ${hora12(p.hora)}</span><span class="sub-hora">${p.aplazado ? "Aplazado" : etiquetaDia(p.fecha)}</span>`;
-  const star = n => esFav(n) ? '<span class="fav">★</span> ' : '';
-  const estadoHtml = esVivo
-    ? `<span class="badge-vivo">EN VIVO ${esc(p.reloj)}</span>`
-    : `${p.estado === "final" ? "Finalizado" : (p.aplazado ? "Aplazado" : "Programado")}${conFecha ? " · " + etiquetaDia(p.fecha) : ""}`;
-  return `<div class="partido ${esVivo ? 'en-vivo' : ''}">
-    <div class="cab"><span>${p.liga}</span><span>${estadoHtml}</span></div>
-    <div class="vs">
-      <div class="eq ${real==="1"?'ganador':''}">${escudo(p.local)}<span>${star(p.local)}${esc(p.local)}</span></div>
-      <div class="marc">${marc}</div>
-      <div class="eq ${real==="2"?'ganador':''}">${escudo(p.visita)}<span>${star(p.visita)}${esc(p.visita)}</span></div>
-    </div>
-    ${p.estadio ? `<p class="estadio-txt">🏟️ ${esc(p.estadio)}</p>` : ""}
-    ${extra}
-  </div>`;
-}
-
-function pintarPartidos(){
-  const q = $("buscar-partido").value.trim().toLowerCase();
-  let lista = PARTIDOS.filter(p => ligaActiva === "Todas" || p.liga === ligaActiva);
-  if (estadoFiltro !== "todos") lista = lista.filter(p => p.estado === estadoFiltro);
-  else if (!q) lista = lista.filter(p => p.fecha === diaActivo);
-  if (q) lista = lista.filter(p => (p.local + " " + p.visita + " " + p.liga).toLowerCase().includes(q));
-  lista.sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
-  if (estadoFiltro === "final") lista.reverse();
-
-  const jug = lista.filter(p => p.gl !== null);
-  const prox = lista.filter(p => p.estado === "previo");
-  const goles = jug.reduce((s,p) => s + p.gl + p.gv, 0);
-  $("resumen").innerHTML = lista.length ? `
-    <div><b>${lista.length}</b><span>partidos mostrados</span></div>
-    <div><b>${prox.length}</b><span>por jugar</span></div>
-    <div><b>${jug.length}</b><span>jugados o en vivo</span></div>
-    <div><b>${goles}</b><span>goles</span></div>` : "";
-
-  if (PARTIDOS.length) {
-    const mostrarFecha = !!q || estadoFiltro !== "todos";
-    $("lista-partidos").innerHTML = lista.length ? lista.slice(0, 60).map(p => tarjeta(p, mostrarFecha)).join("")
-      : `<p class="vacio">No hay partidos para este día o filtro. Prueba con otro día arriba o con "Próximos".</p>`;
-  }
-}
-
-/* PRONÓSTICOS */
-function pronosticar(c, k){
-  if (PRED[c] === k) delete PRED[c]; else PRED[c] = k;
-  guardar("pred", PRED);
-  pintarPartidos(); pintarFavoritos(); pintarPred();
-  toast("Pronóstico guardado");
-}
-function pintarPred(){
-  let ac = 0, fa = 0, pe = 0;
-  PARTIDOS.forEach(p => {
-    const pr = PRED[clave(p)];
-    if (!pr) return;
-    if (p.estado !== "final") pe++; else if (pr === resultado(p)) ac++; else fa++;
-  });
-  $("marcador-pred").innerHTML = (ac + fa + pe)
-    ? `<b>Tus pronósticos:</b> ${ac} aciertos · ${fa} fallos · ${pe} pendientes`
-    : `Pronostica los próximos partidos: <b>1</b> gana el local, <b>X</b> empate, <b>2</b> gana el visitante.`;
-}
-
-/* TABLA */
-function pintarTabla(){
-  $("tabs-ligas").innerHTML = Object.keys(TABLAS).map(l =>
-    `<button class="${l===tablaActiva?'activo':''}" onclick="elegirTabla('${l}')">${l}</button>`).join("");
-  const filas = TABLAS[tablaActiva] || [];
-  if (!filas.length) return;
-  const max = filas[0][6] || 1;
-  $("grafica").innerHTML = `<h3>Los 6 primeros · puntos</h3>` + filas.slice(0,6).map(e =>
-    `<div class="barra-fila"><span class="barra-n">${esc(e[0])}</span><div class="barra"><i style="width:${e[6]/max*100}%"></i></div><b>${e[6]}</b></div>`).join("");
-  $("cuerpo-tabla").innerHTML = filas.map((f,i) => {
-    const clase = i < 4 ? "top" : (i >= filas.length-3 ? "baja" : "");
-    const dg = f[5] === null || f[5] === undefined ? "–" : (f[5] > 0 ? "+" + f[5] : f[5]);
-    return `<tr class="${clase}"><td>${i+1}</td><td><span class="td-eq">${escudo(f[0])}${esc(f[0])}</span></td><td>${f[1]}</td><td>${f[2]}</td><td>${f[3]}</td><td>${f[4]}</td><td>${dg}</td><td><strong>${f[6]}</strong></td></tr>`;
-  }).join("");
-}
-function elegirTabla(l){ tablaActiva = l; pintarTabla(); }
-
-/* GOLEADORES */
-function pintarGoleadores(){
-  $("tabs-goleadores").innerHTML = Object.keys(TABLAS).map(l =>
-    `<button class="${l===goleadorLigaActiva?'activo':''}" onclick="elegirGoleadorLiga('${l}')">${l}</button>`).join("");
-  const lista = GOLEADORES[goleadorLigaActiva] || [];
-  if (!lista.length) {
-    $("grid-goleadores").innerHTML = `<p class="vacio">Todavía no hay datos de goleadores para ${goleadorLigaActiva}. Pulsa ↻ Actualizar en la sección de partidos.</p>`;
-    return;
-  }
-  const nota = lista[0].recientes ? `<p class="nota" style="grid-column:1/-1">Goleadores de los partidos de las últimas dos semanas.</p>` : "";
-  $("grid-goleadores").innerHTML = nota + lista.map(g => `
-    <div class="card-goleador">
-      <div class="gol-pos">${g.pos}</div>
-      <div class="gol-avatar">${g.foto ? `<img src="${esc(g.foto)}" alt="${esc(g.nombre)}" onerror="this.remove()">` : `<span>⚽</span>`}</div>
-      <div class="gol-info"><h4>${esc(g.nombre)}</h4><p>${escudo(g.equipo)} ${esc(g.equipo)}</p></div>
-      <div class="gol-cifra"><b>${g.goles}</b><span>Goles</span></div>
-    </div>`).join("");
-}
-function elegirGoleadorLiga(l){ goleadorLigaActiva = l; pintarGoleadores(); }
-
-/* ESTADÍSTICAS */
-function pintarStats(){
-  const datos = Object.keys(TABLAS).map(l => {
-    const j = jugados().filter(p => p.liga === l);
-    const g = j.reduce((s,p) => s + (p.gl || 0) + (p.gv || 0), 0);
-    return {l, prom: j.length ? g / j.length : 0};
-  });
-  const max = Math.max(...datos.map(d => d.prom), 0.01);
-  $("stats-ligas").innerHTML = datos.map(d =>
-    `<div class="barra-fila"><span class="barra-n">${d.l}</span><div class="barra"><i style="width:${d.prom/max*100}%"></i></div><b>${d.prom.toFixed(2)}</b></div>`).join("");
-  const top = jugados().sort((a,b) => (b.gl + b.gv) - (a.gl + a.gv)).slice(0,5);
-  $("goleadas").innerHTML = top.length
-    ? top.map(p => `<li><span>${esc(p.local)} <b>${p.gl}-${p.gv}</b> ${esc(p.visita)}</span><small>${p.liga}</small></li>`).join("")
-    : `<li><span>Esperando partidos finalizados</span></li>`;
-  const tot = jugados().length || 1;
-  const loc = jugados().filter(p => p.gl > p.gv).length, emp = jugados().filter(p => p.gl === p.gv).length, vis = jugados().filter(p => p.gl < p.gv).length;
-  const pct = n => Math.round(n / tot * 100);
-  $("resultados-pct").innerHTML = [["Local",loc],["Empate",emp],["Visitante",vis]].map(([t,n]) =>
-    `<div class="barra-fila"><span class="barra-n">${t}</span><div class="barra"><i style="width:${pct(n)}%"></i></div><b>${pct(n)}%</b></div>`).join("");
-}
-
-/* EQUIPOS Y FAVORITOS */
-function pintarEquipos(filtro=""){
-  const q = filtro.toLowerCase();
-  const mapa = {};
-  Object.entries(TABLAS).forEach(([liga, eqs]) => eqs.forEach(([n]) => mapa[n] = liga));
-  PARTIDOS.forEach(p => { if (!mapa[p.local]) mapa[p.local] = p.liga; if (!mapa[p.visita]) mapa[p.visita] = p.liga; });
-  const lista = Object.entries(mapa).sort((a,b) => a[0].localeCompare(b[0])).filter(([n,l]) => (n + " " + l).toLowerCase().includes(q));
-  $("grid-equipos").innerHTML = lista.map(([n,l]) =>
-    `<div class="equipo" data-n="${esc(n)}" onclick="verEquipo(this.dataset.n)">
-      <button class="estrella ${esFav(n)?'on':''}" title="Seguir equipo" onclick="event.stopPropagation();toggleFav(this.closest('.equipo').dataset.n)">${esFav(n)?'★':'☆'}</button>
-      ${escudo(n)}<h3>${esc(n)}</h3><p>${l}</p></div>`).join("")
-    || `<p class="vacio">No encontramos ese equipo.</p>`;
-}
-function verEquipo(n){
-  $("buscar-partido").value = n;
-  estadoFiltro = "todos";
-  document.querySelectorAll("#filtros-estado button").forEach((b,i) => b.classList.toggle("activo", i === 0));
-  pintarTabsDias();
-  pintarPartidos();
-  $("partidos").scrollIntoView({behavior:"smooth"});
-}
-function toggleFav(n){
-  const agregado = !esFav(n);
-  FAVS = agregado ? [...FAVS, n] : FAVS.filter(x => x !== n);
-  guardar("favs", FAVS);
-  pintarEquipos($("buscador").value); pintarFavoritos(); pintarPartidos();
-  toast(agregado ? `${n} añadido a favoritos ★` : `${n} quitado de favoritos`);
-}
-function pintarFavoritos(){
-  const lista = PARTIDOS.filter(p => esFav(p.local) || esFav(p.visita)).sort((a,b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
-  $("lista-favoritos").innerHTML = lista.length ? lista.map(p => tarjeta(p, true)).join("")
-    : `<p class="vacio">Toca la ★ en cualquier equipo para ver aquí su calendario y horarios.</p>`;
-}
-
-/* COMPARADOR */
-function pintarComparar(){
-  const ligaSel = $("cmp-liga").value || Object.keys(TABLAS)[0];
-  const eqs = TABLAS[ligaSel] || [];
-  if (eqs.length < 2) return;
-  ["cmp-a","cmp-b"].forEach((id,i) => {
-    const s = $(id), previo = s.value;
-    s.innerHTML = eqs.map(e => `<option>${esc(e[0])}</option>`).join("");
-    s.value = eqs.some(e => e[0] === previo) ? previo : eqs[i][0];
-  });
-  const A = eqs.find(e => e[0] === $("cmp-a").value), B = eqs.find(e => e[0] === $("cmp-b").value);
-  if (!A || !B) return;
-  const pos = e => eqs.indexOf(e) + 1;
-  const pct = e => e[1] ? Math.round(e[2] / e[1] * 100) : 0;
-  const dg = e => e[5] === null || e[5] === undefined ? "–" : e[5];
-  const filas = [
-    ["Posición", pos(A), pos(B), true], ["Puntos", A[6], B[6]], ["Partidos", A[1], B[1], null],
-    ["Ganados", A[2], B[2]], ["Empates", A[3], B[3], null], ["Perdidos", A[4], B[4], true],
-    ["Dif. de gol", dg(A), dg(B)], ["% Victorias", pct(A) + "%", pct(B) + "%"]
-  ];
-  $("cmp").innerHTML = `<div class="cmp-cab"><div>${escudo(A[0])}${esc(A[0])}</div><div>VS</div><div>${escudo(B[0])}${esc(B[0])}</div></div>` +
-    filas.map(([t,a,b,menor]) => {
-      const va = parseFloat(a), vb = parseFloat(b);
-      const comparable = menor !== null && !isNaN(va) && !isNaN(vb) && va !== vb;
-      const mejorA = comparable && (menor ? va < vb : va > vb);
-      const mejorB = comparable && (menor ? vb < va : vb > va);
-      return `<div class="cmp-fila"><b class="${mejorA?'mejor':''}">${a}</b><span>${t}</span><b class="${mejorB?'mejor':''}">${b}</b></div>`;
-    }).join("");
-}
-
-/* ARMA TU ONCE */
-const FORMACIONES_PRO = {
-  "4-3-3": {filas:[1,4,3,3], posiciones:["POR","LI","DFC","DFC","LD","MC","MC","MCO","EI","DC","ED"], dorsales:[1,3,4,5,2,6,8,10,11,9,7]},
-  "4-4-2": {filas:[1,4,4,2], posiciones:["POR","LI","DFC","DFC","LD","MI","MC","MC","MD","DC","DC"], dorsales:[1,3,4,5,2,11,6,8,7,9,10]},
-  "3-5-2": {filas:[1,3,5,2], posiciones:["POR","DFC","DFC","DFC","CAI","MC","MCD","MC","CAD","DC","DC"], dorsales:[1,4,5,3,11,8,6,10,2,9,7]},
-  "4-2-3-1": {filas:[1,4,2,3,1], posiciones:["POR","LI","DFC","DFC","LD","MCD","MCD","EI","MCO","ED","DC"], dorsales:[1,3,4,5,2,6,8,11,10,7,9]}
-};
-let ONCE = leer("once_pro", {nombre:"", escudo:"", f:"4-3-3", j:{}});
-if (!FORMACIONES_PRO[ONCE.f]) ONCE.f = "4-3-3";
-
-function poblarSelectorClubesOnce(){
-  const sel = $("escudo-once");
-  const previo = ONCE.escudo || "";
-  const todos = Object.keys(ESCUDOS_OFICIALES).sort();
-  sel.innerHTML = `<option value="">-- Elige un club para usar su escudo y su plantilla --</option>` + todos.map(eq => `<option value="${esc(eq)}">${esc(eq)}</option>`).join("");
-  if (todos.includes(previo)) sel.value = previo;
-}
-
-async function seleccionarClubOnce(club){
-  ONCE.escudo = club;
-  if (!club) { guardar("once_pro", ONCE); pintarOnce(); return; }
-  ONCE.nombre = club;
-  pintarOnce();
-  const info = EQUIPOS_INFO[club];
-  if (!info || !info.id) { toast("Escudo puesto. Escribe tú los nombres de tus jugadores."); guardar("once_pro", ONCE); return; }
-  toast(`Cargando plantilla de ${club}...`);
-  try {
-    const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/soccer/${info.slug}/teams/${info.id}/roster`);
-    const atletas = data.athletes || [];
-    if (atletas.length) {
-      const porPos = {GK:[], DEF:[], MID:[], FWD:[]};
-      atletas.forEach(a => {
-        const p = a.position?.abbreviation || "";
-        const item = {nombre: a.shortName || a.displayName, dorsal: a.jersey || ""};
-        if (p === "G" || p === "GK") porPos.GK.push(item);
-        else if (p === "D" || p === "DF") porPos.DEF.push(item);
-        else if (p === "M" || p === "MF") porPos.MID.push(item);
-        else porPos.FWD.push(item);
-      });
-      const f = FORMACIONES_PRO[ONCE.f];
-      ONCE.j = {};
-      f.posiciones.forEach((pos, idx) => {
-        let c = null;
-        if (pos === "POR") c = porPos.GK.shift();
-        else if (["LI","DFC","LD","CAI","CAD"].includes(pos)) c = porPos.DEF.shift();
-        else if (["MC","MCO","MCD","MI","MD"].includes(pos)) c = porPos.MID.shift();
-        else c = porPos.FWD.shift();
-        if (!c) c = porPos.MID.shift() || porPos.DEF.shift() || porPos.FWD.shift() || porPos.GK.shift();
-        if (c) ONCE.j[idx] = {nombre: c.nombre, dorsal: c.dorsal || f.dorsales[idx]};
-      });
-      toast(`Plantilla de ${club} cargada`);
-    }
-  } catch(e) { toast("No se pudo cargar la plantilla. Puedes escribir los nombres."); }
-  guardar("once_pro", ONCE);
-  pintarOnce();
-}
-
-function pintarOnce(){
-  const selForm = $("formacion");
-  if (!selForm.options.length) selForm.innerHTML = Object.keys(FORMACIONES_PRO).map(f => `<option value="${f}">${f}</option>`).join("");
-  selForm.value = ONCE.f;
-  if (document.activeElement !== $("nombre-equipo-once")) $("nombre-equipo-once").value = ONCE.nombre || "";
-  const conf = FORMACIONES_PRO[ONCE.f];
-  const url = ONCE.escudo ? urlEscudo(ONCE.escudo) : "";
-  const logoHtml = url ? `<img src="${esc(url)}" alt="${esc(ONCE.escudo)}" onerror="this.remove()">` : "";
-  let idx = 0;
-  const filasHtml = conf.filas.map(cant => {
-    let jug = "";
-    for (let i = 0; i < cant; i++) {
-      const a = idx, pos = conf.posiciones[a], dato = ONCE.j[a] || {};
-      const dorsal = dato.dorsal || conf.dorsales[a];
-      const nombre = dato.nombre || "";
-      jug += `<div class="jugador-ficha"><div class="camiseta"><span>${esc(dorsal)}</span><small>${pos}</small></div>
-        <input type="text" value="${esc(nombre)}" placeholder="Jugador" maxlength="22" aria-label="${pos}" onchange="editarJugador(${a}, this.value)"></div>`;
-      idx++;
-    }
-    return `<div class="fila-cancha">${jug}</div>`;
-  }).join("");
-  $("cancha").innerHTML = `<div class="cancha-cab">${logoHtml}<div><strong id="titulo-once">${esc(ONCE.nombre || "Mi Once Ideal")}</strong><span>Formación ${ONCE.f}</span></div></div><div class="cancha-campo">${filasHtml}</div>`;
-}
-function editarJugador(idx, val){
-  const conf = FORMACIONES_PRO[ONCE.f];
-  ONCE.j[idx] = {nombre: val.trim(), dorsal: ONCE.j[idx]?.dorsal || conf.dorsales[idx]};
-  guardar("once_pro", ONCE);
-}
-function limpiarOnce(){
-  ONCE = {nombre:"", escudo:"", f: ONCE.f || "4-3-3", j:{}};
-  $("escudo-once").value = "";
-  $("nombre-equipo-once").value = "";
-  guardar("once_pro", ONCE);
-  pintarOnce();
-  toast("Alineación reiniciada");
-}
-function compartirOnce(){
-  const payload = btoa(unescape(encodeURIComponent(JSON.stringify(ONCE))));
-  const url = `${location.origin}${location.pathname}?once=${encodeURIComponent(payload)}#alineacion`;
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(() => toast("¡Enlace copiado!")).catch(() => prompt("Copia este enlace:", url));
-  else prompt("Copia este enlace para compartir tu Once:", url);
-}
-function cargarOnceDesdeURL(){
-  const raw = new URLSearchParams(location.search).get("once");
-  if (!raw) return;
-  try {
-    const parsed = JSON.parse(decodeURIComponent(escape(atob(raw))));
-    if (parsed && FORMACIONES_PRO[parsed.f]) { ONCE = {nombre: parsed.nombre || "", escudo: parsed.escudo || "", f: parsed.f, j: parsed.j || {}}; guardar("once_pro", ONCE); }
-  } catch(e) {}
-}
-
-/* TEMA */
-function cambiarFondo(){
-  document.body.classList.toggle("claro");
-  const claro = document.body.classList.contains("claro");
-  guardar("tema_claro", claro);
-  toast(claro ? "Modo claro activado" : "Modo oscuro activado");
-}
-
-/* INICIO */
-window.addEventListener("DOMContentLoaded", () => {
-  if (leer("tema_claro", false)) document.body.classList.add("claro");
-  $("fecha-hoy").textContent = new Date().toLocaleDateString("es-CO", {weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"America/Bogota"});
-
-  /* Primero se muestra lo guardado para que la página nunca se vea vacía */
-  const cacheP = leer("cache_partidos", []);
-  if (cacheP.length) PARTIDOS = cacheP;
-  else { cargarRespaldoPartidos(); MODO_RESPALDO = true; }
-  const cacheT = leer("cache_tablas", {});
-  LIGAS_API.forEach(({nombre}) => { TABLAS[nombre] = (cacheT[nombre] && cacheT[nombre].length) ? cacheT[nombre] : respaldoTabla(nombre); });
-  ajustarDia();
-
-  $("cmp-liga").innerHTML = Object.keys(TABLAS).map(l => `<option>${l}</option>`).join("");
-  $("cmp-liga").onchange = pintarComparar;
-  $("cmp-a").onchange = pintarComparar;
-  $("cmp-b").onchange = pintarComparar;
-  $("buscar-partido").oninput = pintarPartidos;
-  $("buscador").oninput = e => pintarEquipos(e.target.value);
-  $("escudo-once").onchange = e => seleccionarClubOnce(e.target.value);
-  $("formacion").onchange = e => { ONCE.f = e.target.value; guardar("once_pro", ONCE); pintarOnce(); };
-  $("nombre-equipo-once").oninput = e => { ONCE.nombre = e.target.value; guardar("once_pro", ONCE); const t = $("titulo-once"); if (t) t.textContent = ONCE.nombre || "Mi Once Ideal"; };
-  window.addEventListener("scroll", () => $("subir").classList.toggle("visible", window.scrollY > 400));
-
-  cargarOnceDesdeURL();
-  refrescarInterfazCompleta();
-  sincronizarTodoEnVivo();
-  setInterval(() => sincronizarTodoEnVivo(false), 60000);
-  setInterval(pintarDestacado, 30000);
+  sincronizarTodoEnVivo(false);
 });
 </script>
 </body>
